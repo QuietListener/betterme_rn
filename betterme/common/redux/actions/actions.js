@@ -91,7 +91,7 @@ export function load_mine_data()
   }
 }
 
-async function return_get_data_func(type,dispatch,getState,call_back)
+async function return_get_data_func(type,dispatch,getState,call_back,params={})
 {
   var state = getState();
   //console.log("getState",state);
@@ -114,7 +114,11 @@ async function return_get_data_func(type,dispatch,getState,call_back)
     var url = type.url();
     var method = type.method || base.HttpType.GET;
 
-    var res3 = await base.axios({method:method , url:url })
+    params = params || {}
+
+    var res3 = await base.axios({method:method , url:url ,data:params});
+    console.log(`HTTP: ${method} : ${JSON.stringify(params)} : ${url} : res=${JSON.stringify(res3)}`);
+
     let data = res3.data;
     let new_data = null;
     if (call_back)
@@ -226,10 +230,26 @@ export function reset_specified_data_state(type,dispatch,getState)
   return update_data_state(type.name, type.url(), UPDATE_DATA_STATUS.INIT, null, null)
 }
 
-export function login(call_back)
+export function login(params, call_back)
 {
-  console.log("load_plan_data");
+  console.log("login");
   return function(dispatch,getState) {
-    return_get_data_func(base.URLS.login,dispatch,getState,call_back);
+    return_get_data_func(base.URLS.login,dispatch,getState,call_back,params);
+  }
+}
+
+export function register(params, call_back)
+{
+  console.log("register");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.register,dispatch,getState,call_back,params);
+  }
+}
+
+export function ensure_code(params, call_back)
+{
+  console.log("ensure_code");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.ensure_code,dispatch,getState,call_back,params);
   }
 }

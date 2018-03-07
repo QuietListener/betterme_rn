@@ -6,7 +6,7 @@
 
 import React, { Component} from 'react';
 import * as base from "../common/base.js"
-import {TouchableOpacity,Button,TextInput} from "react-native"
+import {TouchableOpacity,Button,TextInput,Alert} from "react-native"
 import * as BaseStyle from  "../styles/base_style.js"
 import {
   Platform,
@@ -14,6 +14,15 @@ import {
   Text,
   View
 } from 'react-native';
+
+import CHeadTip from "../common/component/c_header_tip"
+
+import { connect } from "react-redux";
+import {login,register,ensure_code,update_data_state,UPDATE_DATA_STATUS,UPDATE_DATA_STATE} from "../../betterme/common/redux/actions/actions.js"
+
+
+const codeBtnText = "获取验证码"
+const codeBtnDisabled = "秒后重新发送"
 
 class LoginPassword extends Component {
 
@@ -24,8 +33,14 @@ class LoginPassword extends Component {
       account:null,
       password:null,
       code:null,
-      register:true
+      register:true,
+      codeBtnText:codeBtnText,
+      tip:null
     }
+
+
+    this.countdown = this.countdown.bind(this);
+
   }
 
   toggle()
@@ -44,16 +59,97 @@ class LoginPassword extends Component {
     this.props.navigation.navigate(screenName,params)
   }
 
-
   login()
   {
       var account = this.state.account;
       var password = this.state.password;
+      this.props.login({username:account,password:password},null);
+  }
 
+  register()
+  {
+      var account = this.state.account;
+      var password = this.state.password;
+      var code = this.state.code;
+      var params = {username: account, password: password, code: code};
+      this.props.register(params);
+  }
+
+  async countdown()
+  {
+    try
+    {
+      var account = this.state.account;
+      var password = this.state.password;
+
+      var params = {username: account, password: password}
+      var url = base.URLS.ensure_code.url();
+      var method = base.HttpType.POST;
+
+      var res3 = await base.axios({method: method, url:url , data: params});
+
+      console.log(`HTTP: ${method} : ${JSON.stringify(params)} : ${url} : res=${JSON.stringify(res3)}`);
+
+      if (!!res3 && !!res3.data && res3.data.status == 1)
+      {
+
+        if (this.interval != null)
+        {
+          this.interval = clearInterval(this.interval);
+        }
+
+        this.setState({count: 60});
+        this.interval = setInterval(() => {
+          var precount = this.state.count || 60;
+          var count = precount - 1;
+          this.setState({count: count, codeBtnText: `${count}${codeBtnDisabled}`});
+        }, 1000);
+      }
+      else
+      {
+
+        var msg = "error"
+        if (!!res3 && !!res3.data && (res3.data.smsg ||  res3.data.msg))
+        {
+          msg = res3.data.smsg ||  res3.data.msg;
+        }
+
+        Alert.alert(msg);
+      }
+    }
+    catch(e)
+    {
+      console.error(e);
+    }
+  }
+
+
+  goto_home()
+  {
+    this.props.navigation.navigate("CWebViewMall",{url:`${base.HOBBY_DOMAIN}/home#/`});
+  }
+
+  componentWillReceiveProps(props)
+  {
+    console.log("componentWillReceiveProps" , props);
+    if(props.user_info && props.user_info.data && props.user_info.data && props.user_info.data.data.access_token )
+    {
+      base.set_cookie("access_token",props.user_info.data.data.access_token);
+      this.goto_home();
+    }
   }
 
   render() {
 
+
+    console.log("user_info",this.props.user_info);
+
+    var tip = null;
+    if(this.props.user_info && this.props.user_info.data && this.props.user_info.data.status != 1)
+    {
+        var tipTxt = this.props.user_info.data.msg || this.props.user_info.data.smsg;
+        tip = <CHeadTip  style={{flex:1,width:base.ScreenWidth}} tip={tipTxt}/>
+    }
 
     var show_view = null;
     if(this.state.register == true)
@@ -69,9 +165,7 @@ class LoginPassword extends Component {
                      onChangeText={txt => this.setState({password: txt})}/>
 
 
-          <TouchableOpacity onPress={() => {
-            this.props.login(alert)
-          }}
+          <TouchableOpacity onPress={() => {this.login()}}
                             style={[styles.login_item, {marginTop: 20}]}>
             <Text style={styles.login_text}>登录</Text>
           </TouchableOpacity>
@@ -80,7 +174,7 @@ class LoginPassword extends Component {
             this.toggle();
           }}
                             style={[styles.tip_item, {marginTop: 20}]}>
-            <Text style={styles.login_text}>我有账号去登陆</Text>
+            <Text style={styles.login_text}>没有账号去注册</Text>
           </TouchableOpacity>
 
         <TouchableOpacity onPress={() => {
@@ -111,23 +205,26 @@ class LoginPassword extends Component {
                      onChangeText={txt => this.setState({password: txt})}/>
 
 
-          <TextInput style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
-                     autoCapitalize={"none"} secureTextEntry={true}
-                     onChangeText={txt => this.setState({code: txt})}/>
+          <View style={{flexDirection:"row"}}>
+            <TextInput style={{}} placeholderTextColor="rgb(153, 153, 153)" placeholder={"验证码"}
+                       autoCapitalize={"none"} secureTextEntry={false}
+                       onChangeText={txt => this.setState({code: txt})}/>
+
+            <Button title={this.state.codeBtnText} disabled={this.state.count > 0} onPress={this.countdown}></Button>
+
+          </View>
+
 
           <TouchableOpacity onPress={() => {
-            this.bcz_login()
+            this.register()
           }}
                             style={[styles.login_item, {marginTop: 20}]}>
-            <Text style={styles.login_text}>登录</Text>
+            <Text style={styles.login_text}>注册</Text>
           </TouchableOpacity>
 
-
-          <TouchableOpacity onPress={() => {
-            this.toggle();
-          }}
+          <TouchableOpacity onPress={() => {this.toggle();}}
                             style={[styles.tip_item, {marginTop: 20}]}>
-            <Text style={styles.login_text}>没有账号去注册</Text>
+            <Text style={styles.login_text}>我有账号去登陆</Text>
           </TouchableOpacity>
         </View>
 
@@ -135,6 +232,7 @@ class LoginPassword extends Component {
 
     return (
       <View style={BaseStyle.base_styles.base_view_style}>
+        {tip}
         <View style={[BaseStyle.base_styles.base_view_style]}>
           <Text style={[BaseStyle.base_text_style.bigFont]}></Text>
         </View>
@@ -186,21 +284,26 @@ const styles = StyleSheet.create(
 
 
 
-import { connect } from "react-redux";
-import {login} from "../../betterme/common/redux/actions/actions.js"
-
 
 const mapStateToProps = state => {
   return {
-    user_info: state.user_info,
+    user_info: state.update_state.user_info,
     nav:state.nav,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    login:(call_back)=>{
-      dispatch(login(call_back))
+    login:(params,call_back)=>{
+      dispatch(login(params,call_back))
+    },
+
+    register:(params,call_back)=>{
+      dispatch(register(params,call_back))
+    },
+
+    ensure_code:(params,call_back)=>{
+      dispatch(ensure_code(params,call_back))
     }
   }
 }

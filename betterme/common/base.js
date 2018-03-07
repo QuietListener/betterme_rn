@@ -205,11 +205,22 @@ export const URLS = {
     name:'user_info'
   },
 
-  user_info2: {
+  user_info: {
     url:()=>`${HOBBY_DOMAIN}/index/user.json`,
     name:'user_info'
   },
 
+  register: {
+    method:HttpType.POST,
+    url:()=>`${HOBBY_DOMAIN}/register.json`,
+    name:'user_info'
+  },
+
+  ensure_code: {
+    method:HttpType.POST,
+    url:()=>`${HOBBY_DOMAIN}/ensure_code.json`,
+    name:'ensure_code'
+  }
 }
 
 
@@ -228,5 +239,3 @@ export function  rating_in_app_store()
 
 
 export const KeyKeepAlive = "KeyKeepAlive";
-
-set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220676");
