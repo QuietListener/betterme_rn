@@ -4,6 +4,7 @@
 import React, {Component} from 'React'
 import {WebView,Text,Button,View,ActivityIndicator,Image,TouchableOpacity,AsyncStorage} from 'react-native'
 import {StackNavigator, StackRouter} from 'react-navigation';
+import _ from "lodash"
 
 import * as base from '../common/base'
 
@@ -37,7 +38,9 @@ export default class CWebViewMall extends Component
         }}><Text style={{fontSize:18,color:"rgb(71, 175, 255)"}}>关闭</Text></TouchableOpacity>
       </TouchableOpacity>
     );
-    return { headerLeft };
+
+    var headerStyle = {height:0};
+    return {headerStyle, headerLeft};
   };
 
   constructor(props)
@@ -71,6 +74,7 @@ export default class CWebViewMall extends Component
     })
 
     this.webview_key = new Date().toDateString();
+    this.headerStyle = this.headerStyle.bind(this);
 
   }
 
@@ -102,7 +106,21 @@ export default class CWebViewMall extends Component
     return null;
   }
 
+  headerStyle()
+  {
+    var stack = this.state.url_stack
 
+    alert(stack);
+
+    if(!!!stack || stack.length == 0 || stack.length == 1)
+    {
+      return {height:0};
+    }
+    else
+    {
+      return null;
+    }
+  }
 
   cancel_share()
   {
@@ -146,9 +164,10 @@ export default class CWebViewMall extends Component
   }
 
 
+
   componentDidMount() {
     // We can only set the function after the component has been initialized
-    this.props.navigation.setParams({ goBack: this.goBack });
+    this.props.navigation.setParams({ goBack: this.goBack, headerStyle:this.headerStyle});
   }
 
   componentWillUnmount() {
@@ -170,14 +189,16 @@ export default class CWebViewMall extends Component
   //如果在webview内跳转的话,将url压栈
   onNavigationStateChange = (navState) => {
 
+
     var url = navState.url;
     var url_stack = this.state.url_stack || [];
 
+    //alert(JSON.stringify(navState));
     console.log("onNavigationStateChange",JSON.stringify(navState));
     console.log(this.state.url_stack);
 
     //react-betterme-navigation是页面js执行并没有实际跳转，不用管
-    if(url == null || url == undefined || url == "" || url.indexOf("react-betterme-navigation") >=0 )
+    if(url == null || url == undefined || url == ""  )
     {
       return null;
     }
@@ -189,7 +210,7 @@ export default class CWebViewMall extends Component
     url_stack.push(url);
 
     this.setState({
-      url_stack: url_stack,
+      url_stack: _.clone(url_stack),
     });
   };
 
@@ -221,11 +242,33 @@ export default class CWebViewMall extends Component
     console.log("header",this.headers)
     console.log("key",key);
 
+    var top_nav_bar =  <TouchableOpacity style={{height:44,flexDirection:"row",alignItems:"center"}}  activeOpacity={0.9}>
+
+        <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center"}}
+                          onPress={()=>{this.goBack()}}>
+          {/*<Image style={{marginLeft:10}} source={require("../resources/images/back-icon.png")} />*/}
+          <Text style={{fontSize:18,marginLeft:4,color:"rgb(71, 175, 255)"}}>返回</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={{marginLeft:16}} onPress={()=>{
+          this.goBack();
+        }}><Text style={{fontSize:18,color:"rgb(71, 175, 255)"}}>关闭</Text></TouchableOpacity>
+      </TouchableOpacity>
+
+    if(!!!this.state.url_stack
+      || this.state.url_stack.length == 1
+      || this.state.url_stack.length == 0 )
+    {
+      top_nav_bar = null;
+    }
 
     return (
       <View style={{flex:1}}>
         <KeepAlive/>
         <Text style={{width:1,height:1}}>{this.state.url}</Text>
+
+        {top_nav_bar}
+
         <WKWebView  key={this.webview_key} onMessage={this.handleMessage}
                     onProgress={(progress) => {console.log(progress);
 

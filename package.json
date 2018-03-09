@@ -34,6 +34,7 @@
     "react-native-style-loader": "0.0.11",
     "react-native-svg": "5.5.1",
     "react-native-vector-icons": "4.4.3",
+    "lodash": "^4.17.5",
     "react-native-wkwebview-reborn": "https://github.com/leechan/react-native-wkwebview.git"
   },
   "devDependencies": {
