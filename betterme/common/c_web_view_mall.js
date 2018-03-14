@@ -256,11 +256,16 @@ export default class CWebViewMall extends Component
 
     var top_nav_bar =  <TouchableOpacity style={{height:44,flexDirection:"row",alignItems:"center"}}  activeOpacity={0.9}>
 
+        {this.state.url_stack && this.state.url_stack.length >= 2 ?
+
         <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center"}}
                           onPress={()=>{this.goBack()}}>
           {/*<Image style={{marginLeft:10}} source={require("../resources/images/back-icon.png")} />*/}
           <Text style={{fontSize:18,marginLeft:4,color:"rgb(71, 175, 255)"}}>返回</Text>
         </TouchableOpacity>
+        :
+        <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center"}}></TouchableOpacity>
+      }
 
 
       <Button title={"setting"} onPress={()=>navigation.navigate("Setting")}/>
