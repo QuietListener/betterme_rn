@@ -239,3 +239,20 @@ export function  rating_in_app_store()
 
 
 export const KeyKeepAlive = "KeyKeepAlive";
+
+
+
+import {NavigationActions} from "react-navigation"
+export function resetAndGoto(navigation,dest,params)
+{
+  var resetAction = NavigationActions.reset({
+    index: 0,
+    params:params,
+    actions: [
+      NavigationActions.navigate({ routeName: dest })
+    ]
+  });
+
+  this.props.navigation.dispatch(resetAction);
+
+}

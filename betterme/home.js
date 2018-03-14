@@ -22,13 +22,24 @@ import {
 import { connect } from "react-redux";
 import {login,register,ensure_code,update_data_state,UPDATE_DATA_STATUS,UPDATE_DATA_STATE} from "../betterme/common/redux/actions/actions.js"
 import LoginPassword from "../betterme/login/login_password"
-import CWebViewLoading from "../betterme/common/c_web_view_mall.js"
+import CWebViewMall from "../betterme/common/c_web_view_mall.js"
 
 
 const codeBtnText = "获取验证码"
 const codeBtnDisabled = "秒后重新发送"
-
+const NotLogin = -1;
+const  url = `http://m.baidu.com`;
 class Home extends Component {
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    var headerHeight = params.headerHeight;
+    if(headerHeight == null)
+      headerHeight = 44;
+
+    var headerStyle = {height:headerHeight};
+    return {headerStyle,};
+  };
 
   constructor(props)
   {
@@ -36,50 +47,60 @@ class Home extends Component {
     this.state = {
       access_token:null,
     }
-
     this.check_login_state = this.check_login_state.bind(this);
   }
 
   check_login_state()
   {
     base.get_cookie("access_token",(val)=>{
+         console.log(`val = ${val}`);
+        this.setState({access_token:val});
+        this.props.navigation.setParams({headerHeight:0});
 
-        //alert(`check_login_state ${val}`);
-
-        if(!!val)
-        {
-          this.setState({access_token:val});
-        }
-        else
-        {
-          this.setState({access_token:-1});
-        }
     });
   }
 
+  componentWillReceiveProps(props)
+  {
+    console.log("componentWillReceiveProps" , props);
+    if(props.user_info && props.user_info.data && props.user_info.data
+      && props.user_info.data.data && props.user_info.data.data.access_token )
+    {
+      var access_token = props.user_info.data.data.access_token;
+      if(this.state.access_token != access_token)
+      {
+        base.set_cookie("access_token", access_token);
+        this.setState({access_token: access_token});
+        //this.goto_home();
+
+        setTimeout(() => this.check_login_state(), 200);
+      }
+    }
+
+
+  }
 
   componentDidMount()
   {
     this.check_login_state();
   }
 
+
   render() {
 
     var show_view = null;
 
-    if(this.state.access_token == null)
+    console.log(`this.state.access_token = ${this.state.access_token}`)
+
+    if(!this.state.access_token)
     {
-      return null;
-    }
-    else if(this.state.access_token == -1)
-    {
-        show_view = <LoginPassword login_succeed={this.check_login_state}/>
+      show_view = <LoginPassword navigation={this.props.navigation} login_succeed={this.check_login_state}/>
     }
     else
     {
-        var url = `${base.HOBBY_DOMAIN}/home#/`;
-        alert(`webview ${url}`);
-        show_view = <WKWebView   injectedJavaScript={`${base.get_set_cookie_js_str("access_token",this.state.access_token)}`} style={{flex:1,width:'100%'}} source={{uri:url}} />
+       show_view = <CWebViewMall navigation={this.props.navigation} style={{width:base.ScreenWidth}} url={url} />
+
+      //show_view = <LoginPassword navigation={this.props.navigation} login_succeed={this.check_login_state}/>
     }
 
 

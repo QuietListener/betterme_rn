@@ -38,25 +38,12 @@ class LoginPassword extends Component {
       tip:null
     }
 
-
     this.countdown = this.countdown.bind(this);
-
   }
 
   toggle()
   {
     this.setState({register:!this.state.register})
-  }
-
-
-  goto(screenName)
-  {
-    this.props.navigation.navigate(screenName)
-  }
-
-  gotoWithParams(screenName,params)
-  {
-    this.props.navigation.navigate(screenName,params)
   }
 
   login()
@@ -126,18 +113,19 @@ class LoginPassword extends Component {
 
   goto_home()
   {
-    this.props.navigation.navigate("CWebViewMall",{url:`${base.HOBBY_DOMAIN}/home#/`});
+    //this.props.navigation.navigate("CWebViewMall",{url:`${base.HOBBY_DOMAIN}/home#/`});
+    //this.props.navigation.navigate("CWebViewMall",{url:`https://m.baidu.com`});
   }
 
-  componentWillReceiveProps(props)
-  {
-    console.log("componentWillReceiveProps" , props);
-    if(props.user_info && props.user_info.data && props.user_info.data && props.user_info.data.data.access_token )
-    {
-      base.set_cookie("access_token",props.user_info.data.data.access_token);
-      this.goto_home();
-    }
-  }
+  // componentWillReceiveProps(props)
+  // {
+  //   console.log("componentWillReceiveProps" , props);
+  //   if(props.user_info && props.user_info.data && props.user_info.data && props.user_info.data.data.access_token )
+  //   {
+  //     base.set_cookie("set access_token",props.user_info.data.data.access_token);
+  //     //this.goto_home();
+  //   }
+  // }
 
   render() {
 
@@ -185,7 +173,15 @@ class LoginPassword extends Component {
         </TouchableOpacity>
 
 
-        </View>
+        <TouchableOpacity onPress={() => {
+         this.props.navigation.navigate("Setting");
+        }}
+                          style={[styles.tip_item, {marginTop: 20}]}>
+          <Text style={styles.login_text}>setting</Text>
+        </TouchableOpacity>
+
+
+      </View>
 
 
     }

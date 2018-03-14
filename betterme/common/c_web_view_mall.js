@@ -36,11 +36,16 @@ export default class CWebViewMall extends Component
           if(params.call_back)
             params.call_back();
         }}><Text style={{fontSize:18,color:"rgb(71, 175, 255)"}}>关闭</Text></TouchableOpacity>
+
       </TouchableOpacity>
     );
 
-    var headerStyle = {height:0};
-    return {headerStyle, headerLeft};
+    var headerRight =  <View style={{flex:1}}>
+      <Button title={"setting"} onPress={()=>navigation.navigate("Setting")}/>
+    </View>
+
+    var headerStyle = params.headerStyle;
+    return {headerStyle, headerLeft, headerRight};
   };
 
   constructor(props)
@@ -48,12 +53,20 @@ export default class CWebViewMall extends Component
     super(props);
 
     const { state, setParams } = this.props.navigation;
-    const {url,onTodoClick} = state.params;
-    var url_ = url;
-    if(url_ == null)
+    var url = null;
+    var onTodoClick = null;
+    if(this.props.url)
     {
-      url_ = this.props.url;
+      url = this.props.url;
     }
+    else if (state && state.params)
+    {
+      url = state.params.url;
+      onTodoClick = state.params.onTodoClick;
+    }
+
+    var url_ = url;
+
     console.log("CWebViewMall",url_);
     this.state = {url:url_,show_share:false,keep:1,loading:false};
     this.url = url_;
@@ -75,7 +88,6 @@ export default class CWebViewMall extends Component
 
     this.webview_key = new Date().toDateString();
     this.headerStyle = this.headerStyle.bind(this);
-
   }
 
   renderError()
@@ -250,26 +262,19 @@ export default class CWebViewMall extends Component
           <Text style={{fontSize:18,marginLeft:4,color:"rgb(71, 175, 255)"}}>返回</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{marginLeft:16}} onPress={()=>{
-          this.goBack();
-        }}><Text style={{fontSize:18,color:"rgb(71, 175, 255)"}}>关闭</Text></TouchableOpacity>
+
+      <Button title={"setting"} onPress={()=>navigation.navigate("Setting")}/>
       </TouchableOpacity>
 
-    if(!!!this.state.url_stack
-      || this.state.url_stack.length == 1
-      || this.state.url_stack.length == 0 )
-    {
-      top_nav_bar = null;
-    }
-
     return (
-      <View style={{flex:1}}>
+      <View style={{flex:1,...this.props.style}}>
         <KeepAlive/>
         <Text style={{width:1,height:1}}>{this.state.url}</Text>
 
         {top_nav_bar}
 
-        <WKWebView  key={this.webview_key} onMessage={this.handleMessage}
+        <WKWebView
+            key={this.webview_key} onMessage={this.handleMessage}
                     onProgress={(progress) => {console.log(progress);
 
                       if(this.loading_view == null)
@@ -282,7 +287,6 @@ export default class CWebViewMall extends Component
                     //injectedJavaScript={`document.write("<h1>Test</h1>")`}
                     //bounces={true}
                     sendCookies={true}
-                    style={{flex:1,width:'100%'}}
 
                     startInLoadingState={true}
                     renderLoading={this.renderLoading}
