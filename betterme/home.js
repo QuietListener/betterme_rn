@@ -76,6 +76,11 @@ class Home extends Component {
         setTimeout(() => this.check_login_state(), 200);
       }
     }
+    else
+    {
+      base.clear_cookie("access_token");
+      this.setState({access_token: null});
+    }
 
 
   }

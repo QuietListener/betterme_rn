@@ -28,7 +28,9 @@ class Setting extends Component
   logout()
   {
      base.clear_cookie("access_token");
-     this.props.reset_user_info(base.URLS.user_info);
+
+     this.props.clear_all_data();
+
 
     //重置 route
      var resetAction = NavigationActions.reset({
@@ -115,7 +117,7 @@ _.mixin(Setting.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {reset_specified_data_state} from "../common/redux/actions/actions.js"
+import {clear_all_data} from "../common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {
@@ -127,8 +129,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
 
-    reset_user_info:(type)=>{
-      reset_specified_data_state(type,dispatch,null)
+    clear_all_data:()=>{
+      dispatch(clear_all_data())
     }
   }
 }
