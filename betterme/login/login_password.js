@@ -136,7 +136,7 @@ class LoginPassword extends Component {
     if(this.props.user_info && this.props.user_info.data && this.props.user_info.data.status != 1)
     {
         var tipTxt = this.props.user_info.data.msg || this.props.user_info.data.smsg;
-        tip = <CHeadTip  style={{flex:1,width:base.ScreenWidth}} tip={tipTxt}/>
+        tip = <CHeadTip  style={{width:base.ScreenWidth}} tip={tipTxt}/>
     }
 
     var show_view = null;
