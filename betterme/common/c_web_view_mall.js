@@ -27,15 +27,15 @@ export default class CWebViewMall extends Component
                                 params.call_back();
                             }
                           }>
-          {/*<Image style={{marginLeft:10}} source={require("../resources/images/back-icon.png")} />*/}
+          <Image style={{marginLeft:10,height:16}} source={require("../resources/images/back-icon.png")} />
           <Text style={{fontSize:18,marginLeft:4,color:"rgb(71, 175, 255)"}}>返回</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={{marginLeft:16}} onPress={()=>{
-          navigation.goBack();
-          if(params.call_back)
-            params.call_back();
-        }}><Text style={{fontSize:18,color:"rgb(71, 175, 255)"}}>关闭</Text></TouchableOpacity>
+        {/*<TouchableOpacity style={{marginLeft:16}} onPress={()=>{*/}
+          {/*navigation.goBack();*/}
+          {/*if(params.call_back)*/}
+            {/*params.call_back();*/}
+        {/*}}><Text style={{fontSize:18,color:"rgb(71, 175, 255)"}}>关闭</Text></TouchableOpacity>*/}
 
       </TouchableOpacity>
     );
@@ -126,7 +126,7 @@ export default class CWebViewMall extends Component
 
     //alert(stack);
 
-    if(!!!stack || stack.length == 0 || stack.length == 1)
+    if(!!!stack || stack.length >1 )
     {
       return {height:0};
     }
