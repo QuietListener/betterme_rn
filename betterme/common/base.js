@@ -247,12 +247,10 @@ export function resetAndGoto(navigation,dest,params)
 {
   var resetAction = NavigationActions.reset({
     index: 0,
-    params:params,
     actions: [
-      NavigationActions.navigate({ routeName: dest })
+      NavigationActions.navigate({ routeName: dest ,params:params})
     ]
   });
 
-  this.props.navigation.dispatch(resetAction);
-
+  navigation.dispatch(resetAction);
 }

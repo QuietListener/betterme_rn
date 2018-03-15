@@ -53,6 +53,8 @@ export default class CWebViewMall extends Component
     super(props);
 
     const { state, setParams } = this.props.navigation;
+    console.log("this.props.navigation.state = ",state);
+
     var url = null;
     var onTodoClick = null;
     if(this.props.url)
@@ -67,7 +69,7 @@ export default class CWebViewMall extends Component
 
     var url_ = url;
 
-    console.log("CWebViewMall",url_);
+    console.log("CWebViewMall url",url_);
     this.state = {url:url_,show_share:false,keep:1,loading:false};
     this.url = url_;
     this.goBack = this.goBack.bind(this);
@@ -122,7 +124,7 @@ export default class CWebViewMall extends Component
   {
     var stack = this.state.url_stack
 
-    alert(stack);
+    //alert(stack);
 
     if(!!!stack || stack.length == 0 || stack.length == 1)
     {
@@ -254,29 +256,29 @@ export default class CWebViewMall extends Component
     console.log("header",this.headers)
     console.log("key",key);
 
-    var top_nav_bar =  <TouchableOpacity style={{height:44,flexDirection:"row",alignItems:"center"}}  activeOpacity={0.9}>
-
-        {this.state.url_stack && this.state.url_stack.length >= 2 ?
-
-        <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center"}}
-                          onPress={()=>{this.goBack()}}>
-          {/*<Image style={{marginLeft:10}} source={require("../resources/images/back-icon.png")} />*/}
-          <Text style={{fontSize:18,marginLeft:4,color:"rgb(71, 175, 255)"}}>返回</Text>
-        </TouchableOpacity>
-        :
-        <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center"}}></TouchableOpacity>
-      }
-
-
-      <Button title={"setting"} onPress={()=>navigation.navigate("Setting")}/>
-      </TouchableOpacity>
+    // var top_nav_bar =  <TouchableOpacity style={{height:44,flexDirection:"row",alignItems:"center"}}  activeOpacity={0.9}>
+    //
+    //     {this.state.url_stack && this.state.url_stack.length >= 2 ?
+    //
+    //     <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center"}}
+    //                       onPress={()=>{this.goBack()}}>
+    //       {/*<Image style={{marginLeft:10}} source={require("../resources/images/back-icon.png")} />*/}
+    //       <Text style={{fontSize:18,marginLeft:4,color:"rgb(71, 175, 255)"}}>返回</Text>
+    //     </TouchableOpacity>
+    //     :
+    //     <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center"}}></TouchableOpacity>
+    //   }
+    //
+    //
+    //   <Button title={"setting"} onPress={()=>navigation.navigate("Setting")}/>
+    //   </TouchableOpacity>
 
     return (
-      <View style={{flex:1,...this.props.style}}>
+      <View style={{flex:1,...this.props.style,borderWidth:0}}>
         <KeepAlive/>
         <Text style={{width:1,height:1}}>{this.state.url}</Text>
 
-        {top_nav_bar}
+        {/*{top_nav_bar}*/}
 
         <WKWebView
             key={this.webview_key} onMessage={this.handleMessage}

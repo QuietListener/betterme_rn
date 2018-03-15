@@ -28,17 +28,14 @@ import CWebViewMall from "../betterme/common/c_web_view_mall.js"
 const codeBtnText = "获取验证码"
 const codeBtnDisabled = "秒后重新发送"
 const NotLogin = -1;
-const  url = `https://m.baidu.com`;
+const  url = `http://www.coderlong.com/home#/`;
 class Home extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
-    var headerHeight = params.headerHeight;
-    if(headerHeight == null)
-      headerHeight = 44;
+    var headerStyle = {}
 
-    var headerStyle = {height:headerHeight};
-    return {headerStyle,};
+    return {headerStyle};
   };
 
   constructor(props)
@@ -55,7 +52,13 @@ class Home extends Component {
     base.get_cookie("access_token",(val)=>{
          console.log(`val = ${val}`);
         this.setState({access_token:val});
-        this.props.navigation.setParams({headerHeight:0});
+        this.props.navigation.setParams({headerStyle:{height:0,borderWidth:0}});
+
+        console.log(" base.resetAndGoto");
+        if(val)
+        {
+          base.resetAndGoto(this.props.navigation,"CWebViewMall",{url:"https://www.baidu.com"});
+        }
 
     });
   }
@@ -71,9 +74,9 @@ class Home extends Component {
       {
         base.set_cookie("access_token", access_token);
         this.setState({access_token: access_token});
-        //this.goto_home();
 
         setTimeout(() => this.check_login_state(), 200);
+
       }
     }
     else
@@ -103,7 +106,7 @@ class Home extends Component {
     }
     else
     {
-       show_view = <CWebViewMall navigation={this.props.navigation} style={{width:base.ScreenWidth}} url={url} />
+       show_view = null; //<CWebViewMall navigation={this.props.navigation} style={{width:base.ScreenWidth}} url={url} />
 
       //show_view = <LoginPassword navigation={this.props.navigation} login_succeed={this.check_login_state}/>
     }
@@ -111,7 +114,7 @@ class Home extends Component {
 
 
     return (
-      <View style={BaseStyle.base_styles.base_view_style}>
+      <View style={[BaseStyle.base_styles.base_view_style,{borderWidth:0}]}>
         {show_view}
       </View>
     );
