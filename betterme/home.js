@@ -28,7 +28,7 @@ import CWebViewMall from "../betterme/common/c_web_view_mall.js"
 const codeBtnText = "获取验证码"
 const codeBtnDisabled = "秒后重新发送"
 const NotLogin = -1;
-const  url = `http://m.baidu.com`;
+const  url = `https://m.baidu.com`;
 class Home extends Component {
 
   static navigationOptions = ({ navigation }) => {

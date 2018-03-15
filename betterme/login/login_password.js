@@ -165,20 +165,20 @@ class LoginPassword extends Component {
             <Text style={styles.login_text}>没有账号去注册</Text>
           </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {
-          this.props.navigation.navigate("CWebViewMall",{url:`${base.HOBBY_DOMAIN}/home#/`});
-        }}
-                          style={[styles.tip_item, {marginTop: 20}]}>
-          <Text style={styles.login_text}>首页</Text>
-        </TouchableOpacity>
+        {/*<TouchableOpacity onPress={() => {*/}
+          {/*this.props.navigation.navigate("CWebViewMall",{url:`${base.HOBBY_DOMAIN}/home#/`});*/}
+        {/*}}*/}
+                          {/*style={[styles.tip_item, {marginTop: 20}]}>*/}
+          {/*<Text style={styles.login_text}>首页</Text>*/}
+        {/*</TouchableOpacity>*/}
 
 
-        <TouchableOpacity onPress={() => {
-         this.props.navigation.navigate("Setting");
-        }}
-                          style={[styles.tip_item, {marginTop: 20}]}>
-          <Text style={styles.login_text}>setting</Text>
-        </TouchableOpacity>
+        {/*<TouchableOpacity onPress={() => {*/}
+         {/*this.props.navigation.navigate("Setting");*/}
+        {/*}}*/}
+                          {/*style={[styles.tip_item, {marginTop: 20}]}>*/}
+          {/*<Text style={styles.login_text}>setting</Text>*/}
+        {/*</TouchableOpacity>*/}
 
 
       </View>
@@ -192,24 +192,29 @@ class LoginPassword extends Component {
 
         <View style={[BaseStyle.base_styles.base_view_style, {flex: 10, justifyContent: "flex-start"}]}>
 
-          <TextInput style={[styles.input_text, {marginTop: 40}]} placeholderTextColor="rgb(153, 153, 153)"
+          <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center"},{marginTop: 40}]}>
+          <TextInput style={[styles.input_text, ]} placeholderTextColor="rgb(153, 153, 153)"
                      placeholder={"  邮箱/手机号"} autoCapitalize={"none"}
                      onChangeText={txt => this.setState({account: txt})}/>
+
+          <TouchableOpacity style={{position:"absolute",right:18}}
+                            disabled={this.state.count > 0}
+                            onPress={this.countdown}>
+                    <Text style={{fontSize:12,color:"red"}}>{this.state.codeBtnText}</Text>
+          </TouchableOpacity>
+
+          </View>
+
+            <TextInput style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"验证码"}
+                       autoCapitalize={"none"} secureTextEntry={false}
+                       onChangeText={txt => this.setState({code: txt})}/>
+
+
+
 
           <TextInput style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
                      autoCapitalize={"none"} secureTextEntry={true}
                      onChangeText={txt => this.setState({password: txt})}/>
-
-
-          <View style={{flexDirection:"row"}}>
-            <TextInput style={{}} placeholderTextColor="rgb(153, 153, 153)" placeholder={"验证码"}
-                       autoCapitalize={"none"} secureTextEntry={false}
-                       onChangeText={txt => this.setState({code: txt})}/>
-
-            <Button title={this.state.codeBtnText} disabled={this.state.count > 0} onPress={this.countdown}></Button>
-
-          </View>
-
 
           <TouchableOpacity onPress={() => {
             this.register()
@@ -244,7 +249,8 @@ const styles = StyleSheet.create(
   {
     input_text: {
       width: 275,
-      height: 44,
+      lineHeight: 30,
+      height:36,
       borderRadius: 4,
       borderStyle: "solid",
       borderWidth: 0.5,
