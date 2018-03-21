@@ -56,7 +56,7 @@ class Home extends Component {
         console.log(" base.resetAndGoto");
         if(val)
         {
-          base.resetAndGoto(this.props.navigation,"CWebViewMall",{url:"https://www.baidu.com"});
+          base.resetAndGoto(this.props.navigation,"CWebViewMall",{url:"http://www.coderlong.com/home#/",access_token:val});
         }
 
     });

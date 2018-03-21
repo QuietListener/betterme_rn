@@ -40,9 +40,11 @@ export default class CWebViewMall extends Component
       </TouchableOpacity>
     );
 
-    var headerRight =  <View style={{flex:1}}>
-      <Button title={"setting"} onPress={()=>navigation.navigate("Setting")}/>
-    </View>
+    var headerRight =   <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center",marginRight:8}}  activeOpacity={0.9}
+      onPress={()=>navigation.navigate("Setting")}>
+      <Text style={{fontSize:18,marginLeft:4,color:"rgb(71, 175, 255)"}}>设置</Text>
+    </TouchableOpacity>
+
 
     var headerStyle = params.headerStyle;
     return {headerStyle, headerLeft, headerRight};
@@ -57,6 +59,7 @@ export default class CWebViewMall extends Component
 
     var url = null;
     var onTodoClick = null;
+    var access_token = null;
     if(this.props.url)
     {
       url = this.props.url;
@@ -65,9 +68,12 @@ export default class CWebViewMall extends Component
     {
       url = state.params.url;
       onTodoClick = state.params.onTodoClick;
+      access_token = state.params.access_token;
     }
 
     var url_ = url;
+
+
 
     console.log("CWebViewMall url",url_);
     this.state = {url:url_,show_share:false,keep:1,loading:false};
@@ -82,11 +88,8 @@ export default class CWebViewMall extends Component
       console.log("Cookie Pay-Support",cookie);
     })
 
-    that.access_token = null;
-    base.get_cookie("access_token",(access_token)=>{
-      console.log("access_token",access_token);
-      that.access_token = access_token;
-    })
+    this.access_token = access_token;
+    //alert(this.access_token);
 
     this.webview_key = new Date().toDateString();
     this.headerStyle = this.headerStyle.bind(this);

@@ -62,8 +62,30 @@ class Setting extends Component
     return (
       <View style={{flex:1,justifyContent:"flex-start",alignItems:"center"}}>
         <View style={inner_styles.item}>
-            <Button title={"logou"} onPress={()=>this.logout()}/>
+
+          <TouchableOpacity style={inner_styles.subitem1} onPress={()=>this.logout()}>
+            <Text style={inner_styles.bold_text}>退出</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={inner_styles.subitem2} onPress={()=>this.logout()}>
+            <Text style={inner_styles.normal_text}>></Text>
+          </TouchableOpacity>
         </View>
+
+
+        <View style={inner_styles.item}>
+
+          <TouchableOpacity style={inner_styles.subitem1} onPress={()=>this.logout()}>
+            <Text style={inner_styles.bold_text}>版本(0.1.0)</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={inner_styles.subitem2} onPress={()=>this.logout()}>
+            <Text style={inner_styles.normal_text}>></Text>
+          </TouchableOpacity>
+
+
+        </View>
+
       </View>
     )
   }
@@ -98,7 +120,6 @@ const inner_styles = {
 
   bold_text:{
     fontSize:16,
-    paddingBottom:6,
     color:"rgb(0,0,0)",
   },
 
