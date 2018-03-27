@@ -41,17 +41,13 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
-
+	<string>允许百词斩爱阅读使用你的具体位置吗？</string>
 	<key>NSCameraUsageDescription</key>
-    	<string>允许访问相机，定制个性化</string>
-    	<key>NSLocationUsageDescription</key>
-    	<string>允许百词斩爱阅读使用你的具体位置吗？</string>
-    	<key>NSLocationWhenInUseUsageDescription</key>
-    	<string>允许百词斩爱阅读使用你的具体位置吗？</string>
-    	<key>Privacy - Photo Library Usage Description </key>
-    	<string>允许访问相册，图片更精彩</string>
-
+	<string>允许访问相机，定制个性化</string>
+	<key>NSLocationUsageDescription</key>
+	<string>允许百词斩爱阅读使用你的具体位置吗？</string>
+	<key>Privacy - Photo Library Usage Description </key>
+	<string>允许访问相册，图片更精彩</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

@@ -6,7 +6,7 @@
 
 import React, { Component} from 'react';
 import * as base from "../common/base.js"
-import {TouchableOpacity,Button,TextInput,Alert} from "react-native"
+import {TouchableOpacity,Button,TextInput,Alert,NativeModules} from "react-native"
 import * as BaseStyle from  "../styles/base_style.js"
 import {
   Platform,
@@ -23,6 +23,7 @@ import {login,register,ensure_code,update_data_state,UPDATE_DATA_STATUS,UPDATE_D
 
 const codeBtnText = "获取验证码"
 const codeBtnDisabled = "秒后重新发送"
+let AnotherToastAndroid = NativeModules.AnotherToastAndroid;
 
 class LoginPassword extends Component {
 
@@ -39,6 +40,7 @@ class LoginPassword extends Component {
     }
 
     this.countdown = this.countdown.bind(this);
+    AnotherToastAndroid.show('Another Toast', AnotherToastAndroid.LONG);
   }
 
   toggle()
@@ -144,11 +146,11 @@ class LoginPassword extends Component {
     {
       show_view =  <View style={[BaseStyle.base_styles.base_view_style, {flex: 10, justifyContent: "flex-start"}]}>
 
-          <TextInput style={[styles.input_text, {marginTop: 40}]} placeholderTextColor="rgb(153, 153, 153)"
+          <TextInput underlineColorAndroid="transparent" style={[styles.input_text, {marginTop: 40}]} placeholderTextColor="rgb(153, 153, 153)"
                      placeholder={"  邮箱/手机号"} autoCapitalize={"none"}
                      onChangeText={txt => this.setState({account: txt})}/>
 
-          <TextInput style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
+          <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
                      autoCapitalize={"none"} secureTextEntry={true}
                      onChangeText={txt => this.setState({password: txt})}/>
 
@@ -193,7 +195,7 @@ class LoginPassword extends Component {
         <View style={[BaseStyle.base_styles.base_view_style, {flex: 10, justifyContent: "flex-start"}]}>
 
           <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center"},{marginTop: 40}]}>
-          <TextInput style={[styles.input_text, ]} placeholderTextColor="rgb(153, 153, 153)"
+          <TextInput underlineColorAndroid="transparent" style={[styles.input_text, ]} placeholderTextColor="rgb(153, 153, 153)"
                      placeholder={"  邮箱/手机号"} autoCapitalize={"none"}
                      onChangeText={txt => this.setState({account: txt})}/>
 
@@ -205,14 +207,14 @@ class LoginPassword extends Component {
 
           </View>
 
-            <TextInput style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"验证码"}
+            <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"验证码"}
                        autoCapitalize={"none"} secureTextEntry={false}
                        onChangeText={txt => this.setState({code: txt})}/>
 
 
 
 
-          <TextInput style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
+          <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
                      autoCapitalize={"none"} secureTextEntry={true}
                      onChangeText={txt => this.setState({password: txt})}/>
 

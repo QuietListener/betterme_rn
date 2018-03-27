@@ -93,7 +93,9 @@ export function timestamp()
 
 export function set_cookie(cookie_name, cookie_value, expire_in_seconds = 31536000, domain = ".baicizhan.com")
 {
-  // set a cookie (IOS ONLY)
+
+ if(is_ios)
+ { // set a cookie (IOS ONLY)
   return CookieManager.set({
     name: cookie_name,
     value: cookie_value.toString(),
@@ -103,30 +105,37 @@ export function set_cookie(cookie_name, cookie_value, expire_in_seconds = 315360
     version: '1',
     expiration: new Date(Date.parse(new Date()) + expire_in_seconds * 1000)
   })
+  }
 }
 
 export function get_cookie(cookie_name, callback)
 {
-  CookieManager.getAll().then((res) => {
-    var val = null;
-    for (var key in res)
-    {
-      if (key === cookie_name)
-      {
-        val = res[key].value;
-      }
-    }
+    if(is_ios)
+    { CookieManager.getAll().then((res) => {
+        var val = null;
+        for (var key in res)
+        {
+          if (key === cookie_name)
+          {
+            val = res[key].value;
+          }
+        }
 
-    callback(val);
-  });
+        callback(val);
+      });
+     }
 }
 
 
 export function clear_cookie(cookie_name)
 {
-  CookieManager.clearByName(cookie_name).then((res) => {
-    return true;
-  });
+
+  if(is_ios)
+  {
+     CookieManager.clearByName(cookie_name).then((res) => {
+        return true;
+      });
+  }
 }
 
 
