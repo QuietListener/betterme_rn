@@ -19,10 +19,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 import javax.annotation.Nullable;
 
+import java.net.HttpCookie;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookieStore;
+
+
 public class ToastModule extends ReactContextBaseJavaModule {
+
+    static CookieManager cm = new java.net.CookieManager();
+
+    static {
+        CookieHandler.setDefault(cm);
+    }
 
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
@@ -38,8 +49,34 @@ public class ToastModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void show(String message, int duration) {
+        CookieStore cookieStore = cm.getCookieStore();
+
+        List<HttpCookie> cookieList = cookieStore.getCookies();
+
+        String name = "cookies:";
+        for (HttpCookie cookie : cookieList)
+        {
+           name += "\n"+ cookie.getDomain() + ";" +  cookie.getMaxAge()  +";"+ cookie.getName()+"="+cookie.getValue();
+        }
+
+        message = name;
+        System.out.println(message);
         Toast.makeText(getReactApplicationContext(), message, duration).show();
     }
+
+
+//    @ReactMethod
+//    public void setCookie(String domain, String name, String value) {
+//        CookieStore cookieStore = cm.getCookieStore();
+//
+//        List cookieList = cookieStore.getCookies();
+//
+//        for (HttpCookie cookie : cookieList)
+//        {
+//           String name =  cookie.getDomain() + ";" +  cookie.getMaxAge()  +";"+ cookie.getName()+"="+cookie.getValue();
+//        }
+//
+//    }
 
     /**
      * [可选方法]，导出给JS使用的常量。
