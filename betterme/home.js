@@ -48,6 +48,14 @@ class Home extends Component {
 
   check_login_state()
   {
+    AsyncStorage.getItem("access_token").then(access_token=>{
+      this.props.navigation.setParams({headerStyle:{height:0,borderWidth:0}});
+      console.log(" base.resetAndGoto");
+      base.resetAndGoto(this.props.navigation,"CWebViewMall",{url:"http://www.coderlong.com/home#/",access_token:access_token});
+
+    }).catch(e=>{
+      console.error(e);
+    })
   }
 
   componentWillReceiveProps(props)
@@ -60,7 +68,6 @@ class Home extends Component {
       if(this.state.access_token != access_token)
       {
         AsyncStorage.setItem("access_token", access_token);
-        this.setState({access_token: access_token});
 
         setTimeout(() => {
           this.props.navigation.setParams({headerStyle:{height:0,borderWidth:0}});
