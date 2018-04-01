@@ -2,7 +2,7 @@
  * Created by junjun on 17/11/8.
  */
 import React, {Component} from 'React'
-import {WebView,Text,Button,View,ActivityIndicator,Image,TouchableOpacity,AsyncStorage} from 'react-native'
+import {Platform,WebView,Text,Button,View,ActivityIndicator,Image,TouchableOpacity,AsyncStorage} from 'react-native'
 import {StackNavigator, StackRouter} from 'react-navigation';
 import _ from "lodash"
 
@@ -12,6 +12,7 @@ import WKWebView from 'react-native-wkwebview-reborn';
 //const Wechat = require('react-native-wechat');
 import KeepAlive from "react-native-keep-awake"
 
+const GWebview = base.is_android ? WebView : WKWebView
 export default class CWebViewMall extends Component
 {
   static navigationOptions = ({ navigation }) => {
@@ -192,7 +193,14 @@ export default class CWebViewMall extends Component
     {
       try
       {
-        this.webview.evaluateJavaScript(`window.location.href="about:blank";`)
+        if(base.is_ios)
+        {
+          this.webview.evaluateJavaScript(`window.location.href="about:blank";`)
+        }
+        else
+        {
+          this.webview.injectJavaScript(`window.location.href="about:blank";`)
+        }
       }
       catch(e)
       {
@@ -283,7 +291,7 @@ export default class CWebViewMall extends Component
 
         {/*{top_nav_bar}*/}
 
-        <WKWebView
+        <GWebview
             key={this.webview_key} onMessage={this.handleMessage}
                     onProgress={(progress) => {console.log(progress);
 
@@ -305,7 +313,7 @@ export default class CWebViewMall extends Component
                     onLoadEnd={()=>{console.log("onLoadEnd");}}
                     ref={w => this.webview = w}
                     source={{uri:this.url}}>
-        </WKWebView>
+        </GWebview>
       </View>
     )
   }

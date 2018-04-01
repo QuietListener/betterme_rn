@@ -6,7 +6,7 @@
 
 import React, { Component} from 'react';
 import * as base from "../betterme/common/base.js"
-import {TouchableOpacity,Button,TextInput,Alert} from "react-native"
+import {TouchableOpacity,Button,TextInput,Alert,AsyncStorage} from "react-native"
 import * as BaseStyle from  "../betterme/styles/base_style.js"
 import WKWebView from "react-native-wkwebview-reborn"
 
@@ -48,18 +48,6 @@ class Home extends Component {
 
   check_login_state()
   {
-    base.get_cookie("access_token",(val)=>{
-         console.log(`val = ${val}`);
-        this.setState({access_token:val});
-        this.props.navigation.setParams({headerStyle:{height:0,borderWidth:0}});
-
-        console.log(" base.resetAndGoto");
-        if(val)
-        {
-          base.resetAndGoto(this.props.navigation,"CWebViewMall",{url:"http://www.coderlong.com/home#/",access_token:val});
-        }
-
-    });
   }
 
   componentWillReceiveProps(props)
@@ -71,16 +59,19 @@ class Home extends Component {
       var access_token = props.user_info.data.data.access_token;
       if(this.state.access_token != access_token)
       {
-        base.set_cookie("access_token", access_token);
+        AsyncStorage.setItem("access_token", access_token);
         this.setState({access_token: access_token});
 
-        setTimeout(() => this.check_login_state(), 200);
-
+        setTimeout(() => {
+          this.props.navigation.setParams({headerStyle:{height:0,borderWidth:0}});
+          console.log(" base.resetAndGoto");
+          base.resetAndGoto(this.props.navigation,"CWebViewMall",{url:"http://www.coderlong.com/home#/",access_token:access_token});
+        }, 200);
       }
     }
     else
     {
-      base.clear_cookie("access_token");
+      AsyncStorage.removeItem("access_token");
       this.setState({access_token: null});
     }
 
@@ -95,11 +86,17 @@ class Home extends Component {
 
   render() {
 
+    var user_info = this.props.user_info;
+    var access_token = null;
+    if(user_info && user_info.data && user_info.data  && user_info.data.data && user_info.data.data.access_token )
+    {
+      access_token = user_info.data.data.access_token;
+    }
+
     var show_view = null;
+    console.log(`this.state.access_token = ${access_token}`)
 
-    console.log(`this.state.access_token = ${this.state.access_token}`)
-
-    if(!this.state.access_token)
+    if(!access_token)
     {
       show_view = <LoginPassword navigation={this.props.navigation} login_succeed={this.check_login_state}/>
     }
@@ -108,6 +105,7 @@ class Home extends Component {
        show_view = null; //<CWebViewMall navigation={this.props.navigation} style={{width:base.ScreenWidth}} url={url} />
 
       //show_view = <LoginPassword navigation={this.props.navigation} login_succeed={this.check_login_state}/>
+
     }
 
 
@@ -131,8 +129,7 @@ const styles = StyleSheet.create(
 
 const mapStateToProps = state => {
   return {
-    user_info: state.update_state.user_info,
-    nav:state.nav,
+    user_info: state.update_state.user_info
   }
 }
 

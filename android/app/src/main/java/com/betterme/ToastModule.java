@@ -69,13 +69,11 @@ public class ToastModule extends ReactContextBaseJavaModule {
 //    public void setCookie(String domain, String name, String value) {
 //        CookieStore cookieStore = cm.getCookieStore();
 //
-//        List cookieList = cookieStore.getCookies();
-//
-//        for (HttpCookie cookie : cookieList)
-//        {
-//           String name =  cookie.getDomain() + ";" +  cookie.getMaxAge()  +";"+ cookie.getName()+"="+cookie.getValue();
-//        }
-//
+//        BasicClientCookie c = new BasicClientCookie(name,value);
+//        c.setVersion(0);
+//        c.setPath("/");
+//        c.setDomain(domain);
+//        cookieStore.addCookie(c);
 //    }
 
     /**
