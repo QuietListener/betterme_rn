@@ -40,7 +40,7 @@ class LoginPassword extends Component {
     }
 
     this.countdown = this.countdown.bind(this);
-    AnotherToastAndroid.show('Another Toast', AnotherToastAndroid.LONG);
+    // AnotherToastAndroid.show('Another Toast', AnotherToastAndroid.LONG);
   }
 
   toggle()

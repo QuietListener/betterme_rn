@@ -3,6 +3,7 @@ package com.betterme;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.brentvatne.react.ReactVideoPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.corbt.keepawake.KCKeepAwakePackage;
@@ -31,6 +32,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactVideoPackage(),
             new ReactNativePushNotificationPackage(),
             new PickerViewPackage(),
             new KCKeepAwakePackage(),

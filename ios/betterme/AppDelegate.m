@@ -11,6 +11,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <AVFoundation/AVFoundation.h>  // import
 
 @implementation AppDelegate
 
@@ -24,6 +25,9 @@
     #else
         jsCodeLocation = [CodePush bundleURL];
     #endif
+  
+   [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryAmbient error:nil];  // allow
+  
 
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"betterme"

@@ -50,8 +50,18 @@ class Home extends Component {
   {
     AsyncStorage.getItem("access_token").then(access_token=>{
       this.props.navigation.setParams({headerStyle:{height:0,borderWidth:0}});
-      console.log(" base.resetAndGoto");
-      base.resetAndGoto(this.props.navigation,"CWebViewMall",{url:"http://www.coderlong.com/home#/",access_token:access_token});
+      if(access_token)
+      {
+        console.log(" base.resetAndGoto");
+        base.resetAndGoto(this.props.navigation, "CWebViewMall", {
+          url: "http://www.coderlong.com/home#/",
+          access_token: access_token
+        });
+      }
+      else
+      {
+        console.log("access_token is null")
+      }
 
     }).catch(e=>{
       console.error(e);
@@ -61,12 +71,18 @@ class Home extends Component {
   componentWillReceiveProps(props)
   {
     console.log("componentWillReceiveProps" , props);
+
     if(props.user_info && props.user_info.data && props.user_info.data
       && props.user_info.data.data && props.user_info.data.data.access_token )
     {
       var access_token = props.user_info.data.data.access_token;
-      if(this.state.access_token != access_token)
+
+      if(this.state.access_token != access_token && access_token)
       {
+        this.setState({access_token:access_token});
+
+        //alert("access_token");
+        console.log(`componentWillReceiveProps access_token = ${access_token}`);
         AsyncStorage.setItem("access_token", access_token);
 
         setTimeout(() => {
