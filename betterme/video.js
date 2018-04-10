@@ -11,6 +11,12 @@ const DeviceInfo = require('react-native-device-info');
 import Video from "react-native-video"
 import Orientation from 'react-native-orientation';
 
+const Subtitle = require('subtitle')
+const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = require('subtitle')
+//import fs from "fs"
+
+var RNFS = require('react-native-fs');
+
 class Video_ extends Component
 {
 
@@ -34,15 +40,23 @@ class Video_ extends Component
 
   }
 
-  componentDidMount()
+  async componentDidMount()
   {
+    var url = "https://ted2srt.org/api/talks/13591/transcripts/download/srt?lang=en";
+    var res3 = await base.axios({method:"get" , url:url ,data:{}});
+    let data = res3;
+    console.log(res3.data);
+
+    var srt_data = parse(res3.data);
+
+    console.log(srt_data)
     Orientation.lockToLandscape();
     //setTimeout(()=>{this.player.presentFullscreenPlayer()},1000);
   }
 
   setTime(time)
   {
-    console.log("progress",time);
+    //console.log("progress",time);
   }
   //
   // loadStart()
