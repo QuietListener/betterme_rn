@@ -45,6 +45,7 @@
 		E25BCBB037E04936B2D20FCA /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0730A61DCFC34DFDA92C8FBB /* libRNSound.a */; };
 		E38D4B1F93654CC69365477C /* libRNCookieManagerIOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C49725D14EDA408997966C24 /* libRNCookieManagerIOS.a */; };
 		EAF5E65E3ABC49209AF0BF14 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D9805F7523AF4DF19D694639 /* libBVLinearGradient.a */; };
+		ED0127185199420C9C875B69 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BB12FA0A45B46A193B8FC18 /* libRCTOrientation.a */; };
 		FAAA9B393760450482F82383 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F9A13BB4F842420CABB9B5B3 /* libRNDeviceInfo.a */; };
 		FD3E26154254444F93751169 /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0207EC5A88B54BD9A2E2E969 /* libRNFetchBlob.a */; };
 /* End PBXBuildFile section */
@@ -245,6 +246,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 641E28441F0EEC8500443AF6;
 			remoteInfo = "RCTVideo-tvOS";
+		};
+		6081527F207CFE1100D9443B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DD6E60B4D7BD421394DC361D /* RCTOrientation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTOrientation;
 		};
 		60B4696D204E982A000A28EA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -475,6 +483,7 @@
 		6ED9AFF5FCDE46BD8179A3DD /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		6F0D40E648E840D097BCF26F /* RCTVideo.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTVideo.xcodeproj; path = "../node_modules/react-native-video/ios/RCTVideo.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
+		7BB12FA0A45B46A193B8FC18 /* libRCTOrientation.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRCTOrientation.a; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		96BBB1FDABC646E19BBAE50A /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		973A9B52DED84507945A9F07 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
@@ -491,6 +500,7 @@
 		D7CAAD74288643C28A5B695B /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		D9805F7523AF4DF19D694639 /* libBVLinearGradient.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libBVLinearGradient.a; sourceTree = "<group>"; };
 		DBBBA12A3B0140BA8F0575E3 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
+		DD6E60B4D7BD421394DC361D /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
 		E860EA72D41143F381B01CE7 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = SimpleLineIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		ED3DF5560EC04630A6975E6F /* RCTBEEPickerManager.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RCTBEEPickerManager.xcodeproj; path = "../node_modules/react-native-picker/ios/RCTBEEPickerManager.xcodeproj"; sourceTree = "<group>"; };
 		EFDDD6078B2B406392CC7CAE /* RNFS.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFS.xcodeproj; path = "../node_modules/react-native-fs/RNFS.xcodeproj"; sourceTree = "<group>"; };
@@ -532,6 +542,7 @@
 				07FB8F9C30444871805F1E4D /* libRNVectorIcons.a in Frameworks */,
 				10E5F720082F484CB05FF5FD /* libRCTWKWebView.a in Frameworks */,
 				89F47298FC224D998782C627 /* libRCTVideo.a in Frameworks */,
+				ED0127185199420C9C875B69 /* libRCTOrientation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -681,6 +692,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6081527C207CFE1100D9443B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				60815280207CFE1100D9443B /* libRCTOrientation.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		60B46947204E982A000A28EA /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -700,6 +719,7 @@
 				BBA0934C561D4A40A95337F1 /* RCTWeChatTests.xctest */,
 				6627226C5061436B9DDE7078 /* libRCTWKWebView.a */,
 				624120CDB8694918AAE32650 /* libRCTVideo.a */,
+				7BB12FA0A45B46A193B8FC18 /* libRCTOrientation.a */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -841,6 +861,7 @@
 				DBBBA12A3B0140BA8F0575E3 /* RNVectorIcons.xcodeproj */,
 				F8731778E04A44F49A15CEF8 /* RCTWKWebView.xcodeproj */,
 				6F0D40E648E840D097BCF26F /* RCTVideo.xcodeproj */,
+				DD6E60B4D7BD421394DC361D /* RCTOrientation.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -976,6 +997,10 @@
 				{
 					ProductGroup = 00C302D41ABCB9D200DB3ED1 /* Products */;
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
+				},
+				{
+					ProductGroup = 6081527C207CFE1100D9443B /* Products */;
+					ProjectRef = DD6E60B4D7BD421394DC361D /* RCTOrientation.xcodeproj */;
 				},
 				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
@@ -1236,6 +1261,13 @@
 			fileType = archive.ar;
 			path = libRCTVideo.a;
 			remoteRef = 60815229207CEECB00D9443B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		60815280207CFE1100D9443B /* libRCTOrientation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTOrientation.a;
+			remoteRef = 6081527F207CFE1100D9443B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		60B4696E204E982A000A28EA /* libjsinspector.a */ = {
@@ -1517,11 +1549,13 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native-wkwebview-reborn/ios/RCTWKWebView",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				INFOPLIST_FILE = betterme/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/betterme\"",
 					"\"$(SRCROOT)/betterme\"",
 					"\"$(SRCROOT)/betterme\"",
 					"\"$(SRCROOT)/betterme\"",
@@ -1570,11 +1604,13 @@
 					"$(SRCROOT)/../node_modules/react-native-wechat/ios",
 					"$(SRCROOT)/../node_modules/react-native-wkwebview-reborn/ios/RCTWKWebView",
 					"$(SRCROOT)/../node_modules/react-native-video/ios",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				INFOPLIST_FILE = betterme/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/betterme\"",
 					"\"$(SRCROOT)/betterme\"",
 					"\"$(SRCROOT)/betterme\"",
 					"\"$(SRCROOT)/betterme\"",

@@ -9,20 +9,35 @@ import Moment from "moment"
 import * as base from "./common/base"
 const DeviceInfo = require('react-native-device-info');
 import Video from "react-native-video"
+import Orientation from 'react-native-orientation';
 
 class Video_ extends Component
 {
 
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    var headerStyle = {height:0};
+    return {headerStyle};
+  };
+
+
   constructor(props)
   {
     super(props)
+    this.state={
+      backgroundVideo: {
+        width:base.ScreenHeight,
+        height:base.ScreenWidth
+      },
+    }
     this.setTime = this.setTime.bind(this);
 
   }
 
   componentDidMount()
   {
-    setTimeout(()=>{this.player.presentFullscreenPlayer()},1000);
+    Orientation.lockToLandscape();
+    //setTimeout(()=>{this.player.presentFullscreenPlayer()},1000);
   }
 
   setTime(time)
@@ -86,9 +101,10 @@ class Video_ extends Component
                onError={this.videoError}               // Callback when video cannot be loaded
                onBuffer={this.onBuffer}                // Callback when remote video is buffering
                onTimedMetadata={this.onTimedMetadata}  // Callback when the stream receive some metadata
-               style={inner_styles.backgroundVideo} />
+               style={this.state.backgroundVideo} />
 
-        <View style={{flex:1,position:"absolute",top:200,zIndex:1000,backgroundColor:"white"}}>
+        <View style={{flex:1,position:"absolute",bottom:20,width:base.ScreenWidth,zIndex:1000,backgroundColor:"white"}}>
+
           <View style={{flexDirection:"row"}}><Text onPress={()=>alert("asdfasdf")}>asdfasdf</Text><Text>aaaaa</Text></View>
         </View>
       </View>
@@ -133,11 +149,7 @@ const inner_styles = {
     fontSize:14,
     color:"rgb(177,180,183)"
 
-  },
-  backgroundVideo: {
-    width:base.ScreenWidth,
-    height:base.ScreenWidth*3/4
-  },
+  }
 
 };
 

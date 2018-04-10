@@ -150,6 +150,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-orientation')
     compile project(':react-native-video')
     compile project(':react-native-push-notification')
     compile project(':react-native-picker')
