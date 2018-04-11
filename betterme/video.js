@@ -72,10 +72,18 @@ class Video_ extends Component
             continue;
           else
           {
-            show_srt = srt_data[i];
-            console.log(i,show_srt);
+
             if(i != this.state.show_srt_index)
-              this.setState({show_srt_index:i});
+            {
+              show_srt = srt_data[i];
+              var text = show_srt.text;
+              var words = text.split(" ")
+
+              var cur_subtitle = words.map(word=>{return <Text style={{marginLeft:10}} onPress={()=>alert(word)}>{word}</Text>});
+              console.log("cur_subtitle",cur_subtitle)
+              this.setState({show_srt_index:i,cur_subtitle:cur_subtitle});
+            }
+
             break;
           }
       }
@@ -145,7 +153,9 @@ class Video_ extends Component
 
         <View style={{flex:1,position:"absolute",bottom:20,width:base.ScreenWidth,zIndex:1000,backgroundColor:"white"}}>
 
-          <View style={{flexDirection:"row"}}><Text>{this.state.srt_data && this.state.show_srt_index && this.state.show_srt_index > 0 ? `${this.state.srt_data[this.state.show_srt_index].text}`: null }</Text></View>
+          <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+            {this.state.cur_subtitle}
+          </View>
         </View>
       </View>
 
