@@ -17,6 +17,7 @@ const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = r
 
 var RNFS = require('react-native-fs');
 import Tts from 'react-native-tts';
+var SQLite = require('react-native-sqlite-storage')
 
 class Video_ extends Component
 {
@@ -47,6 +48,7 @@ class Video_ extends Component
     this.read_word = this.read_word.bind(this);
   }
 
+
   async componentDidMount()
   {
     var url = "https://ted2srt.org/api/talks/13591/transcripts/download/srt?lang=en";
@@ -61,6 +63,60 @@ class Video_ extends Component
     console.log(srt_data[1])
     Orientation.lockToLandscape();
     //setTimeout(()=>{this.player.presentFullscreenPlayer()},1000);
+    //
+    // this.db = SQLite.openDatabase({name : "words",createFromLocation : "~/www/words"}, this.openCB,this.errorCB);
+    //
+    // this.db.transaction((tx) => {
+    //   tx.executeSql('select * from words limit 2', [], (tx, results) => {
+    //     console.log("Query completed");
+    //
+    //     // Get rows with Web SQL Database spec compliance.
+    //
+    //     var len = results.rows.length;
+    //     for (let i = 0; i < len; i++) {
+    //       let row = results.rows.item(i);
+    //       console.log(row);
+    //     }
+    //
+    //     // Alternatively, you can use the non-standard raw method.
+    //
+    //     /*
+    //       let rows = results.rows.raw(); // shallow copy of rows Array
+    //
+    //       rows.map(row => console.log(`Employee name: ${row.name}, Dept Name: ${row.deptName}`));
+    //     */
+    //   },(e)=>{console.log(e)});
+    // });
+
+
+  }
+
+  //
+  //
+  // errorCB(err) {
+  //   console.log("SQL Error: " + err);
+  // }
+  //
+  // successCB() {
+  //   console.log("SQL executed fine");
+  // }
+  //
+  // openCB() {
+  //   console.log("Database OPENED");
+  // }
+
+
+  get_word_info(word)
+  {
+    if(!word)
+      return {}
+
+    return {
+      word:word,
+      accent:"['kʌstəm]",
+      mean_cn:"n. 习惯，惯例；风俗；海关，关税；经常光顾；[总称]（经常性的）顾客\n" +
+      "adj. （衣服等）定做的，定制的"
+    }
   }
 
   troggle_video()
@@ -97,8 +153,9 @@ class Video_ extends Component
     {
       this.pause();
       this.refs_store[word_index].measure(this.measure)
-      this.setState({cur_word:word});
-      this.read_word(word);
+      var word_info = this.get_word_info(word)
+
+      this.setState({cur_word:word,word_info:word_info});
     }
   }
 
@@ -205,7 +262,17 @@ class Video_ extends Component
          </View>
 
           <View style={{width:200,flex:5,alignItems:"flex-start",justifyContent:"flex-start"}}>
-            <Text style={{color:"white"}}>{this.state.cur_word}</Text>
+            <View style={{flex:1,flexDirection:"row"}}>
+              <Text style={{color:"white",fontSize:20}}>{this.state.word_info?this.state.word_info.word:"空"} </Text>
+
+              <Text style={{color:"white",fontSize:16,marginLeft:10,marginRight:10}}>  {this.state.word_info?this.state.word_info.accent:"空"} </Text>
+
+              <Text style={{color:"white"}} onPress={()=>this.read_word(this.state.word_info?this.state.word_info.word:null)}>播放</Text>
+            </View>
+
+            <View style={{flex:1,flexDirection:"row"}}>
+              <Text style={{color:"white",fontSize:16}}>  {this.state.word_info?this.state.word_info.mean_cn:"空"} </Text>
+            </View>
           </View>
         </View>
 
