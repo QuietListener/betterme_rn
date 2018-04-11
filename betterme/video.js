@@ -88,7 +88,6 @@ class Video_ extends Component
         Tts.speak(word);
       });
     }
-
   }
 
   word_click(words,word_index, srt_index)
