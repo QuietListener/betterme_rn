@@ -33,8 +33,9 @@ class Video_ extends Component
     this.state={
       backgroundVideo: {
         width:base.ScreenHeight,
-        height:base.ScreenWidth
+        height:0//base.ScreenWidth
       },
+      show_srt_index:-1
     }
     this.setTime = this.setTime.bind(this);
 
@@ -49,15 +50,40 @@ class Video_ extends Component
 
     var srt_data = parse(res3.data);
 
-    console.log(srt_data)
+    this.setState({srt_data});
+
+    console.log(srt_data[1])
     Orientation.lockToLandscape();
     //setTimeout(()=>{this.player.presentFullscreenPlayer()},1000);
   }
 
   setTime(time)
   {
-    //console.log("progress",time);
+    var cur_time = time.currentTime*1000;
+    console.log("progress",cur_time);
+
+    if(this.state.srt_data)
+    {
+      var show_srt = null;
+      var srt_data = this.state.srt_data;
+      for(let i = 0; i < srt_data.length; i++)
+      {
+          if(cur_time > srt_data[i].end)
+            continue;
+          else
+          {
+            show_srt = srt_data[i];
+            console.log(i,show_srt);
+            if(i != this.state.show_srt_index)
+              this.setState({show_srt_index:i});
+            break;
+          }
+      }
+
+
+    }
   }
+
   //
   // loadStart()
   // {
@@ -119,7 +145,7 @@ class Video_ extends Component
 
         <View style={{flex:1,position:"absolute",bottom:20,width:base.ScreenWidth,zIndex:1000,backgroundColor:"white"}}>
 
-          <View style={{flexDirection:"row"}}><Text onPress={()=>alert("asdfasdf")}>asdfasdf</Text><Text>aaaaa</Text></View>
+          <View style={{flexDirection:"row"}}><Text>{this.state.srt_data && this.state.show_srt_index && this.state.show_srt_index > 0 ? `${this.state.srt_data[this.state.show_srt_index].text}`: null }</Text></View>
         </View>
       </View>
 
