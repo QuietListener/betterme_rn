@@ -20,15 +20,17 @@ import CWebViewMall from "../betterme/betterme/common/c_web_view_mall.js"
 import Home from "../betterme/betterme/home.js"
 import Setting from "../betterme/betterme/login/setting.js"
 import Video from "../betterme/betterme/video"
+import Test from "../betterme/betterme/test"
 
-const initialRouteName = "Video"
+const initialRouteName = "Test"
 const RootStack =  StackNavigator(
   {
     LoginPassword:{screen:LoginPassword},
     CWebViewMall:{screen:CWebViewMall},
     Home:{screen:Home},
     Video:{screen:Video},
-    Setting:{screen:Setting}
+    Setting:{screen:Setting},
+    Test :{screen:Test}
   },
   {
     initialRouteName: initialRouteName
