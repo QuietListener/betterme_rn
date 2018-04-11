@@ -244,6 +244,17 @@ class Video_ extends Component
 
     var popup_left = left+width/2-160/2;
     var popup_top = 50;
+
+    if(popup_left<0)
+      popup_left = 10
+
+    console.log("popup_left",popup_left,"base.ScreenWidth",base.ScreenWidth);
+    if(left+160 >= base.ScreenWidth-20)
+    {
+      popup_left = base.ScreenWidth - 160-50;
+    }
+
+    console.log("popup_left1",popup_left,"base.ScreenWidth",base.ScreenWidth);
     var param = {popup_left,popup_top};
     console.log(param);
     this.setState(param);
