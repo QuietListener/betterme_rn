@@ -16,6 +16,7 @@ const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = r
 //import fs from "fs"
 
 var RNFS = require('react-native-fs');
+import Tts from 'react-native-tts';
 
 class Video_ extends Component
 {
@@ -35,10 +36,15 @@ class Video_ extends Component
         width:base.ScreenHeight,
         height:0//base.ScreenWidth
       },
-      show_srt_index:-1
+      show_srt_index:-1,
+      paused:false,
+      popup_left:-1000,
+      popup_top:0
     }
     this.setTime = this.setTime.bind(this);
-
+    this.troggle_video = this.troggle_video.bind(this);
+    this.measure = this.measure.bind(this);
+    this.read_word = this.read_word.bind(this);
   }
 
   async componentDidMount()
@@ -57,6 +63,52 @@ class Video_ extends Component
     //setTimeout(()=>{this.player.presentFullscreenPlayer()},1000);
   }
 
+  troggle_video()
+  {
+    this.setState({paused:!this.state.paused})
+  }
+
+  pause()
+  {
+    if(this.state.paused != true)
+      this.setState({paused:true})
+  }
+
+  play()
+  {
+    if(this.state.paused != false)
+       this.setState({paused:false})
+  }
+
+  read_word(word)
+  {
+    if(word)
+    {
+      Tts.getInitStatus().then(() => {
+        Tts.speak(word);
+      });
+    }
+
+  }
+
+  word_click(words,word_index, srt_index)
+  {
+    var word = words[word_index];
+    if(word)
+    {
+      this.pause();
+      this.refs_store[word_index].measure(this.measure)
+      this.setState({cur_word:word});
+      this.read_word(word);
+    }
+  }
+
+  hide_mean_box()
+  {
+    this.setState({popup_left:-1000});
+    this.play();
+  }
+
   setTime(time)
   {
     var cur_time = time.currentTime*1000;
@@ -66,24 +118,32 @@ class Video_ extends Component
     {
       var show_srt = null;
       var srt_data = this.state.srt_data;
+
       for(let i = 0; i < srt_data.length; i++)
       {
           if(cur_time > srt_data[i].end)
             continue;
           else
           {
-
             if(i != this.state.show_srt_index)
             {
               show_srt = srt_data[i];
               var text = show_srt.text;
               var words = text.split(" ")
 
-              var cur_subtitle = words.map(word=>{return <Text style={{marginLeft:10}} onPress={()=>alert(word)}>{word}</Text>});
+              this.refs_store = new Array(words.length);
+
+              var cur_subtitle = words.map((word,index)=>{
+
+                var index_ = _.clone(index);
+                return<Text style={{padding:5}}
+                      ref={(e)=>{this.refs_store[index_] = e}}
+                      onPress={()=>this.word_click(words,index_,i)}>
+                  {word}
+                </Text>});
               console.log("cur_subtitle",cur_subtitle)
               this.setState({show_srt_index:i,cur_subtitle:cur_subtitle});
             }
-
             break;
           }
       }
@@ -122,12 +182,38 @@ class Video_ extends Component
   //   console.log("onTimedMetadata");
   // }
 
+  measure(x, y, width, height, left, top)
+  {
+    console.log("measure",x, y, width, height, left, top);
+
+    var popup_left = left+width/2-160/2;
+    var popup_top = 50;
+    var param = {popup_left,popup_top};
+    console.log(param);
+    this.setState(param);
+  }
+
   render()
   {
-
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-        <Video source={require("./resources/video/KasivaMutua_2017G-950k.mp4")}   // Can be a URL or a local file.
+
+        <View style={{flex:1,width:200,height:150,backgroundColor:"black",justifyContent:"center",alignItems:"center",position:"absolute",left:this.state.popup_left,bottom:this.state.popup_top}}>
+         <View style={{flex:1,alignItems:"flex-end",width:200}}>
+           <Text
+            onPress={()=>{this.hide_mean_box()}}
+            style={{marginRight:10,fontSize:20,color:"white"}}>x</Text>
+         </View>
+
+          <View style={{width:200,flex:5,alignItems:"flex-start",justifyContent:"flex-start"}}>
+            <Text style={{color:"white"}}>{this.state.cur_word}</Text>
+          </View>
+        </View>
+
+        <Video
+
+          onPress={()=>this.troggle_video()}
+          source={require("./resources/video/KasivaMutua_2017G-950k.mp4")}   // Can be a URL or a local file.
                //poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
                ref={(ref) => {
                  this.player = ref
@@ -135,7 +221,7 @@ class Video_ extends Component
                rate={1.0}                              // 0 is paused, 1 is normal.
                volume={1.0}                            // 0 is muted, 1 is normal.
                muted={false}                           // Mutes the audio entirely.
-               paused={false}                          // Pauses playback entirely.
+               paused={this.state.paused}                          // Pauses playback entirely.
                resizeMode="cover"                      // Fill the whole screen at aspect ratio.*
                repeat={true}                           // Repeat forever.
                playInBackground={false}                // Audio continues to play when app entering background.
@@ -150,15 +236,18 @@ class Video_ extends Component
                onBuffer={this.onBuffer}                // Callback when remote video is buffering
                onTimedMetadata={this.onTimedMetadata}  // Callback when the stream receive some metadata
                style={this.state.backgroundVideo} />
-
         <View style={{flex:1,position:"absolute",bottom:20,width:base.ScreenWidth,zIndex:1000,backgroundColor:"white"}}>
 
-          <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+
+          <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}} ref={(ref) => {
+            this.subtitle_view = ref
+          }}>
+
             {this.state.cur_subtitle}
           </View>
+
         </View>
       </View>
-
     )
   }
 }
