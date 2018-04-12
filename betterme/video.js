@@ -59,16 +59,21 @@ class Video_ extends Component
       videoPath:videoPath,
       srtPath:srtPath,
       loadingMean:false,
+      orientation:"LANDSCAPE"
     }
     this.setTime = this.setTime.bind(this);
     this.troggle_video = this.troggle_video.bind(this);
     this.measure = this.measure.bind(this);
     this.read_word = this.read_word.bind(this);
+    this.onLoad = this.onLoad.bind(this);
   }
 
 
   componentDidMount()
   {
+
+    Orientation.lockToLandscape();
+
     var that = this;
     RNFS.readFile(this.state.srtPath).then(data=>{
       //console.log("srt",data);
@@ -77,7 +82,12 @@ class Video_ extends Component
       console.log(srt_data[1])
     })
 
-    Orientation.lockToLandscape();
+
+    Orientation.addOrientationListener((orientation)=>{
+      console.log("orientation changed",orientation);
+      this.setState({orientation});
+      this.onLoad(null,orientation);
+    });
 
   }
 
@@ -191,11 +201,11 @@ class Video_ extends Component
               var cur_subtitle = words.map((word,index)=>{
 
                 var index_ = _.clone(index);
-                return<Text style={{padding:5}}
+                return<TouchableOpacity style={{padding:5,overflow:"visible"}}
                       ref={(e)=>{this.refs_store[index_] = e}}
                       onPress={()=>this.word_click(words,index_,i)}>
-                  {word}
-                </Text>});
+                  <Text>{word}</Text>
+                </TouchableOpacity>});
               console.log("cur_subtitle",cur_subtitle)
               this.setState({show_srt_index:i,cur_subtitle:cur_subtitle});
             }
@@ -237,13 +247,72 @@ class Video_ extends Component
   //   console.log("onTimedMetadata");
   // }
 
+
+  onLoad(response,orientation)
+  {
+      var width = 0;
+      var height = 0;
+
+      if(response && response.naturalSize)
+      {
+        width = response.naturalSize.width;
+        height = response.naturalSize.height;
+        this.setState({videoWidth:width,videoHeight:height});
+        console.log("onLoad1")
+      }
+      else if(this.state.videoWidth && this.state.videoHeight)
+      {
+          width = this.state.videoWidth;
+          height = this.state.videoHeight;
+        console.log("onLoad2")
+      }
+      else
+      {
+        width = 16;
+        height = 9;
+        console.log("onLoad3")
+      }
+
+
+      var videoWH = width * 1.0 / height;
+
+      console.log("video width,height",width,height);
+      var screenWidth = base.ScreenWidth;
+      var screenHeight = base.ScreenHeight;
+
+      if(orientation == "LANDSCAPE")
+      {
+        screenWidth = base.ScreenHeight;
+        screenHeight = base.ScreenWidth;
+      }
+
+      var screenWH = screenWidth * 1.0/ screenHeight;
+
+      var actualWidth = 0;
+      var actualHeight = 0;
+
+      if(videoWH < screenWidth )
+      {
+          actualWidth = screenWidth;
+          actualHeight = height * actualWidth * 1.0 / width;
+      }
+      else
+      {
+        actualHeight= screenHeight;
+        actualWidth = width * actualHeight * 1.0 / height;
+      }
+
+      this.setState({backgroundVideo: {
+                           width:actualWidth,
+                            height:actualHeight}});
+
+  }
+
   measure(x, y, width, height, left, top)
   {
     console.log("measure",x, y, width, height, left, top);
-
-
     var popup_left = left+width/2-meanWidth/2;
-    var popup_top = 50;
+    var popup_top = 80;
 
     if(popup_left<0)
       popup_left = 10
@@ -263,19 +332,60 @@ class Video_ extends Component
   render()
   {
     return (
-      <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+      <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"black"}}>
 
-        <View style={{flex:1,width:meanWidth,height:150,
+        <Video
+
+          onPress={()=>this.troggle_video()}
+          source={{uri:this.state.videoPath}}   // Can be a URL or a local file.
+               //poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
+               ref={(ref) => {
+                 this.player = ref
+               }}                                      // Store reference
+               rate={1.0}                              // 0 is paused, 1 is normal.
+               volume={1.0}                            // 0 is muted, 1 is normal.
+               muted={false}                           // Mutes the audio entirely.
+               paused={this.state.paused}                          // Pauses playback entirely.
+               resizeMode="cover"                      // Fill the whole screen at aspect ratio.*
+               repeat={true}                           // Repeat forever.
+               playInBackground={false}                // Audio continues to play when app entering background.
+               playWhenInactive={false}                // [iOS] Video continues to play when control or notification center are shown.
+               ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent. When 'obey', audio will toggle with the switch. When not specified, will inherit audio settings as usual.
+               progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
+               onLoadStart={this.loadStart}            // Callback when video starts to load
+               onLoad={(res)=>setTimeout(()=>this.onLoad(res,"LANDSCAPE"), 500)}               // Callback when video loads
+               onProgress={this.setTime}               // Callback every ~250ms with currentTime
+               onEnd={this.onEnd}                      // Callback when playback finishes
+               onError={this.videoError}               // Callback when video cannot be loaded
+               onBuffer={this.onBuffer}                // Callback when remote video is buffering
+               onTimedMetadata={this.onTimedMetadata}  // Callback when the stream receive some metadata
+               style={this.state.backgroundVideo} />
+
+
+
+        <View style={{flex:2,position:"absolute",bottom:1,width:this.state.orientation == "LANDSCAPE"?base.ScreenHeight:base.ScreenWidth ,zIndex:1000,backgroundColor:"white"}}>
+
+          <View style={{backgroundColor:"red",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap"}} ref={(ref) => {
+            this.subtitle_view = ref
+          }}>
+            {this.state.cur_subtitle}
+          </View>
+
+        </View>
+
+
+
+        <View style={{flex:2,width:meanWidth,height:150,
           backgroundColor:"black",justifyContent:"center",alignItems:"center",position:"absolute",
           left:this.state.popup_left,bottom:this.state.popup_top,
           zIndex:1000
         }}>
 
-         <View style={{backgroundColor:"black",
-           height:22,alignItems:"flex-end",justifyContent:'flex-start',width:meanWidth-2}}>
-           <Text onPress={()=>{this.hide_mean_box()}}
-            style={{paddingRight:4,fontSize:20,color:"white"}}>x</Text>
-         </View>
+          <View style={{backgroundColor:"black",
+            height:22,alignItems:"flex-end",justifyContent:'flex-start',width:meanWidth-2}}>
+            <Text onPress={()=>{this.hide_mean_box()}}
+                  style={{paddingRight:4,fontSize:20,color:"white"}}>x</Text>
+          </View>
 
 
           {this.state.loadingMean == true?
@@ -299,7 +409,7 @@ class Video_ extends Component
             <View style={{
               width: meanWidth - 2,
               flex: 5,
-
+              popup_left:this.state.popup_left,
               alignItems: "flex-start",
               justifyContent: "flex-start"
             }}>
@@ -334,45 +444,6 @@ class Video_ extends Component
           }
         </View>
 
-
-
-        <Video
-
-          onPress={()=>this.troggle_video()}
-          source={{uri:this.state.videoPath}}   // Can be a URL or a local file.
-               //poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
-               ref={(ref) => {
-                 this.player = ref
-               }}                                      // Store reference
-               rate={1.0}                              // 0 is paused, 1 is normal.
-               volume={1.0}                            // 0 is muted, 1 is normal.
-               muted={false}                           // Mutes the audio entirely.
-               paused={this.state.paused}                          // Pauses playback entirely.
-               resizeMode="cover"                      // Fill the whole screen at aspect ratio.*
-               repeat={true}                           // Repeat forever.
-               playInBackground={false}                // Audio continues to play when app entering background.
-               playWhenInactive={false}                // [iOS] Video continues to play when control or notification center are shown.
-               ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent. When 'obey', audio will toggle with the switch. When not specified, will inherit audio settings as usual.
-               progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
-               onLoadStart={this.loadStart}            // Callback when video starts to load
-               onLoad={this.setDuration}               // Callback when video loads
-               onProgress={this.setTime}               // Callback every ~250ms with currentTime
-               onEnd={this.onEnd}                      // Callback when playback finishes
-               onError={this.videoError}               // Callback when video cannot be loaded
-               onBuffer={this.onBuffer}                // Callback when remote video is buffering
-               onTimedMetadata={this.onTimedMetadata}  // Callback when the stream receive some metadata
-               style={this.state.backgroundVideo} />
-        <View style={{flex:1,position:"absolute",bottom:1,width:base.ScreenWidth,zIndex:1000,backgroundColor:"white"}}>
-
-
-          <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}} ref={(ref) => {
-            this.subtitle_view = ref
-          }}>
-
-            {this.state.cur_subtitle}
-          </View>
-
-        </View>
       </View>
     )
   }
