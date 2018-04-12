@@ -83,11 +83,11 @@ class Video_ extends Component
     })
 
 
-    Orientation.addOrientationListener((orientation)=>{
-      console.log("orientation changed",orientation);
-      this.setState({orientation});
-      this.onLoad(null,orientation);
-    });
+    // Orientation.addOrientationListener((orientation)=>{
+    //   console.log("orientation changed",orientation);
+    //   this.setState({orientation});
+    //   this.onLoad(null,orientation);
+    // });
 
   }
 
@@ -204,7 +204,7 @@ class Video_ extends Component
                 return<TouchableOpacity style={{padding:5,overflow:"visible"}}
                       ref={(e)=>{this.refs_store[index_] = e}}
                       onPress={()=>this.word_click(words,index_,i)}>
-                  <Text>{word}</Text>
+                  <Text style={{fontSize:14}}>{word}</Text>
                 </TouchableOpacity>});
               console.log("cur_subtitle",cur_subtitle)
               this.setState({show_srt_index:i,cur_subtitle:cur_subtitle});
@@ -280,12 +280,6 @@ class Video_ extends Component
       var screenWidth = base.ScreenWidth;
       var screenHeight = base.ScreenHeight;
 
-      if(orientation == "LANDSCAPE")
-      {
-        screenWidth = base.ScreenHeight;
-        screenHeight = base.ScreenWidth;
-      }
-
       var screenWH = screenWidth * 1.0/ screenHeight;
 
       var actualWidth = 0;
@@ -312,7 +306,7 @@ class Video_ extends Component
   {
     console.log("measure",x, y, width, height, left, top);
     var popup_left = left+width/2-meanWidth/2;
-    var popup_top = 80;
+    var popup_top = 30;
 
     if(popup_left<0)
       popup_left = 10
@@ -363,7 +357,7 @@ class Video_ extends Component
 
 
 
-        <View style={{flex:2,position:"absolute",bottom:1,width:this.state.orientation == "LANDSCAPE"?base.ScreenHeight:base.ScreenWidth ,zIndex:1000,backgroundColor:"white"}}>
+        <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"white"}}>
 
           <View style={{backgroundColor:"red",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap"}} ref={(ref) => {
             this.subtitle_view = ref
@@ -376,15 +370,15 @@ class Video_ extends Component
 
 
         <View style={{flex:2,width:meanWidth,height:150,
-          backgroundColor:"black",justifyContent:"center",alignItems:"center",position:"absolute",
+          backgroundColor:"black",borderColor:"white",borderWidth:1,justifyContent:"center",alignItems:"center",position:"absolute",
           left:this.state.popup_left,bottom:this.state.popup_top,
           zIndex:1000
         }}>
 
           <View style={{backgroundColor:"black",
-            height:22,alignItems:"flex-end",justifyContent:'flex-start',width:meanWidth-2}}>
+            height:26,alignItems:"flex-end",justifyContent:'flex-start',width:meanWidth-2}}>
             <Text onPress={()=>{this.hide_mean_box()}}
-                  style={{paddingRight:4,fontSize:20,color:"white"}}>x</Text>
+                  style={{paddingRight:8,paddingLeft:10,fontSize:20,color:"white"}}>x</Text>
           </View>
 
 
