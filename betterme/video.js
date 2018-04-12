@@ -10,6 +10,7 @@ import * as base from "./common/base"
 const DeviceInfo = require('react-native-device-info');
 import Video from "react-native-video"
 import Orientation from 'react-native-orientation';
+var RNFS = require('react-native-fs');
 
 const Subtitle = require('subtitle')
 const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = require('subtitle')
@@ -19,6 +20,8 @@ var RNFS = require('react-native-fs');
 import Tts from 'react-native-tts';
 var SQLite = require('react-native-sqlite-storage')
 
+
+const meanWidth = 300
 class Video_ extends Component
 {
 
@@ -32,6 +35,20 @@ class Video_ extends Component
   constructor(props)
   {
     super(props)
+
+
+    const { state, setParams } = this.props.navigation;
+
+    var videoPath = null;
+    var srtPath = null;
+    if(state && state.params)
+    {
+      videoPath = state.params.videoPath;
+      srtPath =  state.params.srtPath;
+    }
+
+    console.log({srtPath,videoPath})
+
     this.state={
       backgroundVideo: {
         width:base.ScreenHeight,
@@ -40,7 +57,9 @@ class Video_ extends Component
       show_srt_index:-1,
       paused:false,
       popup_left:-1000,
-      popup_top:0
+      popup_top:0,
+      videoPath:videoPath,
+      srtPath:srtPath
     }
     this.setTime = this.setTime.bind(this);
     this.troggle_video = this.troggle_video.bind(this);
@@ -49,18 +68,16 @@ class Video_ extends Component
   }
 
 
-  async componentDidMount()
+  componentDidMount()
   {
-    var url = "https://ted2srt.org/api/talks/13591/transcripts/download/srt?lang=en";
-    var res3 = await base.axios({method:"get" , url:url ,data:{}});
-    let data = res3;
-    console.log(res3.data);
+    var that = this;
+    RNFS.readFile(this.state.srtPath).then(data=>{
+      //console.log("srt",data);
+      var srt_data = parse(data);
+      that.setState({srt_data});
+      console.log(srt_data[1])
+    })
 
-    var srt_data = parse(res3.data);
-
-    this.setState({srt_data});
-
-    console.log(srt_data[1])
     Orientation.lockToLandscape();
     //setTimeout(()=>{this.player.presentFullscreenPlayer()},1000);
     //
@@ -242,16 +259,17 @@ class Video_ extends Component
   {
     console.log("measure",x, y, width, height, left, top);
 
-    var popup_left = left+width/2-160/2;
+
+    var popup_left = left+width/2-meanWidth/2;
     var popup_top = 50;
 
     if(popup_left<0)
       popup_left = 10
 
     console.log("popup_left",popup_left,"base.ScreenWidth",base.ScreenWidth);
-    if(left+160 >= base.ScreenWidth-20)
+    if(left+meanWidth >= base.ScreenWidth-20)
     {
-      popup_left = base.ScreenWidth - 160-50;
+      popup_left = base.ScreenWidth - meanWidth-20;
     }
 
     console.log("popup_left1",popup_left,"base.ScreenWidth",base.ScreenWidth);
@@ -265,23 +283,27 @@ class Video_ extends Component
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
 
-        <View style={{flex:1,width:200,height:150,backgroundColor:"black",justifyContent:"center",alignItems:"center",position:"absolute",left:this.state.popup_left,bottom:this.state.popup_top}}>
-         <View style={{flex:1,alignItems:"flex-end",width:200}}>
-           <Text
-            onPress={()=>{this.hide_mean_box()}}
+        <View style={{flex:1,width:meanWidth,height:150,
+          backgroundColor:"black",justifyContent:"center",alignItems:"center",position:"absolute",
+          left:this.state.popup_left,bottom:this.state.popup_top,
+          zIndex:1000
+        }}>
+
+         <View style={{flex:1,alignItems:"flex-end",width:meanWidth-2}}>
+           <Text onPress={()=>{this.hide_mean_box()}}
             style={{marginRight:10,fontSize:20,color:"white"}}>x</Text>
          </View>
 
-          <View style={{width:200,flex:5,alignItems:"flex-start",justifyContent:"flex-start"}}>
-            <View style={{flex:1,flexDirection:"row"}}>
-              <Text style={{color:"white",fontSize:20}}>{this.state.word_info?this.state.word_info.word:"空"} </Text>
+          <View style={{width:meanWidth-2,flex:5,marginBottom:8,alignItems:"flex-start",justifyContent:"flex-start"}}>
+            <View style={{height:20,flexDirection:"row",alignItems:"center",justifyContent:"flex-start"}}>
+              <Text style={{flex:2,color:"white",fontSize:20}}>{this.state.word_info?this.state.word_info.word:"空"} </Text>
 
-              <Text style={{color:"white",fontSize:16,marginLeft:10,marginRight:10}}>  {this.state.word_info?this.state.word_info.accent:"空"} </Text>
+              <Text style={{flex:2,color:"white",fontSize:16,marginLeft:10,marginRight:10}}>  {this.state.word_info?this.state.word_info.accent:"空"} </Text>
 
-              <Text style={{color:"white"}} onPress={()=>this.read_word(this.state.word_info?this.state.word_info.word:null)}>播放</Text>
+              <Text style={{flex:1,color:"white"}} onPress={()=>this.read_word(this.state.word_info?this.state.word_info.word:null)}>播放</Text>
             </View>
 
-            <View style={{flex:1,flexDirection:"row"}}>
+            <View style={{width:meanWidth-3,flex:1,flexDirection:"row"}}>
               <Text style={{color:"white",fontSize:16}}>  {this.state.word_info?this.state.word_info.mean_cn:"空"} </Text>
             </View>
           </View>
@@ -290,7 +312,7 @@ class Video_ extends Component
         <Video
 
           onPress={()=>this.troggle_video()}
-          source={require("./resources/video/KasivaMutua_2017G-950k.mp4")}   // Can be a URL or a local file.
+          source={{uri:this.state.videoPath}}   // Can be a URL or a local file.
                //poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
                ref={(ref) => {
                  this.player = ref
@@ -313,7 +335,7 @@ class Video_ extends Component
                onBuffer={this.onBuffer}                // Callback when remote video is buffering
                onTimedMetadata={this.onTimedMetadata}  // Callback when the stream receive some metadata
                style={this.state.backgroundVideo} />
-        <View style={{flex:1,position:"absolute",bottom:20,width:base.ScreenWidth,zIndex:1000,backgroundColor:"white"}}>
+        <View style={{flex:1,position:"absolute",bottom:1,width:base.ScreenWidth,zIndex:1000,backgroundColor:"white"}}>
 
 
           <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}} ref={(ref) => {

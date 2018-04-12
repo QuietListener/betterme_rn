@@ -19,6 +19,16 @@ import Tts from 'react-native-tts';
 var SQLite = require('react-native-sqlite-storage')
 var RNFS = require('react-native-fs');
 
+//const fromUrl = 'http://wvoice.spriteapp.cn/voice/2015/0818/55d2248309b09.mp3';
+const downloadDir = `${RNFS.DocumentDirectoryPath}/files/`;
+const fromUrl = "http://assets.baicizhan.com/judu/xsk_1_3_none_srt.mp4";
+const url = "http://assets.baicizhan.com/judu/xsk_1_3_none_srt.mp4";
+const srt_url = "https://ted2srt.org/api/talks/13591/transcripts/download/srt?lang=en";
+
+const name = "KasivaMutua_2017G-950k.mp4";
+const downloadDest = `${downloadDir}/${name}`;
+const srtDest = `${downloadDir}/KasivaMutua_2017G-950k.srt`;
+
 class Test extends Component
 {
 
@@ -53,20 +63,14 @@ class Test extends Component
   }
 
 
-  async download(url,name)
+  async download(url,path)
   {
-
-   ;
-    var fromUrl = 'http://wvoice.spriteapp.cn/voice/2015/0818/55d2248309b09.mp3';
-    var downloadDir = `${RNFS.DocumentDirectoryPath}/files/`;
-    var downloadDest = `${downloadDir}/${name}`;
     RNFS.mkdir(downloadDir);
-
-    console.log(`###download: ${fromUrl} \r\n###to ${downloadDest}`);
+    console.log(`###download: ${url} \r\n###to ${path}`);
 
     const options = {
-      fromUrl: fromUrl,
-      toFile: downloadDest,
+      fromUrl: url,
+      toFile: path,
       background: true,
       begin: (res) => {
         console.log('begin', res);
@@ -75,7 +79,8 @@ class Test extends Component
       progress: (res) => {
 
         let pro = res.bytesWritten*1.0 / res.contentLength;
-        console.log("progress:",res)
+
+        console.log("progress:",res,pro)
       }
     };
     try {
@@ -95,11 +100,17 @@ class Test extends Component
 
   render()
   {
-    var url = "https://pc.tedcdn.com/talk/stream/2017G/Blank/KasivaMutua_2017G-950k.mp4";
-    var name = "KasivaMutua_2017G-950k.mp4";
+
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-            <Text onPress={()=>{this.download(url,name)}}>开始下载</Text>
+            <Text onPress={()=>{this.download(url,downloadDest)}}>开始下载</Text>
+
+        <Text style={{marginTop:50}} onPress={()=>{this.download(srt_url,srtDest)}}>开始下载srt</Text>
+
+
+        <Text style={{marginTop:100}} onPress={()=>{
+          this.props.navigation.navigate("Video",{videoPath:downloadDest,srtPath:srtDest})
+        }}>play</Text>
       </View>
     )
   }
