@@ -2,7 +2,7 @@
  * Created by junjun on 17/11/8.
  */
 import React, {Component} from 'React'
-import {View, Image, Text, Button, StyleSheet,TouchableOpacity, ScrollView,Alert,Switch, AsyncStorage} from 'react-native'
+import {View, Image, Text, Button, ActivityIndicator,StyleSheet,TouchableOpacity, ScrollView,Alert,Switch, AsyncStorage} from 'react-native'
 import {StackNavigator, StackRouter,NavigationActions} from 'react-navigation';
 
 import Moment from "moment"
@@ -20,11 +20,9 @@ var RNFS = require('react-native-fs');
 import Tts from 'react-native-tts';
 var SQLite = require('react-native-sqlite-storage')
 
-
 const meanWidth = 300
 class Video_ extends Component
 {
-
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     var headerStyle = {height:0};
@@ -59,7 +57,8 @@ class Video_ extends Component
       popup_left:-1000,
       popup_top:0,
       videoPath:videoPath,
-      srtPath:srtPath
+      srtPath:srtPath,
+      loadingMean:false,
     }
     this.setTime = this.setTime.bind(this);
     this.troggle_video = this.troggle_video.bind(this);
@@ -79,61 +78,39 @@ class Video_ extends Component
     })
 
     Orientation.lockToLandscape();
-    //setTimeout(()=>{this.player.presentFullscreenPlayer()},1000);
-    //
-    // this.db = SQLite.openDatabase({name : "words",createFromLocation : "~/www/words"}, this.openCB,this.errorCB);
-    //
-    // this.db.transaction((tx) => {
-    //   tx.executeSql('select * from words limit 2', [], (tx, results) => {
-    //     console.log("Query completed");
-    //
-    //     // Get rows with Web SQL Database spec compliance.
-    //
-    //     var len = results.rows.length;
-    //     for (let i = 0; i < len; i++) {
-    //       let row = results.rows.item(i);
-    //       console.log(row);
-    //     }
-    //
-    //     // Alternatively, you can use the non-standard raw method.
-    //
-    //     /*
-    //       let rows = results.rows.raw(); // shallow copy of rows Array
-    //
-    //       rows.map(row => console.log(`Employee name: ${row.name}, Dept Name: ${row.deptName}`));
-    //     */
-    //   },(e)=>{console.log(e)});
-    // });
-
 
   }
 
-  //
-  //
-  // errorCB(err) {
-  //   console.log("SQL Error: " + err);
-  // }
-  //
-  // successCB() {
-  //   console.log("SQL executed fine");
-  // }
-  //
-  // openCB() {
-  //   console.log("Database OPENED");
-  // }
 
-
-  get_word_info(word)
+  async get_word_info(word,call_back)
   {
     if(!word)
       return {}
 
-    return {
-      word:word,
-      accent:"['kʌstəm]",
-      mean_cn:"n. 习惯，惯例；风俗；海关，关税；经常光顾；[总称]（经常性的）顾客\n" +
-      "adj. （衣服等）定做的，定制的"
+    this.setState({loadingMean:true});
+    try
+    {
+      var url = `${base.HOBBY_DOMAIN}/search_word.json?word=${'custom'}`;
+
+      console.log(`HTTP: begin ${url}`);
+      var res3 = await base.axios({method: "get", url: url});
+      console.log(`HTTP: ${url} : res=${JSON.stringify(res3)}`);
+      let data = res3.data;
+      this.setState({loadingMean:false});
+
+      var word_info = data && data.data && data.data.word ? data.data.word: {};
+      console.log("word_info",word_info);
+      call_back(word,word_info)
+
+    }catch(e)
+    {
+      console.error(e);
+      this.setState({loadingMean:false});
     }
+
+
+    console.log()
+
   }
 
   troggle_video()
@@ -166,13 +143,18 @@ class Video_ extends Component
   word_click(words,word_index, srt_index)
   {
     var word = words[word_index];
+    var that = this;
     if(word)
     {
-      this.pause();
-      this.refs_store[word_index].measure(this.measure)
-      var word_info = this.get_word_info(word)
 
-      this.setState({cur_word:word,word_info:word_info});
+      that.pause();
+      that.refs_store[word_index].measure(this.measure)
+
+      this.get_word_info(word,(word,word_info)=>{
+        that.setState({cur_word:word,word_info:word_info});
+      })
+
+
     }
   }
 
@@ -289,25 +271,70 @@ class Video_ extends Component
           zIndex:1000
         }}>
 
-         <View style={{flex:1,alignItems:"flex-end",width:meanWidth-2}}>
+         <View style={{backgroundColor:"black",
+           height:22,alignItems:"flex-end",justifyContent:'flex-start',width:meanWidth-2}}>
            <Text onPress={()=>{this.hide_mean_box()}}
-            style={{marginRight:10,fontSize:20,color:"white"}}>x</Text>
+            style={{paddingRight:4,fontSize:20,color:"white"}}>x</Text>
          </View>
 
-          <View style={{width:meanWidth-2,flex:5,marginBottom:8,alignItems:"flex-start",justifyContent:"flex-start"}}>
-            <View style={{height:20,flexDirection:"row",alignItems:"center",justifyContent:"flex-start"}}>
-              <Text style={{flex:2,color:"white",fontSize:20}}>{this.state.word_info?this.state.word_info.word:"空"} </Text>
 
-              <Text style={{flex:2,color:"white",fontSize:16,marginLeft:10,marginRight:10}}>  {this.state.word_info?this.state.word_info.accent:"空"} </Text>
+          {this.state.loadingMean == true?
+            <View style={{
+              width: meanWidth - 2,
+              flex: 5,
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+              <ActivityIndicator
+                animating={true}
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width:16,height:16,
+                }}
+                size="small"
+              />
+            </View>
+            :
+            <View style={{
+              width: meanWidth - 2,
+              flex: 5,
 
-              <Text style={{flex:1,color:"white"}} onPress={()=>this.read_word(this.state.word_info?this.state.word_info.word:null)}>播放</Text>
+              alignItems: "flex-start",
+              justifyContent: "flex-start"
+            }}>
+              <View style={{backgroundColor:"red",height: 28, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+                <Text style={{
+                  flex: 2,
+                  color: "white",
+                  fontSize: 20
+                }}>{this.state.word_info ? this.state.word_info.word : "空"} </Text>
+
+                <Text style={{
+                  flex: 2,
+                  color: "white",
+                  fontSize: 16,
+                  marginLeft: 10,
+                  marginRight: 10
+                }}>  {this.state.word_info ? this.state.word_info.accent : "空"} </Text>
+
+                <Text style={{flex: 1, color: "white"}}
+                      onPress={() => this.read_word(this.state.word_info ? this.state.word_info.word : null)}>播放</Text>
+              </View>
+
+              <View style={{width: meanWidth - 3, flex: 1, flexDirection: "row"}}>
+                <Text style={{
+                  color: "white",
+                  fontSize: 16
+                }}>  {this.state.word_info ? this.state.word_info.mean_cn : "空"} </Text>
+              </View>
             </View>
 
-            <View style={{width:meanWidth-3,flex:1,flexDirection:"row"}}>
-              <Text style={{color:"white",fontSize:16}}>  {this.state.word_info?this.state.word_info.mean_cn:"空"} </Text>
-            </View>
-          </View>
+
+          }
         </View>
+
+
 
         <Video
 
