@@ -29,7 +29,7 @@ const name = "KasivaMutua_2017G-950k.mp4";
 const downloadDest = `${downloadDir}/${name}`;
 const srtDest = `${downloadDir}/KasivaMutua_2017G-950k.srt`;
 
-import  Realm from "realm";
+//import  Realm from "realm";
 
 class Test extends Component
 {

@@ -31,8 +31,8 @@ const srtDest = `${downloadDir}/KasivaMutua_2017G-950k.srt`;
 
 
 const DownloadError = -100;
-
-import Realm from "realm"
+//
+// import Realm from "realm"
 import {DownloadItem} from "./db/models"
 
 class VideoList extends Component
@@ -43,13 +43,12 @@ class VideoList extends Component
     this.state={
     }
 
-    this.realm = new Realm({schema: [DownloadItem]});
+    //this.realm = new Realm({schema: [DownloadItem]});
   }
 
 
   async componentDidMount()
   {
-
     var video_list = [{
       title: "José Andrés: How a team of chefs fed Puerto Rico after Hurricane Maria",
       poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/122e98d18e724ddf4d68b83db28d6c4a8b9d3a1c_2880x1620.jpg",
@@ -73,22 +72,22 @@ class VideoList extends Component
     var video_key_list = video_list.map((item)=>{});
 
     var orgin_download_state = {};
-    try
-    {
-      if(this.realm == null)
-      {
-        this.realm = await Realm.open({schema: [DownloadItem], deleteRealmIfMigrationNeeded: true});
-      }
-
-      var download_items = this.realm.objects(DownloadItem.name)
-      download_items.forEach((item)=>{
-        orgin_download_state[item.id] = item.progress;
-      })
-    }
-    catch(e)
-    {
-        console.error(e);
-    }
+    // try
+    // {
+    //   if(this.realm == null)
+    //   {
+    //     this.realm = await Realm.open({schema: [DownloadItem], deleteRealmIfMigrationNeeded: true});
+    //   }
+    //
+    //   var download_items = this.realm.objects(DownloadItem.name)
+    //   download_items.forEach((item)=>{
+    //     orgin_download_state[item.id] = item.progress;
+    //   })
+    // }
+    // catch(e)
+    // {
+    //     console.error(e);
+    // }
 
     this.setState({video_list,orgin_download_state});
   }
@@ -108,97 +107,97 @@ class VideoList extends Component
       }
     }
   }
+  //
+  // async createOrUpdate(modal,value)
+  // {
+  //
+  //   try
+  //   {
+  //     if(this.realm == null)
+  //     {
+  //       this.realm = await Realm.open({schema: [modal], deleteRealmIfMigrationNeeded: true});
+  //     }
+  //
+  //     this.realm.write(() => {
+  //       this.realm.create(modal.name, value,true);
+  //     });
+  //   }
+  //   catch(e)
+  //   {
+  //     console.error(e);
+  //     try
+  //     {
+  //       this.realm.close();
+  //     }
+  //     catch(e1)
+  //     {
+  //       console.error(e1);
+  //     }
+  //   }
+  // }
 
-  async createOrUpdate(modal,value)
-  {
-
-    try
-    {
-      if(this.realm == null)
-      {
-        this.realm = await Realm.open({schema: [modal], deleteRealmIfMigrationNeeded: true});
-      }
-
-      this.realm.write(() => {
-        this.realm.create(modal.name, value,true);
-      });
-    }
-    catch(e)
-    {
-      console.error(e);
-      try
-      {
-        this.realm.close();
-      }
-      catch(e1)
-      {
-        console.error(e1);
-      }
-    }
-  }
-
-  async download(url,path,key)
-  {
-    RNFS.mkdir(downloadDir);
-    console.log(`###download: ${url} \r\n###to ${path}`);
-    alert(`###download: ${url} \r\n###to ${path}`)
-
-    var that = this;
-    const options = {
-      fromUrl: url,
-      toFile: path,
-      readTimeout:5000,
-      background: true,
-      begin: (res) => {
-        alert(`开始下载`)
-        console.log('begin', res);
-        console.log('contentLength:', res.contentLength / 1024 / 1024, 'M');
-
-      },
-      progress: (res) => {
-
-        let pro = res.bytesWritten*100.0 / res.contentLength
-        console.log("progress:",res,pro)
-
-        if(pro%5 < 0.1)
-        {
-          that.createOrUpdate(DownloadItem,{id:key,progress:pro})
-        }
-        var params = {}
-        params[key] = pro;
-        that.setState(params);
-      }
-    };
-    try {
-      const ret = RNFS.downloadFile(options);
-      ret.promise.then(res => {
-        console.log('success', res);
-        console.log('file://' + downloadDest)
-        var params = {}
-        params[key] = 100;
-        this.setState(params);
-        this.createOrUpdate(DownloadItem,{id:key,progress:100})
-      }).catch(err => {
-        console.log('err', err);
-
-        alert(err)
-        that.createOrUpdate(DownloadItem,{id:key,progress:DownloadError})
-        var params = {}
-        params[key] = DownloadError;
-        that.setState(params);
-      });
-    }
-    catch (e) {
-      console.error(e);
-      alert(e)
-
-      that.createOrUpdate(DownloadItem,{id:key,progress:DownloadError})
-      var params = {}
-      params[key] = DownloadError;
-      that.setState(params);
-    }
-
-  }
+  // async download(url,path,key)
+  // {
+  //   RNFS.mkdir(downloadDir);
+  //   console.log(`###download: ${url} \r\n###to ${path}`);
+  //   alert(`###download: ${url} \r\n###to ${path}`)
+  //
+  //   var that = this;
+  //   const options = {
+  //     fromUrl: url,
+  //     toFile: path,
+  //     readTimeout:5000,
+  //     background: true,
+  //     begin: (res) => {
+  //       alert(`开始下载`)
+  //       console.log('begin', res);
+  //       console.log('contentLength:', res.contentLength / 1024 / 1024, 'M');
+  //
+  //     },
+  //     progress: (res) => {
+  //
+  //       let pro = res.bytesWritten*100.0 / res.contentLength
+  //       console.log("progress:",res,pro)
+  //
+  //       if(pro%5 < 0.1)
+  //       {
+  //         that.createOrUpdate(DownloadItem,{id:key,progress:pro})
+  //       }
+  //       var params = {}
+  //       params[key] = pro;
+  //       that.setState(params);
+  //     }
+  //   };
+  //   try {
+  //     const ret = RNFS.downloadFile(options);
+  //     ret.promise.then(res => {
+  //       console.log('success', res);
+  //       console.log('file://' + downloadDest)
+  //       var params = {}
+  //       params[key] = 100;
+  //       this.setState(params);
+  //       this.createOrUpdate(DownloadItem,{id:key,progress:100})
+  //     }).catch(err => {
+  //       console.log('err', err);
+  //
+  //       alert(err)
+  //       that.createOrUpdate(DownloadItem,{id:key,progress:DownloadError})
+  //       var params = {}
+  //       params[key] = DownloadError;
+  //       that.setState(params);
+  //     });
+  //   }
+  //   catch (e) {
+  //     console.error(e);
+  //     alert(e)
+  //
+  //     that.createOrUpdate(DownloadItem,{id:key,progress:DownloadError})
+  //     var params = {}
+  //     params[key] = DownloadError;
+  //     that.setState(params);
+  //   }
+  //
+  // }
 
   render()
   {

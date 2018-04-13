@@ -73,6 +73,7 @@ class Video_ extends Component
     this.read_word = this.read_word.bind(this);
     this.onLoad = this.onLoad.bind(this);
     this.loadStart = this.loadStart.bind(this);
+    this.onBuffer = this.onBuffer.bind(this);
 
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
 
@@ -259,10 +260,18 @@ class Video_ extends Component
   //   console.log("setDuration");
   // }
 
-  // onBuffer()
-  // {
-  //   console.log("onBuffer");
-  // }
+  onBuffer(buffer)
+  {
+    console.log("onBuffer",buffer);
+    if(buffer && buffer.isBuffering == true)
+    {
+      this.setState({videoLoading:true})
+    }
+    else
+    {
+      this.setState({videoLoading:false})
+    }
+  }
 
   videoError(e)
   {
@@ -364,7 +373,13 @@ class Video_ extends Component
     if(this.state.videoLoading == true)
     {
       loadingView =  <View style={{
-        flex:1,
+        position:"absolute",
+        width:base.ScreenWidth,
+        height:base.ScreenHeight-200,
+        left:0,
+        top:0,
+        zIndex:100,
+        backgroundColor:"rgba(0,0,0,0.0)",
         alignItems: "center",
         justifyContent: "flex-start",
         marginTop:100
