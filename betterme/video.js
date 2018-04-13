@@ -26,7 +26,7 @@ class Video_ extends Component
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     var headerStyle = {height:0};
-    return {headerStyle};
+    return {headerStyle,headerLeft:null};
   };
 
 
@@ -34,17 +34,19 @@ class Video_ extends Component
   {
     super(props)
 
-
     const { state, setParams } = this.props.navigation;
 
     var videoPath = null;
     var srtPath = null;
     var videoUrl = null;
+    var srtUrl = null;
+
     if(state && state.params)
     {
       videoPath = state.params.videoPath;
       srtPath =  state.params.srtPath;
       videoUrl = state.params.videoUrl;
+      srtUrl =  state.params.srtUrl;
     }
 
     console.log({srtPath,videoPath})
@@ -70,8 +72,37 @@ class Video_ extends Component
     this.measure = this.measure.bind(this);
     this.read_word = this.read_word.bind(this);
     this.onLoad = this.onLoad.bind(this);
+    this.loadStart = this.loadStart.bind(this);
 
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
+
+    var that = this;
+    RNFS.exists(srtPath).then((srtFileExist)=>{
+      if(srtFileExist == true)
+      {
+        alert("srt exist")
+        RNFS.readFile(srtPath).then(data=>{
+          //console.log("srt",data);
+          var srt_data = parse(data);
+          that.setState({srt_data});
+          console.log(srt_data[1])
+        })
+      }
+      else
+      {
+        alert("srt not exist")
+        base.axios({method:"get" , url:srtPath ,data:{}}).then(res3=>{
+          console.log(res3.data);
+          var srt_data = parse(res3.data);
+          that.setState({srt_data});
+          console.log(srt_data[1])
+          alert("加载字幕成功");
+        }).catch(e=>{
+         alert("加载字幕失败...");
+        });
+
+      }
+    });
   }
 
 
@@ -81,13 +112,6 @@ class Video_ extends Component
     Orientation.lockToLandscape();
 
     var that = this;
-    RNFS.readFile(this.state.srtPath).then(data=>{
-      //console.log("srt",data);
-      var srt_data = parse(data);
-      that.setState({srt_data});
-      console.log(srt_data[1])
-    })
-
 
     // Orientation.addOrientationListener((orientation)=>{
     //   console.log("orientation changed",orientation);
@@ -223,25 +247,28 @@ class Video_ extends Component
     }
   }
 
-  //
-  // loadStart()
-  // {
-  //   console.log("loadStart");
-  // }
-  //
+
+  loadStart()
+  {
+    console.log("loadStart");
+    this.setState({videoLoading:true});
+  }
+
   // setDuration()
   // {
   //   console.log("setDuration");
   // }
-  //
-  // videoError()
-  // {
-  //   console.log("videoError")
-  // }
+
   // onBuffer()
   // {
   //   console.log("onBuffer");
   // }
+
+  videoError(e)
+  {
+    this.setState({videoLoading:false});
+    alert("视频加载失败");
+  }
   //
   // onEnd()
   // {
@@ -256,6 +283,7 @@ class Video_ extends Component
 
   onLoad(response,orientation)
   {
+      this.setState({videoLoading:false});
       var width = 0;
       var height = 0;
 
@@ -331,9 +359,31 @@ class Video_ extends Component
 
   render()
   {
+
+    var loadingView = null;
+    if(this.state.videoLoading == true)
+    {
+      loadingView =  <View style={{
+        flex:1,
+        alignItems: "center",
+        justifyContent: "flex-start",
+        marginTop:100
+      }}>
+        <ActivityIndicator
+          animating={true}
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            width:16,height:16,
+          }}
+          size="small"
+        />
+      </View>;
+    }
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"black"}}>
 
+        {loadingView}
         <Video
 
           onPress={()=>this.troggle_video()}
@@ -353,7 +403,8 @@ class Video_ extends Component
                ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent. When 'obey', audio will toggle with the switch. When not specified, will inherit audio settings as usual.
                progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                onLoadStart={this.loadStart}            // Callback when video starts to load
-               onLoad={(res)=>setTimeout(()=>this.onLoad(res,"LANDSCAPE"), 500)}               // Callback when video loads
+               onLoad={(res)=>{
+                 setTimeout(()=>this.onLoad(res,"LANDSCAPE"), 500);}}               // Callback when video loads
                onProgress={this.setTime}               // Callback every ~250ms with currentTime
                onEnd={this.onEnd}                      // Callback when playback finishes
                onError={this.videoError}               // Callback when video cannot be loaded

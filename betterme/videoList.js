@@ -287,12 +287,12 @@ class VideoList extends Component
                <View style={{width:base.ScreenWidth-180}}>
                  <Text>{item.title}</Text>
 
-                 <Text style={{margin:10}} onPress={()=>this.download(item.videoUrl,video_path, key_video)}>下载视频 {progress_video_str}</Text>
+                 {/*<Text style={{margin:10}} onPress={()=>this.download(item.videoUrl,video_path, key_video)}>下载视频 {progress_video_str}</Text>*/}
 
-                 <Text  style={{margin:10}} onPress={()=>this.download(item.srtUrl,srt_path,key_srt)} >下载字幕  {progress_srt_str}</Text>
+                 {/*<Text  style={{margin:10}} onPress={()=>this.download(item.srtUrl,srt_path,key_srt)} >下载字幕  {progress_srt_str}</Text>*/}
 
                  <Text style={{marginTop:20}} onPress={()=>{
-                   this.props.navigation.navigate("Video",{videoUrl:item.videoUrl,videoPath:video_path,srtPath:srt_path})
+                   this.props.navigation.navigate("Video",{videoUrl:item.videoUrl,videoPath:video_path,srtPath:srt_path,srtUrl:item.srtUrl})
                  }}>play</Text>
 
                </View>
