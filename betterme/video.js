@@ -39,10 +39,12 @@ class Video_ extends Component
 
     var videoPath = null;
     var srtPath = null;
+    var videoUrl = null;
     if(state && state.params)
     {
       videoPath = state.params.videoPath;
       srtPath =  state.params.srtPath;
+      videoUrl = state.params.videoUrl;
     }
 
     console.log({srtPath,videoPath})
@@ -59,13 +61,17 @@ class Video_ extends Component
       videoPath:videoPath,
       srtPath:srtPath,
       loadingMean:false,
-      orientation:"LANDSCAPE"
+      orientation:"LANDSCAPE",
+      videoUrl:videoUrl,
     }
+
     this.setTime = this.setTime.bind(this);
     this.troggle_video = this.troggle_video.bind(this);
     this.measure = this.measure.bind(this);
     this.read_word = this.read_word.bind(this);
     this.onLoad = this.onLoad.bind(this);
+
+    RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
   }
 
 
@@ -331,7 +337,7 @@ class Video_ extends Component
         <Video
 
           onPress={()=>this.troggle_video()}
-          source={{uri:this.state.videoPath}}   // Can be a URL or a local file.
+          source={{uri:this.state.videoFileExist == true? this.state.videoPath:this.state.videoUrl}}   // Can be a URL or a local file.
                //poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
                ref={(ref) => {
                  this.player = ref

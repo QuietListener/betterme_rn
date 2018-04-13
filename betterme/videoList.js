@@ -72,8 +72,6 @@ class VideoList extends Component
 
     var video_key_list = video_list.map((item)=>{});
 
-
-
     var orgin_download_state = {};
     try
     {
@@ -127,10 +125,10 @@ class VideoList extends Component
     }
     catch(e)
     {
-      console.error(e1);
+      console.error(e);
       try
       {
-        realm.close();
+        this.realm.close();
       }
       catch(e1)
       {
@@ -149,16 +147,17 @@ class VideoList extends Component
     const options = {
       fromUrl: url,
       toFile: path,
+      readTimeout:5000,
       background: true,
       begin: (res) => {
-        //alert(`开始下载`)
+        alert(`开始下载`)
         console.log('begin', res);
         console.log('contentLength:', res.contentLength / 1024 / 1024, 'M');
 
       },
       progress: (res) => {
 
-        let pro = (res.bytesWritten*100.0 / res.contentLength).toFixed(1);
+        let pro = res.bytesWritten*100.0 / res.contentLength
         console.log("progress:",res,pro)
 
         if(pro%5 < 0.1)
@@ -182,6 +181,7 @@ class VideoList extends Component
       }).catch(err => {
         console.log('err', err);
 
+        alert(err)
         that.createOrUpdate(DownloadItem,{id:key,progress:DownloadError})
         var params = {}
         params[key] = DownloadError;
@@ -190,7 +190,7 @@ class VideoList extends Component
     }
     catch (e) {
       console.error(e);
-      //alert(e)
+      alert(e)
 
       that.createOrUpdate(DownloadItem,{id:key,progress:DownloadError})
       var params = {}
@@ -246,7 +246,7 @@ class VideoList extends Component
      {
           if(progress_video>=0)
           {
-            progress_video_str = `${progress_video}%`;
+            progress_video_str = `${progress_video.toFixed(1)}%`;
           }
           else if(progress_video == DownloadError)
           {
@@ -270,7 +270,7 @@ class VideoList extends Component
       {
         if(progress_srt>=0)
         {
-          progress_srt_str = `${progress_srt}%`;
+          progress_srt_str = `${progress_srt.toFixed(1)}%`;
         }
         else if(progress_srt == DownloadError)
         {
@@ -292,7 +292,7 @@ class VideoList extends Component
                  <Text  style={{margin:10}} onPress={()=>this.download(item.srtUrl,srt_path,key_srt)} >下载字幕  {progress_srt_str}</Text>
 
                  <Text style={{marginTop:20}} onPress={()=>{
-                   this.props.navigation.navigate("Video",{videoPath:video_path,srtPath:srt_path})
+                   this.props.navigation.navigate("Video",{videoUrl:item.videoUrl,videoPath:video_path,srtPath:srt_path})
                  }}>play</Text>
 
                </View>
