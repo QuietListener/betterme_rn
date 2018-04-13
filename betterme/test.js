@@ -29,36 +29,15 @@ const name = "KasivaMutua_2017G-950k.mp4";
 const downloadDest = `${downloadDir}/${name}`;
 const srtDest = `${downloadDir}/KasivaMutua_2017G-950k.srt`;
 
-
-// Define your models and their properties
-const CarSchema = {
-  name: 'Car',
-  properties: {
-    make:  'string',
-    model: 'string',
-    miles: {type: 'int', default: 0},
-  }
-};
-const PersonSchema = {
-  name: 'Person',
-  properties: {
-    name:     'string',
-    birthday: 'date',
-    cars:     'Car[]',
-    picture:  'data?' // optional property
-  }
-};
-
+import  Realm from "realm";
 
 class Test extends Component
 {
-
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     var headerStyle = {height:0};
     return {headerStyle};
   };
-
 
 
   constructor(props)
@@ -79,8 +58,43 @@ class Test extends Component
   }
 
 
-  componentDidMount()
+  async componentDidMount()
   {
+    RNFS.readDir(RNFS.MainBundlePath).then(files=>{
+      console.log("files:",files);
+    })
+
+    // try
+    // {
+    //   var realm = await Realm.open({
+    //     schema: [{name: 'Dog', primaryKey: 'id', properties: {id: `int`, name: 'string',age:'int'}}],
+    //     deleteRealmIfMigrationNeeded:true
+    //   });
+    //
+    //   var dogs = realm.objectForPrimaryKey('Dog', 1);
+    //   if(dogs)
+    //   {
+    //     realm.write(() => {
+    //       realm.create('Dog', {id: 1, name: `Rex${new Date()}`},true);
+    //     });
+    //   }
+    //   else
+    //   {
+    //     realm.write(() => {
+    //       realm.create('Dog', {id: 1, name: 'Rex',age:10});
+    //     });
+    //   }
+    //
+    //
+    //   this.setState({realm})
+    // }
+    // catch(e)
+    // {
+    //   console.error(e);
+    // }
+
+
+
 
   }
 
@@ -123,16 +137,28 @@ class Test extends Component
   render()
   {
 
+    var info = "Loading";
+    if(this.state.realm)
+    {
+      // let dog1 = this.state.realm.objectForPrimaryKey('Dog',1);
+      //
+      // info  = dog1.name +" ; " +dog1.age;
+    }
+
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-            <Text onPress={()=>{this.download(url,downloadDest)}}>开始下载</Text>
+            <Text onPress={()=>{this.download(url,downloadDest)}}>开始xz</Text>
 
-        <Text style={{marginTop:50}} onPress={()=>{this.download(srt_url,srtDest)}}>开始下载srt</Text>
+        <Text style={{marginTop:50}} onPress={()=>{this.download(srt_url,srtDest)}}>开始xzsrt</Text>
 
 
-        <Text style={{marginTop:100}} onPress={()=>{
-          this.props.navigation.navigate("Video",{videoPath:downloadDest,srtPath:srtDest})
-        }}>play</Text>
+        {/*<Text style={{marginTop:100}} onPress={()=>{*/}
+          {/*this.props.navigation.navigate("Video",{videoPath:downloadDest,srtPath:srtDest})*/}
+        {/*}}>bf</Text>*/}
+
+        <Text>
+          {info}
+        </Text>
       </View>
     )
   }
