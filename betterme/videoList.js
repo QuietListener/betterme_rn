@@ -66,6 +66,69 @@ class VideoList extends Component
         srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
         videoFileName: "124.mp4",
         srtFileName: "124.srt",
+      },
+      {
+        title: "Malika Whitley: How the arts help homeless youth heal and build",
+        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
+        title_cn: "",
+        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
+        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
+        videoFileName: "124.mp4",
+        srtFileName: "124.srt",
+      },
+      {
+        title: "Malika Whitley: How the arts help homeless youth heal and build",
+        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
+        title_cn: "",
+        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
+        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
+        videoFileName: "124.mp4",
+        srtFileName: "124.srt",
+      },
+      {
+        title: "Malika Whitley: How the arts help homeless youth heal and build",
+        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
+        title_cn: "",
+        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
+        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
+        videoFileName: "124.mp4",
+        srtFileName: "124.srt",
+      },
+      {
+        title: "Malika Whitley: How the arts help homeless youth heal and build",
+        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
+        title_cn: "",
+        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
+        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
+        videoFileName: "124.mp4",
+        srtFileName: "124.srt",
+      },
+      {
+        title: "Malika Whitley: How the arts help homeless youth heal and build",
+        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
+        title_cn: "",
+        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
+        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
+        videoFileName: "124.mp4",
+        srtFileName: "124.srt",
+      },
+      {
+        title: "Malika Whitley: How the arts help homeless youth heal and build",
+        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
+        title_cn: "",
+        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
+        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
+        videoFileName: "124.mp4",
+        srtFileName: "124.srt",
+      },
+      {
+        title: "Malika Whitley: How the arts help homeless youth heal and build",
+        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
+        title_cn: "",
+        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
+        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
+        videoFileName: "124.mp4",
+        srtFileName: "124.srt",
       }
     ]
 
@@ -277,32 +340,38 @@ class VideoList extends Component
         }
       }
 
+      let width_ = base.ScreenWidth/2-20
 
-     return <View style={{height:200,width:base.ScreenWidth,flexDirection:"row",padding:4,margin:4,marginBottom:8,borderWidth:1,}}>
-               <View style={{width:150+2,height:190}}>
-                 {/*<Image style={{width:150,height:190,}} source={{uri:item.poster}} />*/}
+
+     return <TouchableOpacity style={{height:200,width:width_,flexDirection:"row",margin:10,backgroundColor:"white"}}
+                  onPress={()=>{ this.props.navigation.navigate("Video",{videoUrl:item.videoUrl,videoPath:video_path,srtPath:srt_path,srtUrl:item.srtUrl})}}>
+
+               {/*<Image style={{width:width_,height:200,}} source={{uri:item.poster}} />*/}
+
+
+               <View style={{position:"absolute",bottom:0,width:width_
+                 ,justifyContent:"center",alignItems:"center",backgroundColor:"black"}}>
+                 <Text style={{color:"white"}}>{item.title}</Text>
                </View>
 
-               <View style={{width:base.ScreenWidth-180}}>
-                 <Text>{item.title}</Text>
+       <View style={{width:width_-180}}>
 
                  {/*<Text style={{margin:10}} onPress={()=>this.download(item.videoUrl,video_path, key_video)}>下载视频 {progress_video_str}</Text>*/}
 
                  {/*<Text  style={{margin:10}} onPress={()=>this.download(item.srtUrl,srt_path,key_srt)} >下载字幕  {progress_srt_str}</Text>*/}
-
-                 <Text style={{marginTop:20}} onPress={()=>{
-                   this.props.navigation.navigate("Video",{videoUrl:item.videoUrl,videoPath:video_path,srtPath:srt_path,srtUrl:item.srtUrl})
-                 }}>play</Text>
-
                </View>
-      </View>
+      </TouchableOpacity>
     });
 
 
     return (
-      <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-        {videos_views}
-      </View>
+
+        <ScrollView style={{flex:1,width:base.ScreenWidth}}>
+          <View style={{flex:1,flexDirection:"row",justifyContent:"flex-start",alignItems:"center",flexWrap:"wrap"}}>
+          {videos_views}
+          </View>
+        </ScrollView>
+
     )
   }
 }

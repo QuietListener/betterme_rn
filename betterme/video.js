@@ -89,10 +89,10 @@ class Video_ extends Component
           console.log(srt_data[1])
         })
       }
-      else
+      else if(srtUrl)
       {
-        alert("srt not exist")
-        base.axios({method:"get" , url:srtPath ,data:{}}).then(res3=>{
+        alert("srt not exist,url = ",srtUrl)
+        base.axios({method:"get" , url:srtUrl ,data:{}}).then(res3=>{
           console.log(res3.data);
           var srt_data = parse(res3.data);
           that.setState({srt_data});
@@ -162,7 +162,9 @@ class Video_ extends Component
   pause()
   {
     if(this.state.paused != true)
+    {
       this.setState({paused:true})
+    }
   }
 
   play()
@@ -187,15 +189,12 @@ class Video_ extends Component
     var that = this;
     if(word)
     {
-
       that.pause();
       that.refs_store[word_index].measure(this.measure)
 
       this.get_word_info(word,(word,word_info)=>{
         that.setState({cur_word:word,word_info:word_info});
       })
-
-
     }
   }
 
@@ -249,9 +248,9 @@ class Video_ extends Component
   }
 
 
-  loadStart()
+  loadStart(res)
   {
-    console.log("loadStart");
+    console.log("loadStart",res);
     this.setState({videoLoading:true});
   }
 
@@ -270,6 +269,7 @@ class Video_ extends Component
     else
     {
       this.setState({videoLoading:false})
+      this.play();
     }
   }
 
@@ -292,6 +292,7 @@ class Video_ extends Component
 
   onLoad(response,orientation)
   {
+      console.log("onLoad",response);
       this.setState({videoLoading:false});
       var width = 0;
       var height = 0;
@@ -370,8 +371,16 @@ class Video_ extends Component
   {
 
     var loadingView = null;
+    var playView = <TouchableOpacity style={{position:"absolute", top:10,right:20,zIndex:1000}} onPress={()=>this.troggle_video()}>
+        <Text style={{color:"white"}}>{ this.state.paused == false ? `pause`:`play`}</Text>
+      </TouchableOpacity>
+
+
+
     if(this.state.videoLoading == true)
     {
+      playView = null;
+
       loadingView =  <View style={{
         position:"absolute",
         width:base.ScreenWidth,
@@ -397,8 +406,11 @@ class Video_ extends Component
     }
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"black"}}>
+        
 
+        {playView}
         {loadingView}
+
         <Video
 
           onPress={()=>this.troggle_video()}
@@ -419,7 +431,7 @@ class Video_ extends Component
                progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                onLoadStart={this.loadStart}            // Callback when video starts to load
                onLoad={(res)=>{
-                 setTimeout(()=>this.onLoad(res,"LANDSCAPE"), 500);}}               // Callback when video loads
+                 setTimeout(()=>this.onLoad(res,"LANDSCAPE"), 100);}}               // Callback when video loads
                onProgress={this.setTime}               // Callback every ~250ms with currentTime
                onEnd={this.onEnd}                      // Callback when playback finishes
                onError={this.videoError}               // Callback when video cannot be loaded
@@ -429,9 +441,9 @@ class Video_ extends Component
 
 
 
-        <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"white"}}>
+        <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.4)"}}>
 
-          <View style={{backgroundColor:"red",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap"}} ref={(ref) => {
+          <View style={{backgroundColor:"rgba(255,255,255,0.4)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap"}} ref={(ref) => {
             this.subtitle_view = ref
           }}>
             {this.state.cur_subtitle}
@@ -475,7 +487,7 @@ class Video_ extends Component
             <View style={{
               width: meanWidth - 2,
               flex: 5,
-              popup_left:this.state.popup_left,
+              left:this.state.popup_left,
               alignItems: "flex-start",
               justifyContent: "flex-start"
             }}>
