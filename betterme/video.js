@@ -625,7 +625,7 @@ class Video_ extends Component
                 </View>
                 </View>
                 :
-                <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                <View style={{flex:1,width:meanWidth,justifyContent:"center",alignItems:"center"}}>
                   <Text style={{fontSize:16,color:"white"}}>没有找到数据喃~</Text>
                 </View>
               }
