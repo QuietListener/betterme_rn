@@ -574,6 +574,7 @@ class Video_ extends Component
               />
             </View>
             :
+
             <View style={{
               width: meanWidth,
               flex: 5,
@@ -581,47 +582,54 @@ class Video_ extends Component
               alignItems: "flex-start",
               justifyContent: "flex-start"
             }}>
-              <View style={{backgroundColor:"black",height: 32,  margin:2, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+              { this.state.word_info && this.state.word_info.word?
+                <View style={{flex:1}}>
+                <View style={{backgroundColor:"black",height: 32,  margin:2, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
 
-                <Text style={{
-                  flex: 6,
-                  color: "white",
-                  fontSize: 20,
-                  marginLeft:8,
-                }}>
-                  {this.state.word_info ? this.state.word_info.word : "空"}
-                </Text>
+                  <Text style={{
+                    flex: 6,
+                    color: "white",
+                    fontSize: 20,
+                    marginLeft:8,
+                  }}>
+                    { this.state.word_info.word }
+                  </Text>
 
 
-                <TouchableOpacity style={{flex:1,marginRight:2,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { console.log("ok"); }}>
-                  <Icon name="star-o" size={18} color="white" />
-                </TouchableOpacity>
+                  <TouchableOpacity style={{flex:1,marginRight:2,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { console.log("ok"); }}>
+                    <Icon name="star-o" size={18} color="white" />
+                  </TouchableOpacity>
 
-              </View>
+                </View>
 
-              <View  style={{backgroundColor:"black",height: 32,   margin:2,flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+                <View  style={{backgroundColor:"black",height: 32,   margin:2,flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
 
-                <Text style={{
-                  flex: 6,
-                  color: "white",
-                  fontSize: 14,
-                  marginRight: 10
-                }}>  {this.state.word_info ? this.state.word_info.accent : "空"} </Text>
+                  <Text style={{
+                    flex: 6,
+                    color: "white",
+                    fontSize: 14,
+                    marginRight: 10
+                  }}>  {this.state.word_info.accent} </Text>
 
-                <TouchableOpacity style={{flex:1,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.read_word(this.state.word_info ? this.state.word_info.word : null)} }>
-                  <Icon name="volume-up" size={18} color="white" />
-                </TouchableOpacity>
+                  <TouchableOpacity style={{flex:1,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.read_word(this.state.word_info.word)} }>
+                    <Icon name="volume-up" size={18} color="white" />
+                  </TouchableOpacity>
 
-              </View>
+                </View>
 
-              <View style={{width: meanWidth - 3, flex: 1, flexDirection: "row"}}>
-                <Text style={{
-                  color: "white",
-                  fontSize: 14
-                }}>  {this.state.word_info ? this.state.word_info.mean_cn : "空"} </Text>
-              </View>
+                <View style={{width: meanWidth - 3, flex: 1, flexDirection: "row"}}>
+                  <Text style={{
+                    color: "white",
+                    fontSize: 14
+                  }}>  {this.state.word_info.mean_cn } </Text>
+                </View>
+                </View>
+                :
+                <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                  <Text style={{fontSize:16,color:"white"}}>没有找到数据喃~</Text>
+                </View>
+              }
             </View>
-
 
           }
         </View>
