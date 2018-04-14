@@ -75,6 +75,7 @@ class Video_ extends Component
     this.onLoad = this.onLoad.bind(this);
     this.loadStart = this.loadStart.bind(this);
     this.onBuffer = this.onBuffer.bind(this);
+    this.showProgress = this.showProgress.bind(this);
 
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
 
@@ -157,7 +158,9 @@ class Video_ extends Component
 
   troggle_video()
   {
+    console.log("paused = ",this.state.paused)
     this.setState({paused:!this.state.paused})
+
   }
 
   pause()
@@ -171,7 +174,10 @@ class Video_ extends Component
   play()
   {
     if(this.state.paused != false)
-       this.setState({paused:false})
+    {
+      console.log("paused = ",false)
+      this.setState({paused:false})
+    }
   }
 
   read_word(word)
@@ -269,12 +275,14 @@ class Video_ extends Component
     console.log("onBuffer",buffer);
     if(buffer && buffer.isBuffering == true)
     {
-      this.setState({videoLoading:true})
+      //console.log("onBuffer paused = ",true)
+      this.setState({videoLoading:true,showProgressBar:true})
     }
     else
     {
+      //console.log("onBuffer paused = ",false)
       this.setState({videoLoading:false})
-      this.play();
+      this.showProgress();
     }
   }
 
@@ -283,6 +291,21 @@ class Video_ extends Component
     if(this.player)
       this.player.seek(currentTime)
 
+  }
+
+  showProgress()
+  {
+    var that = this;
+    if(that.state.showProgressBar == false)
+    {
+      that.setState({showProgressBar: true})
+      setTimeout(() => {
+        if (that && that.setState)
+        {
+          that.setState({showProgressBar: false})
+        }
+      },5000);
+    }
   }
 
   videoError(e)
@@ -404,7 +427,7 @@ class Video_ extends Component
 
     if(this.state.videoLoading == true)
     {
-      playView = null;
+      var playView = null;
 
       loadingView =  <View style={{
         position:"absolute",
@@ -433,13 +456,13 @@ class Video_ extends Component
     var btn = null;
     if(this.state.paused == false)
     {
-      btn = <TouchableOpacity style={{flex:1,justifyContent:"center", paddingLeft:4,paddingRight:6,alignItems:"center"}} onPress={() => { this.troggle_video()}} >
+      btn = <TouchableOpacity style={{flex:1,justifyContent:"center", padding:6,alignItems:"center"}} onPress={() => { this.troggle_video()}} >
         <Icon name="pause" size={16} color="#47afff" />
       </TouchableOpacity>;
     }
     else
     {
-      btn = <TouchableOpacity style={{flex:1,justifyContent:"center",paddingLeft:4,paddingRight:6, alignItems:"center"}} onPress={() => { this.troggle_video()}}>
+      btn = <TouchableOpacity style={{flex:1,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.troggle_video()}}>
         <Icon name="play" size={16} color="#47afff" />
       </TouchableOpacity>;
     }
@@ -470,19 +493,7 @@ class Video_ extends Component
 
     var touchView = <TouchableOpacity activeOpacity={0.8}
       style={{position:"absolute",left:0,top:0,zIndex:101,width:base.ScreenWidth,height:base.ScreenHeight,backgroundColor:"rgba(0,0,0,0.0)"}}
-      onPress={()=>{
-        if(this.state.showProgressBar == false)
-        {
-            this.setState({showProgressBar: true})
-            setTimeout(() => {
-              if (this && this.setState)
-              {
-                this.setState({showProgressBar: false})
-              }
-            },5000);
-        }
-
-      }}
+      onPress={()=>{this.showProgress()}}
     ></TouchableOpacity>
 
 
