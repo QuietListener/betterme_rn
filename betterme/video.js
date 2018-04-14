@@ -133,7 +133,7 @@ class Video_ extends Component
     this.setState({loadingMean:true});
     try
     {
-      var url = `${base.HOBBY_DOMAIN}/api/search_word.json?word=${'custom'}`;
+      var url = `${base.HOBBY_DOMAIN}/api/search_word.json?word=${word}`;
 
       console.log(`HTTP: begin ${url}`);
       var res3 = await base.axios({method: "get", url: url});
