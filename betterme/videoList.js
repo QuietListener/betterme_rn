@@ -49,88 +49,39 @@ class VideoList extends Component
 
   async componentDidMount()
   {
-    var video_list = [{
-      title: "José Andrés: How a team of chefs fed Puerto Rico after Hurricane Maria",
-      poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/122e98d18e724ddf4d68b83db28d6c4a8b9d3a1c_2880x1620.jpg",
-      title_cn: "",
-      videoUrl: "https://download.ted.com/talks/JoseAndres_2017X-320k.mp4",
-      srtUrl: "https://ted2srt.org/api/talks/13778/transcripts/download/srt?lang=en",
-      videoFileName: "123.mp4",
-      srtFileName: "123.srt",
-    },
-      {
-        title: "Malika Whitley: How the arts help homeless youth heal and build",
-        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
-        title_cn: "",
-        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
-        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
-        videoFileName: "124.mp4",
-        srtFileName: "124.srt",
-      },
-      {
-        title: "Malika Whitley: How the arts help homeless youth heal and build",
-        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
-        title_cn: "",
-        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
-        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
-        videoFileName: "124.mp4",
-        srtFileName: "124.srt",
-      },
-      {
-        title: "Malika Whitley: How the arts help homeless youth heal and build",
-        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
-        title_cn: "",
-        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
-        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
-        videoFileName: "124.mp4",
-        srtFileName: "124.srt",
-      },
-      {
-        title: "Malika Whitley: How the arts help homeless youth heal and build",
-        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
-        title_cn: "",
-        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
-        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
-        videoFileName: "124.mp4",
-        srtFileName: "124.srt",
-      },
-      {
-        title: "Malika Whitley: How the arts help homeless youth heal and build",
-        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
-        title_cn: "",
-        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
-        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
-        videoFileName: "124.mp4",
-        srtFileName: "124.srt",
-      },
-      {
-        title: "Malika Whitley: How the arts help homeless youth heal and build",
-        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
-        title_cn: "",
-        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
-        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
-        videoFileName: "124.mp4",
-        srtFileName: "124.srt",
-      },
-      {
-        title: "Malika Whitley: How the arts help homeless youth heal and build",
-        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
-        title_cn: "",
-        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
-        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
-        videoFileName: "124.mp4",
-        srtFileName: "124.srt",
-      },
-      {
-        title: "Malika Whitley: How the arts help homeless youth heal and build",
-        poster: "https://pi.tedcdn.com/r/pe.tedcdn.com/images/ted/01d7d581e5beecfab87e575bb301ef5c1b9d8859_2880x1620.jpg",
-        title_cn: "",
-        videoUrl: "https://download.ted.com/talks/MalikaWhitley_2017S-320k.mp4",
-        srtUrl: "https://ted2srt.org/api/talks/13022/transcripts/download/srt?lang=en",
-        videoFileName: "124.mp4",
-        srtFileName: "124.srt",
-      }
-    ]
+    var video_list = [];
+    video_list = [
+    ];
+
+
+     var url = `${base.HOBBY_DOMAIN}/api/videos.json`
+
+    console.log(`HTTP: begin ${url}`);
+     try
+     {
+       var res3 = await base.axios({method: "get", url: url});
+       console.log(`HTTP: ${url} : res=${JSON.stringify(res3)}`);
+       let data = res3.data;
+       if(data && data.data)
+       {
+         video_list = data.data.map(item=>{
+          return  {
+             title:item.title,
+             poster: item.poster,
+             title_cn: item.title_cn,
+             videoUrl: item.video_url,
+             srtUrl:  item.srt_url,
+             videoFileName:  item.video_file_name,
+             srtFileName:   item.srt_file_name,
+           }
+         })
+       }
+     }
+     catch(e)
+     {
+        console.error(e);
+        alert("加载数据失败");
+     }
 
     var video_key_list = video_list.map((item)=>{});
 
@@ -152,7 +103,7 @@ class VideoList extends Component
     //     console.error(e);
     // }
 
-    this.setState({video_list,orgin_download_state});
+    this.setState({video_list, orgin_download_state});
   }
 
 

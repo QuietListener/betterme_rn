@@ -133,7 +133,7 @@ class Video_ extends Component
     this.setState({loadingMean:true});
     try
     {
-      var url = `${base.HOBBY_DOMAIN}/search_word.json?word=${'custom'}`;
+      var url = `${base.HOBBY_DOMAIN}/api/search_word.json?word=${'custom'}`;
 
       console.log(`HTTP: begin ${url}`);
       var res3 = await base.axios({method: "get", url: url});
@@ -388,7 +388,7 @@ class Video_ extends Component
       this.setState({duration:response.duration,
                      backgroundVideo: {
                            width:actualWidth,
-                            height:actualHeight}});
+                            height:0}});
 
   }
 
@@ -469,13 +469,13 @@ class Video_ extends Component
 
     var progressBar = <View style={{flexDirection:"row",alignItems:"center"
       ,justifyContent:"center",height:30,width:base.ScreenWidth
-      ,position:"absolute",zIndex:1001,top:8, backgroundColor:"rgba(255,255,255,0.2)"}}>
+      ,position:"absolute",zIndex:1001,top:8, backgroundColor:"rgba(255,255,255,0.4)"}}>
 
-        <Text style={{flex:1,alignSelf:"center",fontSize:12,paddingLeft:8,flex:1,color:"white"}} > {this.formatedCurrentTime(this.state.cur_time)} </Text>
+        <Text style={{flex:1,alignSelf:"center",fontSize:15,paddingLeft:8,flex:1,color:"black"}} > {this.formatedCurrentTime(this.state.cur_time)} </Text>
 
         <Slider
           //thumbImage={require('../resources/images/circle2.png')}
-          style={{backgroundColor:"rgba(0,0,0,0.0)",width:base.ScreenWidth-140}}
+          style={{backgroundColor:"rgba(0,0,0,0.0)",width:base.ScreenWidth-170}}
           value={this.state.cur_time}
           step = { 1 }
           minimumValue = { 0 }
@@ -484,7 +484,7 @@ class Video_ extends Component
           onValueChange={(ChangedValue) => this.changeCurrentTime(ChangedValue)}
         />
 
-        <Text style={{flex:1,alignSelf:"center",fontSize:12,color:"white"}} > {this.formatedCurrentTime(this.state.duration||0)} </Text>
+        <Text style={{flex:1,alignSelf:"center",fontSize:15,color:"black"}} > {this.formatedCurrentTime(this.state.duration||0)} </Text>
 
         {btn}
       </View>
@@ -493,7 +493,10 @@ class Video_ extends Component
 
     var touchView = <TouchableOpacity activeOpacity={0.8}
       style={{position:"absolute",left:0,top:0,zIndex:101,width:base.ScreenWidth,height:base.ScreenHeight,backgroundColor:"rgba(0,0,0,0.0)"}}
-      onPress={()=>{this.showProgress()}}
+      onPress={()=>{this.showProgress();
+            if(this.state.popup_left > 0)
+              this.hide_mean_box()
+      }}
     ></TouchableOpacity>
 
 
@@ -545,18 +548,13 @@ class Video_ extends Component
 
 
 
+
+
         <View style={{flex:2,width:meanWidth,height:150,
           backgroundColor:"black",borderColor:"white",borderWidth:1,justifyContent:"center",alignItems:"center",position:"absolute",
           left:this.state.popup_left,bottom:this.state.popup_top,
           zIndex:1000
         }}>
-
-          <View style={{backgroundColor:"black",
-            height:26,alignItems:"flex-end",justifyContent:'flex-start',width:meanWidth-2}}>
-            <Text onPress={()=>{this.hide_mean_box()}}
-                  style={{paddingRight:8,paddingLeft:10,fontSize:20,color:"white"}}>x</Text>
-          </View>
-
 
           {this.state.loadingMean == true?
             <View style={{
@@ -577,35 +575,49 @@ class Video_ extends Component
             </View>
             :
             <View style={{
-              width: meanWidth - 2,
+              width: meanWidth,
               flex: 5,
-              left:this.state.popup_left,
+              left:0,
               alignItems: "flex-start",
               justifyContent: "flex-start"
             }}>
-              <View style={{backgroundColor:"red",height: 28, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
-                <Text style={{
-                  flex: 2,
-                  color: "white",
-                  fontSize: 20
-                }}>{this.state.word_info ? this.state.word_info.word : "空"} </Text>
+              <View style={{backgroundColor:"black",height: 32,  margin:2, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
 
                 <Text style={{
-                  flex: 2,
+                  flex: 6,
                   color: "white",
-                  fontSize: 16,
-                  marginLeft: 10,
+                  fontSize: 20,
+                  marginLeft:8,
+                }}>
+                  {this.state.word_info ? this.state.word_info.word : "空"}
+                </Text>
+
+
+                <TouchableOpacity style={{flex:1,marginRight:2,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { console.log("ok"); }}>
+                  <Icon name="star-o" size={18} color="white" />
+                </TouchableOpacity>
+
+              </View>
+
+              <View  style={{backgroundColor:"black",height: 32,   margin:2,flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+
+                <Text style={{
+                  flex: 6,
+                  color: "white",
+                  fontSize: 14,
                   marginRight: 10
                 }}>  {this.state.word_info ? this.state.word_info.accent : "空"} </Text>
 
-                <Text style={{flex: 1, color: "white"}}
-                      onPress={() => this.read_word(this.state.word_info ? this.state.word_info.word : null)}>播放</Text>
+                <TouchableOpacity style={{flex:1,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.read_word(this.state.word_info ? this.state.word_info.word : null)} }>
+                  <Icon name="volume-up" size={18} color="white" />
+                </TouchableOpacity>
+
               </View>
 
               <View style={{width: meanWidth - 3, flex: 1, flexDirection: "row"}}>
                 <Text style={{
                   color: "white",
-                  fontSize: 16
+                  fontSize: 14
                 }}>  {this.state.word_info ? this.state.word_info.mean_cn : "空"} </Text>
               </View>
             </View>
