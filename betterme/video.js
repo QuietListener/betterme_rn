@@ -12,6 +12,7 @@ import Video from "react-native-video"
 import Orientation from 'react-native-orientation';
 var RNFS = require('react-native-fs');
 
+
 const Subtitle = require('subtitle')
 const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = require('subtitle')
 //import fs from "fs"
@@ -21,6 +22,7 @@ import Tts from 'react-native-tts';
 var SQLite = require('react-native-sqlite-storage')
 
 const meanWidth = 300
+const ProgressShowTime = 10000
 class Video_ extends Component
 {
   static navigationOptions = ({ navigation }) => {
@@ -76,6 +78,7 @@ class Video_ extends Component
     this.loadStart = this.loadStart.bind(this);
     this.onBuffer = this.onBuffer.bind(this);
     this.showProgress = this.showProgress.bind(this);
+    this.videoError = this.videoError.bind(this);
 
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
 
@@ -83,7 +86,7 @@ class Video_ extends Component
     RNFS.exists(srtPath).then((srtFileExist)=>{
       if(srtFileExist == true)
       {
-        alert("srt exist")
+        //alert("srt exist")
         RNFS.readFile(srtPath).then(data=>{
           //console.log("srt",data);
           var srt_data = parse(data);
@@ -93,13 +96,13 @@ class Video_ extends Component
       }
       else if(srtUrl)
       {
-        alert("srt not exist,url = ",srtUrl)
+        //alert("srt not exist,url = ",srtUrl)
         base.axios({method:"get" , url:srtUrl ,data:{}}).then(res3=>{
           console.log(res3.data);
           var srt_data = parse(res3.data);
           that.setState({srt_data});
           console.log(srt_data[1])
-          alert("加载字幕成功");
+          //alert("加载字幕成功");
         }).catch(e=>{
          alert("加载字幕失败...");
         });
@@ -192,8 +195,11 @@ class Video_ extends Component
 
   word_click(words,word_index, srt_index)
   {
-    var word = words[word_index];
+    var word_ = words[word_index]||"";
     var that = this;
+    var word = word_.replace(/^[\(|\)|'|’|"|“|”|！|!|.|?|,]+/g ,"").replace(/\(|\)|['|’|"|“|”|！|!|.|?|,]+$/g ,"")
+    console.log(`search word:${word_}=>${word}`)
+
     if(word)
     {
       that.refs_store[word_index].measure(this.measure)
@@ -237,6 +243,7 @@ class Video_ extends Component
               this.refs_store = new Array(words.length);
 
               var cur_subtitle = words.map((word,index)=>{
+
 
                 var index_ = _.clone(index);
                 return<TouchableOpacity style={{padding:5,overflow:"visible"}}
@@ -304,7 +311,7 @@ class Video_ extends Component
         {
           that.setState({showProgressBar: false})
         }
-      },5000);
+      },ProgressShowTime);
     }
   }
 
@@ -336,7 +343,7 @@ class Video_ extends Component
         {
           that.setState({showProgressBar:false})
         }
-      },5000);
+      },ProgressShowTime);
 
 
       var width = 0;
@@ -388,7 +395,7 @@ class Video_ extends Component
       this.setState({duration:response.duration,
                      backgroundVideo: {
                            width:actualWidth,
-                            height:0}});
+                            height:actualHeight}});
 
   }
 
@@ -506,9 +513,9 @@ class Video_ extends Component
         {loadingView}
         {touchView}
 
-        <Video
+        <Video key={121321}
 
-          onPress={()=>alert("111")}
+
           source={{uri:this.state.videoFileExist == true? this.state.videoPath:this.state.videoUrl}}   // Can be a URL or a local file.
                //poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
                ref={(ref) => {
