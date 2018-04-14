@@ -205,6 +205,17 @@ class Video_ extends Component
       that.refs_store[word_index].measure(this.measure)
 
       this.get_word_info(word,(word,word_info)=>{
+        try
+        {
+          word_info['mean_cn_view'] = JSON.parse(word_info.mean_cn).map(item => {
+            return <View style={{flex: 1}}><Text style={{color: "white"}}>{item}</Text></View>
+          });
+        }
+        catch(e)
+        {
+          word_info['mean_cn_view'] = <View sytle={{flex: 1}}>{word_info.mean_cn}</View>
+        }
+
         that.setState({cur_word:word,word_info:word_info});
       })
     }
@@ -624,12 +635,11 @@ class Video_ extends Component
 
                 </View>
 
-                <View style={{width: meanWidth - 3, flex: 1, flexDirection: "row"}}>
-                  <Text style={{
-                    color: "white",
-                    fontSize: 14
-                  }}>  {this.state.word_info.mean_cn } </Text>
-                </View>
+                <ScrollView>
+                  <View style={{width: meanWidth - 3, marginLeft:8,flex: 1, flexDirection: "column"}}>
+                    {this.state.word_info['mean_cn_view'] }
+                  </View>
+                </ScrollView>
                 </View>
                 :
                 <View style={{flex:1,width:meanWidth,justifyContent:"center",alignItems:"center"}}>
