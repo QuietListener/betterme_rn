@@ -2,9 +2,9 @@
  * Created by junjun on 17/11/8.
  */
 import React, {Component} from 'React'
-import {View, Image, Text, Button, ActivityIndicator,StyleSheet,TouchableOpacity, ScrollView,Alert,Switch, AsyncStorage} from 'react-native'
+import {View, Image, Text, Button, ActivityIndicator,StyleSheet,Slider,TouchableOpacity, ScrollView,Alert,Switch, AsyncStorage} from 'react-native'
 import {StackNavigator, StackRouter,NavigationActions} from 'react-navigation';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Moment from "moment"
 import * as base from "./common/base"
 const DeviceInfo = require('react-native-device-info');
@@ -65,6 +65,7 @@ class Video_ extends Component
       loadingMean:false,
       orientation:"LANDSCAPE",
       videoUrl:videoUrl,
+      showProgressBar:true,
     }
 
     this.setTime = this.setTime.bind(this);
@@ -189,13 +190,14 @@ class Video_ extends Component
     var that = this;
     if(word)
     {
-      that.pause();
       that.refs_store[word_index].measure(this.measure)
 
       this.get_word_info(word,(word,word_info)=>{
         that.setState({cur_word:word,word_info:word_info});
       })
     }
+
+    that.pause();
   }
 
   hide_mean_box()
@@ -239,19 +241,22 @@ class Video_ extends Component
               console.log("cur_subtitle",cur_subtitle)
               this.setState({show_srt_index:i,cur_subtitle:cur_subtitle});
             }
+
             break;
           }
       }
-
-
     }
+
+
+    this.setState({cur_time:cur_time/1000});
+    console.log("cur_time",this.state.cur_time);
   }
 
 
   loadStart(res)
   {
     console.log("loadStart",res);
-    this.setState({videoLoading:true});
+    this.setState({videoLoading:true, cur_time:0});
   }
 
   // setDuration()
@@ -271,6 +276,13 @@ class Video_ extends Component
       this.setState({videoLoading:false})
       this.play();
     }
+  }
+
+  changeCurrentTime(currentTime)
+  {
+    if(this.player)
+      this.player.seek(currentTime)
+
   }
 
   videoError(e)
@@ -293,7 +305,17 @@ class Video_ extends Component
   onLoad(response,orientation)
   {
       console.log("onLoad",response);
-      this.setState({videoLoading:false});
+      var that = this;
+      this.setState({videoLoading:false,showProgressBar:true});
+
+      setTimeout(()=>{
+        if(that && that.setState)
+        {
+          that.setState({showProgressBar:false})
+        }
+      },5000);
+
+
       var width = 0;
       var height = 0;
 
@@ -340,7 +362,8 @@ class Video_ extends Component
         actualWidth = width * actualHeight * 1.0 / height;
       }
 
-      this.setState({backgroundVideo: {
+      this.setState({duration:response.duration,
+                     backgroundVideo: {
                            width:actualWidth,
                             height:actualHeight}});
 
@@ -367,15 +390,17 @@ class Video_ extends Component
     this.setState(param);
   }
 
+  formatedCurrentTime(seconds)
+  {
+    var miniseconds = seconds*1000;
+    var str = new Moment(miniseconds).format("mm:ss");
+    return str;
+  }
+
   render()
   {
 
     var loadingView = null;
-    var playView = <TouchableOpacity style={{position:"absolute", top:10,right:20,zIndex:1000}} onPress={()=>this.troggle_video()}>
-        <Text style={{color:"white"}}>{ this.state.paused == false ? `pause`:`play`}</Text>
-      </TouchableOpacity>
-
-
 
     if(this.state.videoLoading == true)
     {
@@ -404,16 +429,75 @@ class Video_ extends Component
         />
       </View>;
     }
+
+
+
+
+    var btn = null;
+    if(this.state.paused == false)
+    {
+      btn = <TouchableOpacity style={{flex:1,justifyContent:"center", alignItems:"center",fontSize:12}} onPress={() => { this.troggle_video()}} >
+        <Icon name="pause" size={16} color="#47afff" />
+      </TouchableOpacity>;
+    }
+    else
+    {
+      btn = <TouchableOpacity style={{flex:1,justifyContent:"center",alignItems:"center",fontSize:12}} onPress={() => { this.troggle_video()}}>
+        <Icon name="play" size={16} color="#47afff" />
+      </TouchableOpacity>;
+    }
+
+    var progressBar = <View style={{flexDirection:"row",alignItems:"center"
+      ,justifyContent:"center",height:30,width:base.ScreenWidth
+      ,position:"absolute",zIndex:1001,top:2, backgroundColor:"rgba(255,255,255,0.2)"}}>
+
+        <Text style={{flex:1,alignSelf:"center",fontSize:12,paddingLeft:8,flex:1,color:"white"}} > {this.formatedCurrentTime(this.state.cur_time)} </Text>
+
+        <Slider
+          //thumbImage={require('../resources/images/circle2.png')}
+          style={{backgroundColor:"rgba(0,0,0,0.0)",width:base.ScreenWidth-140}}
+          value={this.state.cur_time}
+          step = { 1 }
+          minimumValue = { 0 }
+          maximumValue = { this.state.duration }
+          minimumTrackTintColor = "rgb(71, 175, 255)"
+          onValueChange={(ChangedValue) => this.changeCurrentTime(ChangedValue)}
+        />
+
+        <Text style={{flex:1,alignSelf:"center",fontSize:12,color:"white"}} > {this.formatedCurrentTime(this.state.duration||0)} </Text>
+
+        {btn}
+      </View>
+
+
+
+    var touchView = <TouchableOpacity activeOpacity={0.8}
+      style={{position:"absolute",left:0,top:0,zIndex:101,width:base.ScreenWidth,height:base.ScreenHeight,backgroundColor:"rgba(0,0,0,0.0)"}}
+      onPress={()=>{
+        if(this.state.showProgressBar == false)
+        {
+            this.setState({showProgressBar: true})
+            setTimeout(() => {
+              if (this && this.setState)
+              {
+                this.setState({showProgressBar: false})
+              }
+            },5000);
+        }
+
+      }}
+    ></TouchableOpacity>
+
+
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"black"}}>
-        
-
-        {playView}
+        {this.state.showProgressBar == true ?progressBar:null}
         {loadingView}
+        {touchView}
 
         <Video
 
-          onPress={()=>this.troggle_video()}
+          onPress={()=>alert("111")}
           source={{uri:this.state.videoFileExist == true? this.state.videoPath:this.state.videoUrl}}   // Can be a URL or a local file.
                //poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
                ref={(ref) => {
