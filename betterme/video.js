@@ -430,26 +430,23 @@ class Video_ extends Component
       </View>;
     }
 
-
-
-
     var btn = null;
     if(this.state.paused == false)
     {
-      btn = <TouchableOpacity style={{flex:1,justifyContent:"center", alignItems:"center",fontSize:12}} onPress={() => { this.troggle_video()}} >
+      btn = <TouchableOpacity style={{flex:1,justifyContent:"center", paddingLeft:4,paddingRight:6,alignItems:"center"}} onPress={() => { this.troggle_video()}} >
         <Icon name="pause" size={16} color="#47afff" />
       </TouchableOpacity>;
     }
     else
     {
-      btn = <TouchableOpacity style={{flex:1,justifyContent:"center",alignItems:"center",fontSize:12}} onPress={() => { this.troggle_video()}}>
+      btn = <TouchableOpacity style={{flex:1,justifyContent:"center",paddingLeft:4,paddingRight:6, alignItems:"center"}} onPress={() => { this.troggle_video()}}>
         <Icon name="play" size={16} color="#47afff" />
       </TouchableOpacity>;
     }
 
     var progressBar = <View style={{flexDirection:"row",alignItems:"center"
       ,justifyContent:"center",height:30,width:base.ScreenWidth
-      ,position:"absolute",zIndex:1001,top:2, backgroundColor:"rgba(255,255,255,0.2)"}}>
+      ,position:"absolute",zIndex:1001,top:8, backgroundColor:"rgba(255,255,255,0.2)"}}>
 
         <Text style={{flex:1,alignSelf:"center",fontSize:12,paddingLeft:8,flex:1,color:"white"}} > {this.formatedCurrentTime(this.state.cur_time)} </Text>
 
