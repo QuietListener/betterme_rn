@@ -9,6 +9,7 @@ import Moment from "moment"
 import * as base from "./common/base"
 const DeviceInfo = require('react-native-device-info');
 import Orientation from 'react-native-orientation';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = require('subtitle')
 //import fs from "fs"
@@ -23,8 +24,9 @@ class Wordbook extends Component
   constructor(props)
   {
     super(props)
-    this.state={
-    }
+    this.state={}
+
+    this.read_word = this.read_word.bind(this);
   }
 
 
@@ -41,6 +43,16 @@ class Wordbook extends Component
 
   }
 
+  read_word(word)
+  {
+    if(word)
+    {
+      Tts.getInitStatus().then(() => {
+        Tts.speak(word);
+      });
+    }
+  }
+
   mean_cn_view(mean_cn)
   {
     if(!mean_cn)
@@ -48,19 +60,21 @@ class Wordbook extends Component
       return null;
     }
 
-    var mean_cn_view = null;
+    var ret = null;
     try
     {
-      mean_cn_view= JSON.parse(mean_cn).map(item => {
-        return <View style={{flex: 1}}><Text style={{color: "black"}}>{item}</Text></View>
+      ret= JSON.parse(mean_cn).map(item => {
+        return item
       });
+
+      ret = ret.join(";  ")
     }
     catch(e)
     {
-      mean_cn_view = <View sytle={{flex: 1,color: "black"}}>{mean_cn}</View>
+      ret = <Text sytle={{flex: 1,color: "black"}}>{mean_cn}</Text>
     }
 
-    return mean_cn_view;
+    return ret;
   }
 
   render()
@@ -110,13 +124,42 @@ class Wordbook extends Component
           return null;
 
 
-        return <View style={{height:80,width:base.ScreenWidth-60}}>
+        var subtitle = item.subtitle;
+
+        var subtitle_text = null;
+        if(subtitle)
+        {
+          try
+          {
+            var subtitleObj = JSON.parse(subtitle);
+            subtitle_text = subtitleObj.text;
+          }
+          catch(e)
+          {
+            subtitle_text = null;
+          }
+
+        }
+
+        return <View style={{height:subtitle_text?80:54,width:base.ScreenWidth-60,borderWidth:1, padding:4,margin:4}}>
             <View style={{flex:1,flexDirection:"row"}} >
-              <Text>{learn_word.word}</Text>
-              <Text style={{marginLeft:20}}>{learn_word.accent}</Text>
+              <View style={{flexDirection:"row",flex:5,justifyContent:"flex-start"}}>
+                <Text>{learn_word.word}</Text>
+                <Text style={{marginLeft:20}}>{learn_word.accent}</Text>
+              </View>
+
+              <TouchableOpacity style={{flex:1,justifyContent:"flex-end", alignItems:"center"}} onPress={() => { this.read_word(learn_word.word)} }>
+                <Icon name="volume-up" size={18} color="white" />
+              </TouchableOpacity>
+
             </View>
-          <View style={{flex:1,flexDirection:"row",flexWrap:"wrap"}} >
+
+          <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start"}} >
             <Text>{this.mean_cn_view(learn_word.mean_cn)}</Text>
+          </View>
+
+          <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start"}} >
+            <Text>{subtitle_text}</Text>
           </View>
         </View>
       })

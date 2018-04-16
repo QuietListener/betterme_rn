@@ -10,7 +10,6 @@ import * as base from "./common/base"
 const DeviceInfo = require('react-native-device-info');
 import Video from "react-native-video"
 import Orientation from 'react-native-orientation';
-
 const Subtitle = require('subtitle')
 const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = require('subtitle')
 //import fs from "fs"
