@@ -49,6 +49,8 @@ class VideoList extends Component
 
   async componentDidMount()
   {
+
+    base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",expire_in_seconds = 31536000, domain = "172.16.35.224")
     var video_list = [];
     video_list = [
     ];
@@ -295,7 +297,7 @@ class VideoList extends Component
 
 
      return <TouchableOpacity style={{height:200,width:width_,flexDirection:"row",margin:10,backgroundColor:"white"}}
-                  onPress={()=>{ this.props.navigation.navigate("Video",{videoUrl:item.videoUrl,videoPath:video_path,srtPath:srt_path,srtUrl:item.srtUrl})}}>
+                  onPress={()=>{ this.props.navigation.navigate("Video",{videoUrl:item.videoUrl,videoPath:video_path,srtPath:srt_path,srtUrl:item.srtUrl,video_id:item.id})}}>
 
                {/*<Image style={{width:width_,height:200,}} source={{uri:item.poster}} />*/}
 

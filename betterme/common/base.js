@@ -22,8 +22,8 @@ export const axios = instance
 export const is_android = Platform.OS === "android";
 export const is_ios = Platform.OS === "ios";
 //export const HOBBY_DOMAIN = "http://www.coderlong.com";
-//export const HOBBY_DOMAIN = "http://172.16.35.224:3000";
-export const HOBBY_DOMAIN = "http://192.168.1.101:3000";
+export const HOBBY_DOMAIN = "http://172.16.35.224:3000";
+//export const HOBBY_DOMAIN = "http://192.168.1.101:3000";
 
 export const UGC_PACKAGE_START = 10000000;
 

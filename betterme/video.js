@@ -42,6 +42,7 @@ class Video_ extends Component
     var srtPath = null;
     var videoUrl = null;
     var srtUrl = null;
+    var video_id = null;
 
     if(state && state.params)
     {
@@ -49,6 +50,7 @@ class Video_ extends Component
       srtPath =  state.params.srtPath;
       videoUrl = state.params.videoUrl;
       srtUrl =  state.params.srtUrl;
+      video = state.params.video_id
     }
 
     console.log({srtPath,videoPath})
@@ -68,6 +70,7 @@ class Video_ extends Component
       orientation:"LANDSCAPE",
       videoUrl:videoUrl,
       showProgressBar:true,
+      video_id:video_id
     }
 
     this.setTime = this.setTime.bind(this);
@@ -79,6 +82,7 @@ class Video_ extends Component
     this.onBuffer = this.onBuffer.bind(this);
     this.showProgress = this.showProgress.bind(this);
     this.videoError = this.videoError.bind(this);
+    this.save_word = this.save_word.bind(this);
 
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
 
@@ -253,6 +257,8 @@ class Video_ extends Component
 
               this.refs_store = new Array(words.length);
 
+              var cur_subtitle_org = show_srt;
+
               var cur_subtitle = words.map((word,index)=>{
 
 
@@ -263,7 +269,7 @@ class Video_ extends Component
                   <Text style={{fontSize:14}}>{word}</Text>
                 </TouchableOpacity>});
               console.log("cur_subtitle",cur_subtitle)
-              this.setState({show_srt_index:i,cur_subtitle:cur_subtitle});
+              this.setState({show_srt_index:i,cur_subtitle:cur_subtitle,cur_subtitle_org:cur_subtitle_org});
             }
 
             break;
@@ -406,7 +412,7 @@ class Video_ extends Component
       this.setState({duration:response.duration,
                      backgroundVideo: {
                            width:actualWidth,
-                            height:actualHeight}});
+                            height:0}});
 
   }
 
@@ -436,6 +442,32 @@ class Video_ extends Component
     var miniseconds = seconds*1000;
     var str = new Moment(miniseconds).format("mm:ss");
     return str;
+  }
+
+
+  save_word(id,word,video_id,subtitle)
+  {
+    //alert("srt not exist,url = ",srtUrl)
+    var url = `${base.HOBBY_DOMAIN}/dict/save_word.json`;
+
+    var subtitle_str = null;
+    if(subtitle)
+    {
+      try
+      {
+        subtitle_str = JSON.stringify(subtitle);
+      }
+      catch(e)
+      {
+        console.error(e);
+      }
+    }
+
+    base.axios({method:"post" , url:url ,data:{id:id,word:word,video_id:video_id,subtitle:subtitle_str}}).then(res3=>{
+      alert(JSON.parse(res3.data));
+    }).catch(e=>{
+      alert("保存单词失败",e);
+    });
   }
 
   render()
@@ -614,7 +646,12 @@ class Video_ extends Component
                   </Text>
 
 
-                  <TouchableOpacity style={{flex:1,marginRight:2,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { console.log("ok"); }}>
+                  <TouchableOpacity style={{flex:1,marginRight:2,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => {
+                    this.save_word(this.state.word_info.id,
+                    this.state.word_info.word,
+                    this.state.video_id,
+                      this.state.cur_subtitle_org,
+                    ) }}>
                     <Icon name="star-o" size={18} color="white" />
                   </TouchableOpacity>
 
