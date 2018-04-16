@@ -232,7 +232,14 @@ export const URLS = {
     method:HttpType.POST,
     url:()=>`${HOBBY_DOMAIN}/ensure_code.json`,
     name:'ensure_code'
+  },
+
+  my_words: {
+    method:HttpType.GET,
+    url:()=>`${HOBBY_DOMAIN}/api/my_words.json`,
+    name:'my_words',
   }
+
 }
 
 

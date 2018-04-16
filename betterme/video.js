@@ -464,7 +464,7 @@ class Video_ extends Component
     }
 
     base.axios({method:"post" , url:url ,data:{id:id,word:word,video_id:video_id,subtitle:subtitle_str}}).then(res3=>{
-      alert(JSON.parse(res3.data));
+      alert(JSON.stringify(res3.data));
     }).catch(e=>{
       alert("保存单词失败",e);
     });
@@ -740,7 +740,7 @@ _.mixin(Video_.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {clear_all_data} from "./common/redux/actions/actions.js"
+import {get_my_words} from "./common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {
@@ -751,9 +751,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-
-    clear_all_data:()=>{
-      dispatch(clear_all_data())
+    get_my_words:(page)=>{
+      dispatch(get_my_words({page:page}))
     }
   }
 }

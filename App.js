@@ -22,8 +22,9 @@ import Setting from "../betterme/betterme/login/setting.js"
 import Video from "../betterme/betterme/video"
 import Test from "../betterme/betterme/test"
 import VideoList from "../betterme/betterme/videoList"
+import Wordbook from "../betterme/betterme/wordbook"
 
-const initialRouteName = "VideoList"
+const initialRouteName = "Wordbook"
 const RootStack =  StackNavigator(
   {
     LoginPassword:{screen:LoginPassword},
@@ -32,7 +33,8 @@ const RootStack =  StackNavigator(
     Video:{screen:Video},
     Setting:{screen:Setting},
     Test :{screen:Test},
-    VideoList:{screen:VideoList}
+    VideoList:{screen:VideoList},
+    Wordbook:{screen:Wordbook}
   },
   {
     initialRouteName: initialRouteName

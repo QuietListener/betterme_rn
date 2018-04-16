@@ -376,7 +376,7 @@ _.mixin(VideoList.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {clear_all_data} from "./common/redux/actions/actions.js"
+import {get_my_words} from "./common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {
@@ -387,9 +387,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-
-    clear_all_data:()=>{
-      dispatch(clear_all_data())
+    get_my_words:(page=1)=>{
+      dispatch(get_my_words({page:page}))
     }
   }
 }

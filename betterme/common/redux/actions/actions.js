@@ -116,8 +116,25 @@ async function return_get_data_func(type,dispatch,getState,call_back,params={})
 
     params = params || {}
 
-    var res3 = await base.axios({method:method , url:url ,data:params});
-    console.log(`HTTP: ${method} : ${JSON.stringify(params)} : ${url} : res=${JSON.stringify(res3)}`);
+
+    if(method == base.HttpType.GET)
+    {
+      var params_str = "";
+      for (let name in params)
+      {
+        params_str += `${name}=${params[name]}&`;
+      }
+      url = url+`?${params_str}`;
+      params={};
+    }
+
+    console.log(`HTTP: ${method} :${url} :  ${JSON.stringify(params)} `);
+
+    var config = method == base.HttpType.GET ? {method:method , url:url ,data:params} : {method:method , url:url}
+
+    var res3 = await base.axios(config);
+
+    console.log(`HTTP: ${method} :${url} :  ${JSON.stringify(params)} : res=${JSON.stringify(res3)}`);
 
     let data = res3.data;
     let new_data = null;
@@ -138,6 +155,7 @@ async function return_get_data_func(type,dispatch,getState,call_back,params={})
   }
   catch(e)
   {
+    console.error(`HTTP: ${method} :${url} :  ${JSON.stringify(params)} `,e);
     dispatch(update_data_state(
       type.name,
       type.url(),
@@ -251,5 +269,14 @@ export function ensure_code(params, call_back)
   console.log("ensure_code");
   return function(dispatch,getState) {
     return_get_data_func(base.URLS.ensure_code,dispatch,getState,call_back,params);
+  }
+}
+
+
+export function get_my_words(params)
+{
+  console.log("get_my_words");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.my_words,dispatch,getState,null,params);
   }
 }
