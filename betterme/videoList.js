@@ -54,35 +54,36 @@ class VideoList extends Component
     video_list = [
     ];
 
-
-     var url = `${base.HOBBY_DOMAIN}/api/videos.json`
-
-    console.log(`HTTP: begin ${url}`);
-     try
-     {
-       var res3 = await base.axios({method: "get", url: url});
-       console.log(`HTTP: ${url} : res=${JSON.stringify(res3)}`);
-       let data = res3.data;
-       if(data && data.data)
-       {
-         video_list = data.data.map(item=>{
-          return  {
-             title:item.title,
-             poster: item.poster,
-             title_cn: item.title_cn,
-             videoUrl: item.video_url,
-             srtUrl:  item.srt_url,
-             videoFileName:  item.video_file_name,
-             srtFileName:   item.srt_file_name,
-           }
-         })
-       }
-     }
-     catch(e)
-     {
-        console.error(e);
-        alert("加载数据失败");
-     }
+    this.props.videos(1);
+    //
+    //  var url = `${base.HOBBY_DOMAIN}/api/videos.json`
+    //
+    // console.log(`HTTP: begin ${url}`);
+    //  try
+    //  {
+    //    var res3 = await base.axios({method: "get", url: url});
+    //    console.log(`HTTP: ${url} : res=${JSON.stringify(res3)}`);
+    //    let data = res3.data;
+    //    if(data && data.data)
+    //    {
+    //      video_list = data.data.map(item=>{
+    //       return  {
+    //          title:item.title,
+    //          poster: item.poster,
+    //          title_cn: item.title_cn,
+    //          videoUrl: item.video_url,
+    //          srtUrl:  item.srt_url,
+    //          videoFileName:  item.video_file_name,
+    //          srtFileName:   item.srt_file_name,
+    //        }
+    //      })
+    //    }
+    //  }
+    //  catch(e)
+    //  {
+    //     console.error(e);
+    //     alert("加载数据失败");
+    //  }
 
     var video_key_list = video_list.map((item)=>{});
 
@@ -216,6 +217,7 @@ class VideoList extends Component
 
   render()
   {
+    
     var videos_views = [];
 
     if(!this.state.video_list)
@@ -375,7 +377,7 @@ _.mixin(VideoList.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {get_my_words} from "./common/redux/actions/actions.js"
+import {videos} from "./common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {
@@ -386,8 +388,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_my_words:(page=1)=>{
-      dispatch(get_my_words({page:page}))
+    videos:(page)=>{
+      dispatch(videos({page:page}))
     }
   }
 }

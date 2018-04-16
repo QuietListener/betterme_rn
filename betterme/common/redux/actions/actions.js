@@ -130,7 +130,7 @@ async function return_get_data_func(type,dispatch,getState,call_back,params={})
 
     console.log(`HTTP: ${method} :${url} :  ${JSON.stringify(params)} `);
 
-    var config = method == base.HttpType.GET ? {method:method , url:url ,data:params} : {method:method , url:url}
+    var config = method == base.HttpType.GET ? {method:method , url:url } : {method:method , url:url, data:params}
 
     var res3 = await base.axios(config);
 
@@ -155,7 +155,7 @@ async function return_get_data_func(type,dispatch,getState,call_back,params={})
   }
   catch(e)
   {
-    console.error(`HTTP: ${method} :${url} :  ${JSON.stringify(params)} `,e);
+    console.log(`HTTP: ${method} :${url} :  ${JSON.stringify(params)} `,e);
     dispatch(update_data_state(
       type.name,
       type.url(),
@@ -278,5 +278,14 @@ export function get_my_words(params)
   console.log("get_my_words");
   return function(dispatch,getState) {
     return_get_data_func(base.URLS.my_words,dispatch,getState,null,params);
+  }
+}
+
+
+export function videos(params)
+{
+  console.log("videos");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.videos,dispatch,getState,null,params);
   }
 }

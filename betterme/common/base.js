@@ -239,6 +239,12 @@ export const URLS = {
     url:()=>`${HOBBY_DOMAIN}/api/my_words.json`,
     name:'my_words',
   }
+  ,
+  videos: {
+    method:HttpType.GET,
+    url:()=>`${HOBBY_DOMAIN}/api/videos.json`,
+    name:'videos',
+  }
 
 }
 
