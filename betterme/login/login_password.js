@@ -147,7 +147,7 @@ class LoginPassword extends Component {
       show_view =  <View style={[BaseStyle.base_styles.base_view_style, {flex: 10, justifyContent: "flex-start"}]}>
 
           <TextInput underlineColorAndroid="transparent" style={[styles.input_text, {marginTop: 40}]} placeholderTextColor="rgb(153, 153, 153)"
-                     placeholder={"  邮箱/手机号"} autoCapitalize={"none"}
+                     placeholder={"  手机号"} autoCapitalize={"none"}
                      onChangeText={txt => this.setState({account: txt})}/>
 
           <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
@@ -252,8 +252,8 @@ const styles = StyleSheet.create(
     input_text: {
       width: 275,
       lineHeight: 30,
-      height:36,
-      borderRadius: 4,
+      height:40,
+      borderRadius: 20,
       borderStyle: "solid",
       borderWidth: 0.5,
       borderColor: "#cccccc",
