@@ -25,6 +25,9 @@ Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
 
 const meanWidth = 300
 const ProgressShowTime = 10000
+
+var chineseReg = /[\u4e00-\u9fa5]/g
+
 class Video_ extends Component
 {
   static navigationOptions = ({ navigation }) => {
@@ -87,6 +90,7 @@ class Video_ extends Component
     this.showProgress = this.showProgress.bind(this);
     this.videoError = this.videoError.bind(this);
     this.save_word = this.save_word.bind(this);
+    this.englishPercent = this.englishPercent.bind(this);
 
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
 
@@ -243,6 +247,18 @@ class Video_ extends Component
     this.play();
   }
 
+  englishPercent(str)
+  {
+    if(str == null || _.trim(str) == "")
+      return 0;
+
+    var str_ =  str.replace(/[\(|\)|'|’|"|“|”|！|!|.|?|,]+/g ,"");
+    var originLength = str_.length;
+    var englishLength = originLength - str_.replace(/[A-Za-z]+/g ,"").length
+
+    return englishLength*1.0/originLength;
+  }
+
   setTime(time)
   {
     var cur_time = time.currentTime*1000;
@@ -263,6 +279,53 @@ class Video_ extends Component
             {
               show_srt = srt_data[i];
               var text = show_srt.text;
+              var splites = text.split(/[\r|\n|\r\n]/);
+              var splites = splites.filter((item)=>{
+                  return (item != null && _.trim(item) != "")
+              });
+
+              var text = null; //英语字幕
+              var otherText = null; //其他字幕
+              if(splites.length == 0)
+              {
+                text = splites[0];
+              }
+              else
+              {
+                var text0 = splites[0] || "";
+                var text1 = splites[1] || "";
+
+                if(text0 == null || _.trim(text0) == "")
+                {
+                  text = text1;
+                  otherText = text0;
+                }
+                else if(text1 == null || _.trim(text1) == "")
+                {
+                  text = text0;
+                  otherText = text1;
+                }
+                else
+                {
+                  var enPercent0 = this.englishPercent(text0);
+                  var enPercent1 = this.englishPercent(text1);
+
+                  if(enPercent0>=enPercent1)
+                  {
+                    text = text0;
+                    otherText = text1;
+                  }
+                  else
+                  {
+                    text = text1;
+                    otherText = text0;
+                  }
+                }
+              }
+
+              console.log("en text:", text);
+              console.log("other text:", otherText);
+
               var words = text.split(" ")
 
               this.refs_store = new Array(words.length);
@@ -273,13 +336,14 @@ class Video_ extends Component
 
 
                 var index_ = _.clone(index);
-                return<TouchableOpacity style={{padding:5,overflow:"visible"}}
+                return<TouchableOpacity style={{paddingRight:4,overflow:"visible"}}
                       ref={(e)=>{this.refs_store[index_] = e}}
                       onPress={()=>this.word_click(words,index_,i)}>
                   <Text style={{fontSize:14}}>{word}</Text>
                 </TouchableOpacity>});
+
               console.log("cur_subtitle",cur_subtitle)
-              this.setState({show_srt_index:i,cur_subtitle:cur_subtitle,cur_subtitle_org:cur_subtitle_org});
+              this.setState({show_srt_index:i,cur_subtitle:cur_subtitle,cur_subtitle_org:cur_subtitle_org,otherText:otherText});
             }
 
             break;
@@ -422,7 +486,7 @@ class Video_ extends Component
       this.setState({duration:response.duration,
                      backgroundVideo: {
                            width:actualWidth,
-                            height:actualHeight}});
+                            height:0}});
 
   }
 
@@ -622,9 +686,11 @@ class Video_ extends Component
             {this.state.cur_subtitle}
           </View>
 
+          <View style={{paddingBottom:4,backgroundColor:"rgba(255,255,255,0.4)",justifyContent:"center",alignItems:"center"}}>
+            <Text>{this.state.otherText}</Text>
+          </View>
+
         </View>
-
-
 
 
 
