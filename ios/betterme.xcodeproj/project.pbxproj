@@ -1680,6 +1680,7 @@
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
 				INFOPLIST_FILE = betterme/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1723,6 +1724,7 @@
 					"$(SRCROOT)/../node_modules/realm/src/**",
 				);
 				INFOPLIST_FILE = betterme/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

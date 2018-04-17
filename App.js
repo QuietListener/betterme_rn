@@ -11,9 +11,9 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  TouchableOpacity
 } from 'react-native';
-
 
 import LoginPassword from "../betterme/betterme/login/login_password"
 import CWebViewMall from "../betterme/betterme/common/c_web_view_mall.js"
@@ -23,7 +23,7 @@ import Video from "../betterme/betterme/video"
 import Test from "../betterme/betterme/test"
 import VideoList from "../betterme/betterme/videoList"
 import Wordbook from "../betterme/betterme/wordbook"
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 const initialRouteName = "Home"
 const RootStack =  StackNavigator(
   {
@@ -37,7 +37,15 @@ const RootStack =  StackNavigator(
     Wordbook:{screen:Wordbook}
   },
   {
-    initialRouteName: initialRouteName
+    initialRouteName: initialRouteName,
+    navigationOptions: ({navigation}) => {
+
+      const { params } = navigation.state;
+      var left = <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center"}} onPress={
+        ()=>{navigation.goBack();} }>
+        <Icon name={'angle-left'} size={20} color="black" />
+      </TouchableOpacity>;
+  }
   }
 );
 

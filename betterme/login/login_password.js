@@ -259,7 +259,8 @@ const styles = StyleSheet.create(
       borderColor: "#cccccc",
       padding:4,
       color:"black",
-      margin:10
+      margin:10,
+      fontSize:20
     },
     tip_item:{
       flexDirection:"row",

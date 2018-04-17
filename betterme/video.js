@@ -66,8 +66,8 @@ class Video_ extends Component
 
     this.state={
       backgroundVideo: {
-        width:base.ScreenHeight,
-        height:base.ScreenWidth
+        width:base.ScreenWidth,
+        height:base.ScreenHeight
       },
       show_srt_index:-1,
       show_srt_index1:-1,
@@ -700,7 +700,7 @@ class Video_ extends Component
     }
 
     var progressBar = <View style={{flexDirection:"row",alignItems:"center"
-      ,justifyContent:"center",height:30,width:this.state.orientation == "LANDSCAPE"? base.ScreenWidth: base.ScreenHeight
+      ,justifyContent:"center",height:30,width:this.state.orientation == "LANDSCAPE"? base.ScreenHeight: base.ScreenWidth
       ,position:"absolute",zIndex:1001,top:8, backgroundColor:"rgba(255,255,255,0.4)"}}>
 
       <TouchableOpacity activeOpacity={0.8}
@@ -795,7 +795,7 @@ class Video_ extends Component
                progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                onLoadStart={this.loadStart}            // Callback when video starts to load
                onLoad={(res)=>{
-                 setTimeout(()=>this.onLoad(res,"LANDSCAPE"), 10);}}               // Callback when video loads
+                 setTimeout(()=>this.onLoad(res,"Portrait"), 10);}}               // Callback when video loads
                onProgress={this.setTime}               // Callback every ~250ms with currentTime
                onEnd={this.onEnd}                      // Callback when playback finishes
                onError={this.videoError}               // Callback when video cannot be loaded
