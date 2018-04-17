@@ -702,7 +702,8 @@ class Video_ extends Component
                         style={{flex:1.2,paddingLeft:4,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}
                         onPress={()=>{this.props.navigation.goBack();}}
       >
-        <Icon name={'angle-left'} size={26} color="black" /> <Text style={{color:"black"}}>返回</Text>
+        <Icon name={'angle-left'} size={20} color="black" />
+        <Text style={{fontSize:14,color:"black"}}>返回</Text>
 
       </TouchableOpacity>
 
@@ -711,7 +712,7 @@ class Video_ extends Component
 
         <Slider
           //thumbImage={require('../resources/images/circle2.png')}
-          style={{backgroundColor:"rgba(0,0,0,0.0)",flex:6}}
+          style={{backgroundColor:"rgba(0,0,0,0.0)",flex:5.5}}
           value={this.state.cur_time}
           step = { 1 }
           minimumValue = { 0 }
@@ -799,15 +800,17 @@ class Video_ extends Component
 
 
 
-        <View style={{flex:2,backgroundColor:"rgba(255,255,255,0.4)",position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.4)"}}>
+        <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.4)"}}>
 
-          <View style={{backgroundColor:"rgba(255,255,255,0.4)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom: 2,paddingTop:4}} ref={(ref) => {
+          {this.state.cur_subtitle?
+          <View style={{backgroundColor:"rgba(255,255,255,0.4)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom:4,paddingTop:2}} ref={(ref) => {
             this.subtitle_view = ref
           }}>
             {this.state.cur_subtitle}
           </View>
+          :null}
 
-          {this.state.otherText ?
+          {(this.state.otherText && _.trim(this.state.otherText) != "")?
             <View style={{
               paddingBottom: 6,
               backgroundColor: "rgba(255,255,255,0.4)",
