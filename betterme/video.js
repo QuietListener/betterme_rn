@@ -666,6 +666,13 @@ class Video_ extends Component
 
 
                   <TouchableOpacity style={{flex:1,marginRight:2,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => {
+
+                    if(this.state.word_info && this.state.word_info.logined != true)
+                    {
+                       alert("登录后才能搜藏喔~")
+                       return;
+                    }
+
                     this.save_word(this.state.word_info.id,
                     this.state.word_info.word,
                     this.state.video_id,
