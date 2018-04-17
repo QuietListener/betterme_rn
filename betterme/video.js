@@ -742,9 +742,9 @@ class Video_ extends Component
 
 
 
-        <View style={{flex:2,backgroundColor:"rgba(255,255,255,0.4)",position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.4)",paddingTop:4,paddingBottom:4}}>
+        <View style={{flex:2,backgroundColor:"rgba(255,255,255,0.4)",position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.4)"}}>
 
-          <View style={{backgroundColor:"rgba(255,255,255,0.4)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap"}} ref={(ref) => {
+          <View style={{backgroundColor:"rgba(255,255,255,0.4)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom: 2,paddingTop:4}} ref={(ref) => {
             this.subtitle_view = ref
           }}>
             {this.state.cur_subtitle}
@@ -752,7 +752,7 @@ class Video_ extends Component
 
           {this.state.otherText ?
             <View style={{
-              paddingBottom: 4,
+              paddingBottom: 6,
               backgroundColor: "rgba(255,255,255,0.4)",
               justifyContent: "center",
               alignItems: "center"
