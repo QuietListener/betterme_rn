@@ -2,7 +2,7 @@
  * Created by junjun on 17/11/8.
  */
 import React, {Component} from 'React'
-import {View, Image, Text, Button, ActivityIndicator,StyleSheet,Slider,TouchableOpacity, ScrollView,Alert,Switch, AsyncStorage} from 'react-native'
+import {View, Image, Text, Button, ActivityIndicator,PanResponder,StyleSheet,Slider,TouchableOpacity, ScrollView,Alert,Switch, AsyncStorage} from 'react-native'
 import {StackNavigator, StackRouter,NavigationActions} from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Moment from "moment"
@@ -174,6 +174,11 @@ class Video_ extends Component
     // });
 
   }
+
+  componentWillMount(){
+
+  }
+
 
 
   async get_word_info(word,call_back)
@@ -550,7 +555,7 @@ class Video_ extends Component
       this.setState({duration:response.duration,
                      backgroundVideo: {
                            width:actualWidth,
-                            height:0}});
+                            height:actualHeight}});
 
   }
 
@@ -582,6 +587,31 @@ class Video_ extends Component
     return str;
   }
 
+  goback()
+  {
+    if(this.player)
+    {
+      var time = this.state.cur_time;
+      if(time && time >= 5)
+      {
+        time = time - 5;
+      }
+      this.player.seek(time)
+    }
+  }
+
+  goforward()
+  {
+    if(this.player)
+    {
+      var time = this.state.cur_time;
+      if(time && this.state.duration && time < this.state.duration)
+      {
+        time = time + 5;
+      }
+      this.player.seek(time)
+    }
+  }
 
   save_word(id,word,video_id,subtitle)
   {
@@ -654,13 +684,13 @@ class Video_ extends Component
     if(this.state.paused == false)
     {
       btn = <TouchableOpacity style={{flex:1,justifyContent:"center", padding:6,alignItems:"center"}} onPress={() => { this.troggle_video()}} >
-        <Icon name="pause" size={16} color="#47afff" />
+        <Icon name="pause" size={16} color="black" />
       </TouchableOpacity>;
     }
     else
     {
-      btn = <TouchableOpacity style={{flex:50,justifyContent:"center",padding:0, alignItems:"center"}} onPress={() => { this.troggle_video()}}>
-        <Icon name="play" size={16} color="#47afff" />
+      btn = <TouchableOpacity style={{flex:1,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.troggle_video()}}>
+        <Icon name="play" size={16} color="black" />
       </TouchableOpacity>;
     }
 
@@ -672,7 +702,7 @@ class Video_ extends Component
                         style={{flex:1.2,paddingLeft:4,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}
                         onPress={()=>{this.props.navigation.goBack();}}
       >
-        <Icon name={'angle-left'} size={20} color="black" /> <Text style={{color:"black"}}>返回</Text>
+        <Icon name={'angle-left'} size={26} color="black" /> <Text style={{color:"black"}}>返回</Text>
 
       </TouchableOpacity>
 
@@ -698,12 +728,39 @@ class Video_ extends Component
 
 
     var touchView = <TouchableOpacity activeOpacity={0.8}
-      style={{position:"absolute",left:0,top:0,zIndex:101,width:base.ScreenWidth,height:base.ScreenHeight,backgroundColor:"rgba(0,0,0,0.0)"}}
+      style={{position:"absolute",left:0,top:0,zIndex:101,
+        flexDirection:"row",justifyContent:"center",alignItems:"center"
+        ,width:base.ScreenWidth,height:base.ScreenHeight
+        ,backgroundColor:"rgba(0,0,0,0.0)"}}
+
       onPress={()=>{this.showProgress();
             if(this.state.popup_left > 0)
               this.hide_mean_box()
       }}
-    ></TouchableOpacity>
+
+
+    >
+
+      {this.state.showProgressBar?
+       <TouchableOpacity onPress={()=>this.goback()}
+         style={{flex:1,justifyContent:"center",padding:10,alignItems:"center",backgroundColor:"rgba(0,0,0,0.1)"}}>
+          <Icon name={'angle-left'} size={36} color="white" />
+       </TouchableOpacity>:null
+      }
+
+      <View style={{flex:10}}>
+
+      </View>
+
+      {this.state.showProgressBar?
+        <TouchableOpacity
+          onPress={()=>this.goforward()}
+          style={{flex:1,justifyContent:"center",padding:10,alignItems:"center",backgroundColor:"rgba(0,0,0,0.1)"}}>
+          <Icon name={'angle-right'} size={36} color="white" />
+      </TouchableOpacity>:null
+      }
+
+    </TouchableOpacity>
 
 
     return (
