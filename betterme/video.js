@@ -67,7 +67,7 @@ class Video_ extends Component
     this.state={
       backgroundVideo: {
         width:base.ScreenHeight,
-        height:0//base.ScreenWidth
+        height:base.ScreenWidth
       },
       show_srt_index:-1,
       show_srt_index1:-1,
@@ -149,14 +149,14 @@ class Video_ extends Component
       });
     });
 
-
-
-
-
-   // Orientation.lockToLandscape();
+    //Orientation.lockToLandscape();
 
   }
 
+  componentWillUnmount()
+  {
+    //Orientation.lockToPortrait()
+  }
 
   componentDidMount()
   {
@@ -165,13 +165,10 @@ class Video_ extends Component
 
     //base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "172.16.35.224")
 
-    base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "192.168.1.101")
-
-    // Orientation.addOrientationListener((orientation)=>{
-    //   console.log("orientation changed",orientation);
-    //   this.setState({orientation});
-    //   this.onLoad(null,orientation);
-    // });
+    Orientation.addOrientationListener((orientation)=>{
+      console.log("orientation changed",orientation);
+      this.onLoad(null,orientation);
+    });
 
   }
 
@@ -496,7 +493,7 @@ class Video_ extends Component
   {
       console.log("onLoad",response);
       var that = this;
-      this.setState({videoLoading:false,showProgressBar:true});
+      this.setState({videoLoading:false,showProgressBar:true,orientation:orientation});
 
       setTimeout(()=>{
         if(that && that.setState)
@@ -536,6 +533,13 @@ class Video_ extends Component
       var screenWidth = base.ScreenWidth;
       var screenHeight = base.ScreenHeight;
 
+      if(orientation == "LANDSCAPE")
+      {
+        var tmp = screenWidth;
+        screenHeight = screenHeight;
+        screenHeight = tmp;
+      }
+
       var screenWH = screenWidth * 1.0/ screenHeight;
 
       var actualWidth = 0;
@@ -552,7 +556,8 @@ class Video_ extends Component
         actualWidth = width * actualHeight * 1.0 / height;
       }
 
-      this.setState({duration:response.duration,
+      var duration = response?response.duration:this.state.duration;
+      this.setState({duration:duration,
                      backgroundVideo: {
                            width:actualWidth,
                             height:actualHeight}});
@@ -695,7 +700,7 @@ class Video_ extends Component
     }
 
     var progressBar = <View style={{flexDirection:"row",alignItems:"center"
-      ,justifyContent:"center",height:30,width:base.ScreenWidth
+      ,justifyContent:"center",height:30,width:this.state.orientation == "LANDSCAPE"? base.ScreenWidth: base.ScreenHeight
       ,position:"absolute",zIndex:1001,top:8, backgroundColor:"rgba(255,255,255,0.4)"}}>
 
       <TouchableOpacity activeOpacity={0.8}
@@ -790,7 +795,7 @@ class Video_ extends Component
                progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                onLoadStart={this.loadStart}            // Callback when video starts to load
                onLoad={(res)=>{
-                 setTimeout(()=>this.onLoad(res,"LANDSCAPE"), 100);}}               // Callback when video loads
+                 setTimeout(()=>this.onLoad(res,"LANDSCAPE"), 10);}}               // Callback when video loads
                onProgress={this.setTime}               // Callback every ~250ms with currentTime
                onEnd={this.onEnd}                      // Callback when playback finishes
                onError={this.videoError}               // Callback when video cannot be loaded
