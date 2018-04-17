@@ -15,6 +15,10 @@ const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = r
 //import fs from "fs"
 
 import Tts from 'react-native-tts';
+Tts.addEventListener('tts-start', (event) => console.log("start", event));
+Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
+Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
+
 import {UPDATE_DATA_STATUS} from "./common/redux/actions/actions.js"
 
 
@@ -32,7 +36,10 @@ class Wordbook extends Component
 
   componentDidMount()
   {
-    base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "172.16.35.224")
+    //base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "172.16.35.224")
+
+    base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "192.168.1.101")
+
 
     this.props.get_my_words(1)
   }
@@ -87,9 +94,9 @@ class Wordbook extends Component
     var status = this.props.data[base.URLS.my_words.name].status;
 
 
-    var words = data.data;
-     var show_view = null;
-    if(status == UPDATE_DATA_STATUS.FAILED)
+    var words_data = data.data;
+    var show_view = null;
+    if(status == UPDATE_DATA_STATUS.FAILED || (data && data.status !=1))
     {
       show_view=<Text>加载失败</Text>
     }
@@ -108,9 +115,14 @@ class Wordbook extends Component
     else if(status == UPDATE_DATA_STATUS.SUCCEED)
     {
 
+
+    //  alert(JSON.stringify(data));
     var words_view = [];
+
+    var words = words_data.words;
     if(words.length > 0 )
     {
+
       words_view = words.map(item=>{
 
         let learn_word = item.learn_word;
@@ -135,26 +147,40 @@ class Wordbook extends Component
 
         }
 
-        return <View style={{height:subtitle_text?80:54,width:base.ScreenWidth-60,borderWidth:1, padding:4,margin:4}}>
+        console.log(item);
+        var video = item.video;
+
+
+        return <View style={{width:base.ScreenWidth-10,borderWidth:1, padding:4,margin:4}}>
             <View style={{flex:1,flexDirection:"row"}} >
-              <View style={{flexDirection:"row",flex:5,justifyContent:"flex-start"}}>
-                <Text>{learn_word.word}</Text>
+              <View style={{flexDirection:"row",flex:6,justifyContent:"flex-start",alignItems:"center",marginBottom:4}}>
+                <Text style={{fontSize:20}}>{learn_word.word}</Text>
                 <Text style={{marginLeft:20}}>{learn_word.accent}</Text>
               </View>
 
-              <TouchableOpacity style={{flex:1,justifyContent:"flex-end", alignItems:"center"}} onPress={() => { this.read_word(learn_word.word)} }>
-                <Icon name="volume-up" size={18} color="white" />
+              <View  style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
+
+              <TouchableOpacity style={{justifyContent:"center",alignItems:"flex-end",padding:4}}
+                                onPress={() => { this.read_word(learn_word.word)} }>
+                <Icon name="volume-up" size={18} color="black" />
               </TouchableOpacity>
+            </View>
 
             </View>
 
           <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start"}} >
-            <Text style={{flex:1}}>{this.mean_cn_view(learn_word.mean_cn)}</Text>
+            <Text style={{marginRight:8,fontSize:14}}>词意:</Text><Text style={{flex:1}}>{this.mean_cn_view(learn_word.mean_cn)}</Text>
           </View>
 
-          <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start"}} >
-            <Text style={{flex:1}}>{subtitle_text}</Text>
-          </View>
+          {subtitle_text?
+          <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
+            <Text style={{marginRight:8}}>字幕:</Text><Text style={{flex:1}}>{subtitle_text}</Text>
+          </View>:null}
+
+          {video && video.title?
+            <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
+              <Text style={{marginRight:8,fontSize:14}}>视频:</Text><Text style={{flex:1,fontSize:12}}>{video.title}</Text>
+            </View>:null}
         </View>
       })
     }

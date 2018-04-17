@@ -28,6 +28,8 @@ const name = "KasivaMutua_2017G-950k.mp4";
 const downloadDest = `${downloadDir}/${name}`;
 const srtDest = `${downloadDir}/KasivaMutua_2017G-950k.srt`;
 
+import {UPDATE_DATA_STATUS} from "./common/redux/actions/actions.js"
+
 
 const DownloadError = -100;
 //
@@ -217,12 +219,25 @@ class VideoList extends Component
 
   render()
   {
-    
-    var videos_views = [];
 
-    if(!this.state.video_list)
+    if(!this.props.data
+      || !this.props.data[base.URLS.videos.name]
+      || !this.props.data[base.URLS.videos.name].data)
+      return null;
+
+    var data = this.props.data[base.URLS.videos.name].data;
+    var status = this.props.data[base.URLS.videos.name].status;
+
+
+    var words_data = data.data;
+    var show_view = null;
+    if(status == UPDATE_DATA_STATUS.FAILED || (data && data.status !=1))
     {
-      return <View style={{
+      show_view=<Text>加载失败</Text>
+    }
+    else if(status == UPDATE_DATA_STATUS.LOADING)
+    {
+      show_view=<View style={{
         flex: 1,
         alignItems: "center",
         justifyContent: "center"
@@ -238,92 +253,123 @@ class VideoList extends Component
         />
       </View>
     }
+    else if(status == UPDATE_DATA_STATUS.SUCCEED)
+    {
+      console.log(data);
+      var data = data.data;
+      var videos_views = [];
+      videos_views = data.map((item_) => {
 
-    videos_views = this.state.video_list.map((item)=>{
+        var item = { title:item_.title,
+                   poster: item_.poster,
+                   title_cn: item_.title_cn,
+                   videoUrl: item_.video_url,
+                   srtUrl:  item_.srt_url,
+                   videoFileName:  item_.video_file_name,
+                   srtFileName:   item_.srt_file_name,
+                   id:item_.id
+                 }
 
-     var key_srt = `progress_${item.srtFileName}`;
-     var key_video = `progress_${item.videoFileName}`;
 
-     var video_path = `${downloadDir}/${item.videoFileName}`;
-     var srt_path = `${downloadDir}/${item.srtFileName}`;
+        console.log("video :",item);
 
-     var progress_video = null;
-     if(this.state[key_video])
-     {
-       progress_video = this.state[key_video];
-     }
-     else if(this.state.orgin_download_state)
-     {
-       progress_video = this.state.orgin_download_state[key_video];
-     }
+        var key_srt = `progress_${item.srtFileName}`;
+        var key_video = `progress_${item.videoFileName}`;
 
-     var progress_video_str = null;
-     if(progress_video)
-     {
-          if(progress_video>=0)
+        var video_path = `${downloadDir}/${item.videoFileName}`;
+        var srt_path = `${downloadDir}/${item.srtFileName}`;
+
+        var progress_video = null;
+        if (this.state[key_video])
+        {
+          progress_video = this.state[key_video];
+        }
+        else if (this.state.orgin_download_state)
+        {
+          progress_video = this.state.orgin_download_state[key_video];
+        }
+
+        var progress_video_str = null;
+        if (progress_video)
+        {
+          if (progress_video >= 0)
           {
             progress_video_str = `${progress_video.toFixed(1)}%`;
           }
-          else if(progress_video == DownloadError)
+          else if (progress_video == DownloadError)
           {
             progress_video_str = "下载失败请重试"
           }
-     }
-
-
-      var progress_srt = null;
-      if(this.state[key_video])
-      {
-        progress_srt = this.state[key_srt];
-      }
-      else if(this.state.orgin_download_state)
-      {
-        progress_srt = this.state.orgin_download_state[key_srt];
-      }
-
-      var progress_srt_str = null;
-      if(progress_srt)
-      {
-        if(progress_srt>=0)
-        {
-          progress_srt_str = `${progress_srt.toFixed(1)}%`;
         }
-        else if(progress_srt == DownloadError)
+
+
+        var progress_srt = null;
+        if (this.state[key_video])
         {
-          progress_srt_str = "下载失败请重试"
+          progress_srt = this.state[key_srt];
         }
-      }
+        else if (this.state.orgin_download_state)
+        {
+          progress_srt = this.state.orgin_download_state[key_srt];
+        }
 
-      let width_ = base.ScreenWidth/2-20
+        var progress_srt_str = null;
+        if (progress_srt)
+        {
+          if (progress_srt >= 0)
+          {
+            progress_srt_str = `${progress_srt.toFixed(1)}%`;
+          }
+          else if (progress_srt == DownloadError)
+          {
+            progress_srt_str = "下载失败请重试"
+          }
+        }
+
+        let width_ = base.ScreenWidth / 2 - 20
 
 
-     return <TouchableOpacity style={{height:200,width:width_,flexDirection:"row",margin:10,backgroundColor:"white"}}
-                  onPress={()=>{ this.props.navigation.navigate("Video",{videoUrl:item.videoUrl,videoPath:video_path,srtPath:srt_path,srtUrl:item.srtUrl,video_id:item.id})}}>
+        return <TouchableOpacity
+          style={{height: 200, width: width_, flexDirection: "row", margin: 10, backgroundColor: "white"}}
+          onPress={() => {
+            this.props.navigation.navigate("Video", {
+              videoUrl: item.videoUrl,
+              videoPath: video_path,
+              srtPath: srt_path,
+              srtUrl: item.srtUrl,
+              video_id: item.id
+            })
+          }}>
 
-               {/*<Image style={{width:width_,height:200,}} source={{uri:item.poster}} />*/}
+          {/*<Image style={{width:width_,height:200,}} source={{uri:item.poster}} />*/}
 
 
-               <View style={{position:"absolute",bottom:0,width:width_
-                 ,justifyContent:"center",alignItems:"center",backgroundColor:"black"}}>
-                 <Text style={{color:"white"}}>{item.title}</Text>
-               </View>
+          <View style={{
+            position: "absolute", bottom: 0, width: width_
+            , justifyContent: "center", alignItems: "center", backgroundColor: "black"
+          }}>
+            <Text style={{color: "white"}}>{item.title}</Text>
+          </View>
 
-       <View style={{width:width_-180}}>
+          <View style={{width: width_ - 180}}>
 
-                 {/*<Text style={{margin:10}} onPress={()=>this.download(item.videoUrl,video_path, key_video)}>下载视频 {progress_video_str}</Text>*/}
+            {/*<Text style={{margin:10}} onPress={()=>this.download(item.videoUrl,video_path, key_video)}>下载视频 {progress_video_str}</Text>*/}
 
-                 {/*<Text  style={{margin:10}} onPress={()=>this.download(item.srtUrl,srt_path,key_srt)} >下载字幕  {progress_srt_str}</Text>*/}
-               </View>
-      </TouchableOpacity>
-    });
+            {/*<Text  style={{margin:10}} onPress={()=>this.download(item.srtUrl,srt_path,key_srt)} >下载字幕  {progress_srt_str}</Text>*/}
+          </View>
+        </TouchableOpacity>
+      });
 
+      show_view = <View
+        style={{flex: 1, flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap"}}>
+        {videos_views}
+      </View>
+    }
 
     return (
 
         <ScrollView style={{flex:1,width:base.ScreenWidth}}>
-          <View style={{flex:1,flexDirection:"row",justifyContent:"flex-start",alignItems:"center",flexWrap:"wrap"}}>
-          {videos_views}
-          </View>
+          {show_view}
         </ScrollView>
 
     )

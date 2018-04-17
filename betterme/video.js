@@ -19,7 +19,9 @@ const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = r
 
 var RNFS = require('react-native-fs');
 import Tts from 'react-native-tts';
-var SQLite = require('react-native-sqlite-storage')
+Tts.addEventListener('tts-start', (event) => console.log("start", event));
+Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
+Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
 
 const meanWidth = 300
 const ProgressShowTime = 10000
@@ -50,7 +52,7 @@ class Video_ extends Component
       srtPath =  state.params.srtPath;
       videoUrl = state.params.videoUrl;
       srtUrl =  state.params.srtUrl;
-      video = state.params.video_id
+      video_id = state.params.video_id
     }
 
     console.log({srtPath,videoPath})
@@ -72,6 +74,8 @@ class Video_ extends Component
       showProgressBar:true,
       video_id:video_id
     }
+
+    console.log('video state:',this.state);
 
     this.setTime = this.setTime.bind(this);
     this.troggle_video = this.troggle_video.bind(this);
@@ -113,15 +117,21 @@ class Video_ extends Component
 
       }
     });
+
+
+    Orientation.lockToLandscape();
+
   }
 
 
   componentDidMount()
   {
 
-    Orientation.lockToLandscape();
-
     var that = this;
+
+    //base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "172.16.35.224")
+
+    base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "192.168.1.101")
 
     // Orientation.addOrientationListener((orientation)=>{
     //   console.log("orientation changed",orientation);
@@ -420,7 +430,7 @@ class Video_ extends Component
   {
     console.log("measure",x, y, width, height, left, top);
     var popup_left = left+width/2-meanWidth/2;
-    var popup_top = 30;
+    var popup_top = 60;
 
     if(popup_left<0)
       popup_left = 10
@@ -464,7 +474,16 @@ class Video_ extends Component
     }
 
     base.axios({method:"post" , url:url ,data:{id:id,word:word,video_id:video_id,subtitle:subtitle_str}}).then(res3=>{
-      alert(JSON.stringify(res3.data));
+      if(res3 && res3.data && res3.data.status == 1)
+      {
+
+        if(this.state.word_info)
+        {
+          var word_info = _.clone(this.state.word_info);
+          word_info.saved = true
+          this.setState({word_info});
+        }
+      }
     }).catch(e=>{
       alert("保存单词失败",e);
     });
@@ -600,7 +619,7 @@ class Video_ extends Component
 
 
 
-        <View style={{flex:2,width:meanWidth,height:150,
+        <View style={{flex:2,width:meanWidth,height:170,
           backgroundColor:"black",borderColor:"white",borderWidth:1,justifyContent:"center",alignItems:"center",position:"absolute",
           left:this.state.popup_left,bottom:this.state.popup_top,
           zIndex:1000
@@ -652,7 +671,8 @@ class Video_ extends Component
                     this.state.video_id,
                       this.state.cur_subtitle_org,
                     ) }}>
-                    <Icon name="star-o" size={18} color="white" />
+
+                    <Icon name={`${(this.state.word_info.saved == true && this.state.word_info.logined == true) ? 'star':'star-o'}`} size={18} color="white" />
                   </TouchableOpacity>
 
                 </View>
