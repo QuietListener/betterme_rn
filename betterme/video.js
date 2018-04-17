@@ -119,7 +119,7 @@ class Video_ extends Component
     });
 
 
-    Orientation.lockToLandscape();
+   // Orientation.lockToLandscape();
 
   }
 
@@ -422,7 +422,7 @@ class Video_ extends Component
       this.setState({duration:response.duration,
                      backgroundVideo: {
                            width:actualWidth,
-                            height:0}});
+                            height:actualHeight}});
 
   }
 
@@ -531,7 +531,7 @@ class Video_ extends Component
     }
     else
     {
-      btn = <TouchableOpacity style={{flex:1,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.troggle_video()}}>
+      btn = <TouchableOpacity style={{flex:50,justifyContent:"center",padding:0, alignItems:"center"}} onPress={() => { this.troggle_video()}}>
         <Icon name="play" size={16} color="#47afff" />
       </TouchableOpacity>;
     }
@@ -540,11 +540,20 @@ class Video_ extends Component
       ,justifyContent:"center",height:30,width:base.ScreenWidth
       ,position:"absolute",zIndex:1001,top:8, backgroundColor:"rgba(255,255,255,0.4)"}}>
 
-        <Text style={{flex:1,alignSelf:"center",fontSize:15,paddingLeft:8,flex:1,color:"black"}} > {this.formatedCurrentTime(this.state.cur_time)} </Text>
+      <TouchableOpacity activeOpacity={0.8}
+                        style={{flex:1.2,paddingLeft:4,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}
+                        onPress={()=>{this.props.navigation.goBack();}}
+      >
+        <Icon name={'angle-left'} size={20} color="black" /> <Text style={{color:"black"}}>返回</Text>
+
+      </TouchableOpacity>
+
+
+        <Text style={{alignSelf:"center",fontSize:15,color:"black"}} > {this.formatedCurrentTime(this.state.cur_time)} </Text>
 
         <Slider
           //thumbImage={require('../resources/images/circle2.png')}
-          style={{backgroundColor:"rgba(0,0,0,0.0)",width:base.ScreenWidth-170}}
+          style={{backgroundColor:"rgba(0,0,0,0.0)",flex:6}}
           value={this.state.cur_time}
           step = { 1 }
           minimumValue = { 0 }
@@ -553,7 +562,7 @@ class Video_ extends Component
           onValueChange={(ChangedValue) => this.changeCurrentTime(ChangedValue)}
         />
 
-        <Text style={{flex:1,alignSelf:"center",fontSize:15,color:"black"}} > {this.formatedCurrentTime(this.state.duration||0)} </Text>
+        <Text style={{width:50,alignSelf:"center",fontSize:15,color:"black"}} > {this.formatedCurrentTime(this.state.duration||0)} </Text>
 
         {btn}
       </View>

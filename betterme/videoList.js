@@ -51,12 +51,14 @@ class VideoList extends Component
   async componentDidMount()
   {
 
-    base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",expire_in_seconds = 31536000, domain = "172.16.35.224")
+    // base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",expire_in_seconds = 31536000, domain = "172.16.35.224")
+
     var video_list = [];
     video_list = [
     ];
 
     this.props.videos(1);
+    this.props.user_info();
     //
     //  var url = `${base.HOBBY_DOMAIN}/api/videos.json`
     //
@@ -222,20 +224,26 @@ class VideoList extends Component
 
     if(!this.props.data
       || !this.props.data[base.URLS.videos.name]
-      || !this.props.data[base.URLS.videos.name].data)
+      || !this.props.data[base.URLS.videos.name].data
+      || !this.props.data[base.URLS.user_info.name]
+      || !this.props.data[base.URLS.user_info.name].data
+    )
       return null;
 
     var data = this.props.data[base.URLS.videos.name].data;
     var status = this.props.data[base.URLS.videos.name].status;
 
+    var user_info = this.props.data[base.URLS.user_info.name].data;
+    var user_info_status = this.props.data[base.URLS.user_info.name].status;
+
 
     var words_data = data.data;
     var show_view = null;
-    if(status == UPDATE_DATA_STATUS.FAILED || (data && data.status !=1))
+    if(user_info_status == UPDATE_DATA_STATUS.FAILED || status == UPDATE_DATA_STATUS.FAILED || (data && data.status !=1))
     {
       show_view=<Text>加载失败</Text>
     }
-    else if(status == UPDATE_DATA_STATUS.LOADING)
+    else if(user_info_status == UPDATE_DATA_STATUS.LOADING || status == UPDATE_DATA_STATUS.LOADING)
     {
       show_view=<View style={{
         flex: 1,
@@ -360,9 +368,28 @@ class VideoList extends Component
         </TouchableOpacity>
       });
 
-      show_view = <View
-        style={{flex: 1, flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap"}}>
-        {videos_views}
+
+      var user_info_data = {};
+      user_info_data = user_info.data;
+
+      show_view = <View>
+
+        <View style={{flex:1,flexDirection:"row"}}>
+
+          <View style={{flex:3}}>
+            <Text>{user_info_data.name}</Text>
+         </View>
+
+
+          <View style={{flex:1}}>
+            <Button title={"单词本"} onPress={()=>this.props.navigation.navigate("Wordbook")}/>
+          </View>
+
+        </View>
+
+        <View  style={{flex: 4, flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap"}}>
+          {videos_views}
+        </View>
       </View>
     }
 
@@ -423,7 +450,7 @@ _.mixin(VideoList.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {videos} from "./common/redux/actions/actions.js"
+import {videos,user_info} from "./common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {
@@ -436,7 +463,11 @@ const mapDispatchToProps = dispatch => {
   return {
     videos:(page)=>{
       dispatch(videos({page:page}))
+    },
+    user_info:()=>{
+      dispatch(user_info())
     }
+
   }
 }
 

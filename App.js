@@ -24,7 +24,7 @@ import Test from "../betterme/betterme/test"
 import VideoList from "../betterme/betterme/videoList"
 import Wordbook from "../betterme/betterme/wordbook"
 
-const initialRouteName = "VideoList"
+const initialRouteName = "Home"
 const RootStack =  StackNavigator(
   {
     LoginPassword:{screen:LoginPassword},

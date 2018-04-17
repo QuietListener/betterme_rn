@@ -53,8 +53,8 @@ class Home extends Component {
       if(access_token)
       {
         console.log(" base.resetAndGoto");
-        base.resetAndGoto(this.props.navigation, "CWebViewMall", {
-          url: "http://www.coderlong.com/home#/",
+        base.resetAndGoto(this.props.navigation, "VideoList", {
+
           access_token: access_token
         });
       }

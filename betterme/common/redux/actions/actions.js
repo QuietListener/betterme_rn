@@ -289,3 +289,12 @@ export function videos(params)
     return_get_data_func(base.URLS.videos,dispatch,getState,null,params);
   }
 }
+
+
+export function user_info()
+{
+  console.log("user_info");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.user_info,dispatch,getState,null,{});
+  }
+}
