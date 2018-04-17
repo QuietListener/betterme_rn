@@ -288,6 +288,8 @@ class VideoList extends Component
                    srtUrl:  item_.srt_url,
                    videoFileName:  item_.video_file_name,
                    srtFileName:   item_.srt_file_name,
+                   otherSrtFileName:   item_.other_srt_file_name,
+                   otherSrtUrl:  item_.other_srt_url,
                    id:item_.id
                  }
 
@@ -299,6 +301,7 @@ class VideoList extends Component
 
         var video_path = `${downloadDir}/${item.videoFileName}`;
         var srt_path = `${downloadDir}/${item.srtFileName}`;
+        var other_srt_path = `${downloadDir}/${item.otherSrtFileName}`;
 
         var progress_video = null;
         if (this.state[key_video])
@@ -358,7 +361,9 @@ class VideoList extends Component
               videoPath: video_path,
               srtPath: srt_path,
               srtUrl: item.srtUrl,
-              video_id: item.id
+              video_id: item.id,
+              otherSrtUrl:item.otherSrtUrl,
+              otherSrtPath:other_srt_path,
             })
           }}>
 

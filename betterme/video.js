@@ -45,8 +45,10 @@ class Video_ extends Component
 
     var videoPath = null;
     var srtPath = null;
+    var otherSrtPath = null;
     var videoUrl = null;
     var srtUrl = null;
+    var otherSrtUrl = null;
     var video_id = null;
 
     if(state && state.params)
@@ -56,9 +58,11 @@ class Video_ extends Component
       videoUrl = state.params.videoUrl;
       srtUrl =  state.params.srtUrl;
       video_id = state.params.video_id
+      otherSrtUrl = state.params.otherSrtUrl;
+      otherSrtPath = state.params.otherSrtPath;
     }
 
-    console.log({srtPath,videoPath})
+    console.log({srtPath,otherSrtUrl,videoPath})
 
     this.state={
       backgroundVideo: {
@@ -66,11 +70,13 @@ class Video_ extends Component
         height:0//base.ScreenWidth
       },
       show_srt_index:-1,
+      show_srt_index1:-1,
       paused:false,
       popup_left:-1000,
       popup_top:0,
       videoPath:videoPath,
       srtPath:srtPath,
+      otherSrtUrl:otherSrtUrl,
       loadingMean:false,
       orientation:"LANDSCAPE",
       videoUrl:videoUrl,
@@ -95,32 +101,56 @@ class Video_ extends Component
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
 
     var that = this;
-    RNFS.exists(srtPath).then((srtFileExist)=>{
-      if(srtFileExist == true)
-      {
-        //alert("srt exist")
-        RNFS.readFile(srtPath).then(data=>{
-          //console.log("srt",data);
-          var srt_data = parse(data);
-          that.setState({srt_data});
-          console.log(srt_data[1])
-        })
-      }
-      else if(srtUrl)
-      {
-        //alert("srt not exist,url = ",srtUrl)
-        base.axios({method:"get" , url:srtUrl ,data:{}}).then(res3=>{
-          console.log(res3.data);
-          var srt_data = parse(res3.data);
-          that.setState({srt_data});
-          console.log(srt_data[1])
-          //alert("加载字幕成功");
-        }).catch(e=>{
-         alert("加载字幕失败...");
-        });
+    [{path:srtPath,url:srtUrl},{path:otherSrtPath,url:otherSrtUrl}].forEach((item_,index)=>{
 
-      }
+      var filePath_ = item_.path;
+      var srtUrl_ = item_.url;
+
+      RNFS.exists(filePath_).then((srtFileExist)=>{
+        console.log("##>>",index);
+
+        if(srtFileExist == true)
+        {
+          //alert("srt exist")
+          RNFS.readFile(filePath_).then(data=>{
+            //console.log("srt",data);
+            var srt_data = parse(data);
+            if(index == 0)
+            {
+              that.setState({srt_data});
+            }
+            else
+            {
+              that.setState({srt_data1:srt_data});
+            }
+            console.log(srt_data[1])
+          })
+        }
+        else if(srtUrl_)
+        {
+          //alert("srt not exist,url = ",srtUrl_)
+          base.axios({method:"get" , url:srtUrl_ }).then(res3=>{
+            var srt_data = parse(res3.data);
+            if(index == 0)
+            {
+              that.setState({srt_data});
+            }
+            else
+            {
+              that.setState({srt_data1:srt_data});
+            }
+            console.log(srt_data[1])
+            console.log(`load  subtitle : ${srtUrl_} 成功`);
+          }).catch(e=>{
+            alert("加载字幕失败...");
+          });
+
+        }
+      });
     });
+
+
+
 
 
    // Orientation.lockToLandscape();
@@ -264,10 +294,17 @@ class Video_ extends Component
     var cur_time = time.currentTime*1000;
     console.log("progress",cur_time);
 
+    var cur_subtitle = null;
+    var cur_subtitle_org = null;
+    var show_srt_index = -1;
+    var show_srt_index1 = -1;
+    var otherText = null;
+
     if(this.state.srt_data)
     {
       var show_srt = null;
       var srt_data = this.state.srt_data;
+      var srt_data1 = this.state.srt_data1;
 
       for(let i = 0; i < srt_data.length; i++)
       {
@@ -330,11 +367,8 @@ class Video_ extends Component
 
               this.refs_store = new Array(words.length);
 
-              var cur_subtitle_org = show_srt;
-
-              var cur_subtitle = words.map((word,index)=>{
-
-
+              cur_subtitle_org = show_srt;
+              cur_subtitle = words.map((word,index)=>{
                 var index_ = _.clone(index);
                 return<TouchableOpacity style={{paddingRight:4,overflow:"visible"}}
                       ref={(e)=>{this.refs_store[index_] = e}}
@@ -343,17 +377,47 @@ class Video_ extends Component
                 </TouchableOpacity>});
 
               console.log("cur_subtitle",cur_subtitle)
-              this.setState({show_srt_index:i,cur_subtitle:cur_subtitle,cur_subtitle_org:cur_subtitle_org,otherText:otherText});
+
+              show_srt_index = i;
             }
 
             break;
           }
       }
+
+
+      if(srt_data1)
+      {
+        for(let j = 0; j < srt_data1.length; j++)
+        {
+          if(cur_time > srt_data1[j].end)
+            continue;
+          else
+          {
+            if (j != this.state.show_srt_index1)
+            {
+              var show_srt_ = srt_data1[j];
+              otherText = show_srt_.text;
+              show_srt_index = j;
+              break;
+            }
+          }
+        }
+      }
+
+
+     }
+
+
+    if(cur_subtitle != null && show_srt_index >= 0)
+    {
+      this.setState({cur_subtitle:cur_subtitle,
+        cur_subtitle_org:cur_subtitle_org,otherText:otherText
+        ,show_srt_index:show_srt_index,show_srt_index1:show_srt_index1});
     }
 
-
     this.setState({cur_time:cur_time/1000});
-    console.log("cur_time",this.state.cur_time);
+    console.log("cur_time",this.state.cur_time,this.state.cur_subtitle_org,this.state.otherText,);
   }
 
 
@@ -678,7 +742,7 @@ class Video_ extends Component
 
 
 
-        <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.4)"}}>
+        <View style={{flex:2,backgroundColor:"rgba(255,255,255,0.4)",position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.4)",paddingTop:4,paddingBottom:4}}>
 
           <View style={{backgroundColor:"rgba(255,255,255,0.4)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap"}} ref={(ref) => {
             this.subtitle_view = ref
@@ -686,9 +750,16 @@ class Video_ extends Component
             {this.state.cur_subtitle}
           </View>
 
-          <View style={{paddingBottom:4,backgroundColor:"rgba(255,255,255,0.4)",justifyContent:"center",alignItems:"center"}}>
-            <Text>{this.state.otherText}</Text>
-          </View>
+          {this.state.otherText ?
+            <View style={{
+              paddingBottom: 4,
+              backgroundColor: "rgba(255,255,255,0.4)",
+              justifyContent: "center",
+              alignItems: "center"
+            }}>
+              <Text>{this.state.otherText}</Text>
+            </View>:null
+          }
 
         </View>
 
