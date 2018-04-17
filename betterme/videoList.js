@@ -13,7 +13,7 @@ import Orientation from 'react-native-orientation';
 const Subtitle = require('subtitle')
 const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = require('subtitle')
 //import fs from "fs"
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Tts from 'react-native-tts';
 var SQLite = require('react-native-sqlite-storage')
 var RNFS = require('react-native-fs');
@@ -38,6 +38,19 @@ import {DownloadItem} from "./db/models"
 
 class VideoList extends Component
 {
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+
+    var headerRight =   <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center",marginRight:8}}  activeOpacity={0.9}
+                                          onPress={()=>navigation.navigate("Setting")}>
+      <Icon name="cog" size={20} color="black" />
+    </TouchableOpacity>
+
+
+    var headerStyle = params.headerStyle;
+    return {headerStyle, headerLeft:null, headerRight};
+  };
   constructor(props)
   {
     super(props)
@@ -374,15 +387,18 @@ class VideoList extends Component
 
       show_view = <View>
 
-        <View style={{flex:1,flexDirection:"row"}}>
+        <View style={{flex:1,flexDirection:"row",padding:12,backgroundColor:"white"}}>
 
-          <View style={{flex:3}}>
-            <Text>{user_info_data.name}</Text>
+          <View style={{flex:3,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}>
+            <Icon name="id-badge" size={20} color="black" />
+            <Text style={{marginLeft:4,fontSize:18} }>{user_info_data.name}</Text>
          </View>
 
 
-          <View style={{flex:1}}>
-            <Button title={"单词本"} onPress={()=>this.props.navigation.navigate("Wordbook")}/>
+          <View style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
+            <TouchableOpacity style={{borderWidth:1,padding:4,borderRadius:4}} onPress={()=>this.props.navigation.navigate("Wordbook")}>
+              <Text style={{fontSize:12}}>{'收藏的单词'}</Text>
+            </TouchableOpacity>
           </View>
 
         </View>
