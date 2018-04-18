@@ -27,6 +27,11 @@ let AnotherToastAndroid = NativeModules.AnotherToastAndroid;
 
 class LoginPassword extends Component {
 
+  static navigationOptions = ({ navigation }) => {
+    const {params = {}} = navigation.state;
+    return {title:"登录"}
+  };
+
   constructor(props)
   {
     super(props)

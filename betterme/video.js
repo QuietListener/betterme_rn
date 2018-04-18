@@ -24,7 +24,7 @@ Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
 Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
 
 const meanWidth = 300
-const ProgressShowTime = 10000
+const ProgressShowTime = 15000
 
 var chineseReg = /[\u4e00-\u9fa5]/g
 
@@ -76,12 +76,16 @@ class Video_ extends Component
       popup_top:0,
       videoPath:videoPath,
       srtPath:srtPath,
+      srtUrl:srtUrl,
       otherSrtUrl:otherSrtUrl,
       loadingMean:false,
       orientation:"LANDSCAPE",
       videoUrl:videoUrl,
       showProgressBar:true,
-      video_id:video_id
+      video_id:video_id,
+      subtitleFontSize:18,
+      show_subtitle_en:true,
+      show_subtitle_other:true
     }
 
     console.log('video state:',this.state);
@@ -130,6 +134,7 @@ class Video_ extends Component
         {
           //alert("srt not exist,url = ",srtUrl_)
           base.axios({method:"get" , url:srtUrl_ }).then(res3=>{
+            console.log("subtitle",res3.data);
             var srt_data = parse(res3.data);
             if(index == 0)
             {
@@ -142,6 +147,7 @@ class Video_ extends Component
             console.log(srt_data[1])
             console.log(`load  subtitle : ${srtUrl_} 成功`);
           }).catch(e=>{
+            console.error(e);
             alert("加载字幕失败...");
           });
 
@@ -165,10 +171,10 @@ class Video_ extends Component
 
     //base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "172.16.35.224")
 
-    Orientation.addOrientationListener((orientation)=>{
-      console.log("orientation changed",orientation);
-      this.onLoad(null,orientation);
-    });
+    // Orientation.addOrientationListener((orientation)=>{
+    //   console.log("orientation changed",orientation);
+    //   this.onLoad(null,orientation);
+    // });
 
   }
 
@@ -375,7 +381,7 @@ class Video_ extends Component
                 return<TouchableOpacity style={{paddingRight:4,overflow:"visible"}}
                       ref={(e)=>{this.refs_store[index_] = e}}
                       onPress={()=>this.word_click(words,index_,i)}>
-                  <Text style={{fontSize:14}}>{word}</Text>
+                  <Text style={{fontSize:this.state.subtitleFontSize}}>{word}</Text>
                 </TouchableOpacity>});
 
               console.log("cur_subtitle",cur_subtitle)
@@ -740,6 +746,7 @@ class Video_ extends Component
         ,backgroundColor:"rgba(0,0,0,0.0)"}}
 
       onPress={()=>{this.showProgress();
+            this.troggle_video();
             if(this.state.popup_left > 0)
               this.hide_mean_box()
       }}
@@ -807,7 +814,7 @@ class Video_ extends Component
 
         <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.4)"}}>
 
-          {this.state.cur_subtitle?
+          {this.state.cur_subtitle && (this.state.show_subtitle_en)?
           <View style={{backgroundColor:"rgba(255,255,255,0.4)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom:4,paddingTop:2}} ref={(ref) => {
             this.subtitle_view = ref
           }}>
@@ -815,14 +822,14 @@ class Video_ extends Component
           </View>
           :null}
 
-          {(this.state.otherText && _.trim(this.state.otherText) != "")?
+          {(this.state.otherText && _.trim(this.state.otherText) != "" && this.state.show_subtitle_other)?
             <View style={{
               paddingBottom: 6,
               backgroundColor: "rgba(255,255,255,0.4)",
               justifyContent: "center",
               alignItems: "center"
             }}>
-              <Text>{this.state.otherText}</Text>
+              <Text style={{fontSize:this.state.subtitleFontSize}}>{this.state.otherText}</Text>
             </View>:null
           }
 
