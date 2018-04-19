@@ -456,7 +456,7 @@ class VideoList extends Component
 
           <View style={{flex:3,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}>
             <Icon name="id-badge" size={20} color="black" />
-            <Text style={{marginLeft:4,fontSize:18} }>{user_info_data.name}</Text>
+            <Text style={{marginLeft:4,fontSize:18} }>{base.getUserName(user_info_data.name)}</Text>
          </View>
 
 

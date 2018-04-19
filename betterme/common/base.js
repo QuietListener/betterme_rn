@@ -21,10 +21,10 @@ export const axios = instance
 
 export const is_android = Platform.OS === "android";
 export const is_ios = Platform.OS === "ios";
-export const Domain = "172.16.35.224";//"192.168.1.101";//
+export const Domain = "139.129.86.178"; //"192.168.1.101";//
 
 
-export const HOBBY_DOMAIN = `http://${Domain}:3000`;
+export const HOBBY_DOMAIN = `http://${Domain}`;
 
 export const UGC_PACKAGE_START = 10000000;
 
@@ -285,4 +285,13 @@ export function resetAndGoto(navigation,dest,params)
   });
 
   navigation.dispatch(resetAction);
+}
+export function getUserName(userName)
+{
+  if(userName)
+  {
+    return userName.replace(/[0-9]{6}$/g,"******")
+  }
+  return null;
+
 }

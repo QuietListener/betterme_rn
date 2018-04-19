@@ -83,7 +83,7 @@ class Video_ extends Component
       videoUrl:videoUrl,
       showProgressBar:true,
       video_id:video_id,
-      subtitleFontSize:18,
+      subtitleFontSize:20,
       show_subtitle_en:true,
       show_subtitle_other:true,
       rate:1.0,
@@ -257,8 +257,11 @@ class Video_ extends Component
 
   word_click(words,word_index, srt_index)
   {
-    var word_ = words[word_index]||"";
     var that = this;
+    that.pause();
+
+    var word_ = words[word_index]||"";
+
     var word = word_.replace(/^[\(|\)|'|’|"|“|”|！|!|.|?|,]+/g ,"").replace(/\(|\)|['|’|"|“|”|！|!|.|?|,]+$/g ,"")
     console.log(`search word:${word_}=>${word}`)
 
@@ -282,7 +285,7 @@ class Video_ extends Component
       })
     }
 
-    that.pause();
+
   }
 
   hide_mean_box()
@@ -807,7 +810,7 @@ class Video_ extends Component
 
 
 
-    var speedView =  [0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2].map((item)=>{
+    var speedView =  [0.8,0.9,1.0,1.1,1.2].map((item)=>{
         var active = this.state.rate == item;
         return <Text style={{borderWidth:1,borderRadius:6,padding:4,margin:4,color:active?"white":"black",borderColor:active?"white":"black",fontSize:14}} onPress={()=>this.setState({rate:item})}>
           {item==1.0?"常速":`${item}x`}
