@@ -21,7 +21,7 @@ export const axios = instance
 
 export const is_android = Platform.OS === "android";
 export const is_ios = Platform.OS === "ios";
-export const Domain = "192.168.1.101";//"172.16.35.224";
+export const Domain = "172.16.35.224";//"192.168.1.101";//
 
 
 export const HOBBY_DOMAIN = `http://${Domain}:3000`;

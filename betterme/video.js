@@ -2,7 +2,7 @@
  * Created by junjun on 17/11/8.
  */
 import React, {Component} from 'React'
-import {View, Image, Text, Button, ActivityIndicator,PanResponder,StyleSheet,Slider,TouchableOpacity, ScrollView,Alert,Switch, AsyncStorage} from 'react-native'
+import {View, Image, Text, Button, Modal,ActivityIndicator,PanResponder,StyleSheet,Slider,TouchableOpacity, ScrollView,Alert,Switch, AsyncStorage} from 'react-native'
 import {StackNavigator, StackRouter,NavigationActions} from 'react-navigation';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Moment from "moment"
@@ -85,7 +85,9 @@ class Video_ extends Component
       video_id:video_id,
       subtitleFontSize:18,
       show_subtitle_en:true,
-      show_subtitle_other:true
+      show_subtitle_other:true,
+      rate:1.0,
+      showSettingModal:false,
     }
 
     console.log('video state:',this.state);
@@ -101,7 +103,7 @@ class Video_ extends Component
     this.videoError = this.videoError.bind(this);
     this.save_word = this.save_word.bind(this);
     this.englishPercent = this.englishPercent.bind(this);
-
+    this._orientationLisener = this._orientationLisener.bind(this);
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
 
     var that = this;
@@ -155,13 +157,14 @@ class Video_ extends Component
       });
     });
 
-    //Orientation.lockToLandscape();
+    Orientation.lockToLandscape();
 
   }
 
   componentWillUnmount()
   {
-    //Orientation.lockToPortrait()
+    Orientation.removeOrientationListener(this._orientationLisener);
+    Orientation.lockToPortrait()
   }
 
   componentDidMount()
@@ -171,13 +174,16 @@ class Video_ extends Component
 
     //base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "172.16.35.224")
 
-    // Orientation.addOrientationListener((orientation)=>{
-    //   console.log("orientation changed",orientation);
-    //   this.onLoad(null,orientation);
-    // });
+    Orientation.addOrientationListener(this._orientationLisener);
 
   }
 
+  _orientationLisener(orientation)
+  {
+      console.log("orientation changed",orientation);
+      Orientation.lockToLandscape();
+      //this.onLoad(null,orientation);
+  }
   componentWillMount(){
 
   }
@@ -499,9 +505,17 @@ class Video_ extends Component
   {
       console.log("onLoad",response);
       var that = this;
-      this.setState({videoLoading:false,showProgressBar:true,orientation:orientation});
+      this.setState({showProgressBar:true,orientation:orientation});
 
-      setTimeout(()=>{
+
+    setTimeout(()=>{
+      if(that && that.setState)
+      {
+        that.setState({videoLoading:false})
+      }
+    },1000);
+
+    setTimeout(()=>{
         if(that && that.setState)
         {
           that.setState({showProgressBar:false})
@@ -677,16 +691,16 @@ class Video_ extends Component
         backgroundColor:"rgba(0,0,0,0.0)",
         alignItems: "center",
         justifyContent: "flex-start",
-        marginTop:100
+        marginTop:150
       }}>
         <ActivityIndicator
           animating={true}
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-            width:16,height:16,
+            width:30,height:30,
           }}
-          size="small"
+          size="large"
         />
       </View>;
     }
@@ -706,15 +720,15 @@ class Video_ extends Component
     }
 
     var progressBar = <View style={{flexDirection:"row",alignItems:"center"
-      ,justifyContent:"center",height:30,width:this.state.orientation == "LANDSCAPE"? base.ScreenHeight: base.ScreenWidth
-      ,position:"absolute",zIndex:1001,top:8, backgroundColor:"rgba(255,255,255,0.4)"}}>
+      ,justifyContent:"center",height:44,width:this.state.orientation == "LANDSCAPE"? base.ScreenHeight: base.ScreenWidth
+      ,position:"absolute",zIndex:1001,top:0, backgroundColor:"rgba(255,255,255,0.4)"}}>
 
       <TouchableOpacity activeOpacity={0.8}
-                        style={{flex:1.2,paddingLeft:4,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}
+                        style={{flex:1,flexDirection:"row",justifyContent:"center",alignItems:"center"}}
                         onPress={()=>{this.props.navigation.goBack();}}
       >
-        <Icon name={'angle-left'} size={20} color="black" />
-        <Text style={{fontSize:14,color:"black"}}>返回</Text>
+        <Icon name={'angle-left'} size={32} color="black" />
+        <Text style={{fontSize:14,color:"black"}}>  </Text>
 
       </TouchableOpacity>
 
@@ -728,7 +742,7 @@ class Video_ extends Component
           step = { 1 }
           minimumValue = { 0 }
           maximumValue = { this.state.duration }
-          minimumTrackTintColor = "rgb(71, 175, 255)"
+          minimumTrackTintColor = "black"
           onValueChange={(ChangedValue) => this.changeCurrentTime(ChangedValue)}
         />
 
@@ -736,6 +750,17 @@ class Video_ extends Component
 
         {btn}
       </View>
+
+
+    var settingView =  this.state.showProgressBar ? <TouchableOpacity
+      onPress={()=>{this.pause();this.setState({showSettingModal:true }) }}
+                          style={{width:40,height:40,position:"absolute",top:50,right:10 ,
+                            justifyContent:"center",padding:10,alignItems:"center"
+                            ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
+                            ,borderRadius:20,
+                          }}>
+          <Icon name={'cog'} size={20} color="white" />
+        </TouchableOpacity>:null
 
 
 
@@ -776,11 +801,83 @@ class Video_ extends Component
     </TouchableOpacity>
 
 
+
+
+    var speedView =  [0.8,0.9,1.0,1.2,1.5].map((item)=>{
+        var active = this.state.rate == item;
+        return <Text style={{borderWidth:1,borderRadius:6,padding:4,margin:4,color:active?"white":"black",borderColor:active?"white":"black",fontSize:14}} onPress={()=>this.setState({rate:item})}>
+          {item==1.0?"常速":`${item}x`}
+        </Text>
+    });
+
+    var settingModal = <Modal
+      animationType={"slide"}
+      transparent={true}
+      visible={this.state.showSettingModal}
+      supportedOrientations={['portrait', 'landscape']}>
+
+      <TouchableOpacity onPress={()=>{this.setState({showSettingModal:false }) }}
+
+        style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"rgba(0,0,0,0.4)"}}>
+
+        <TouchableOpacity activeOpacity={1} style={{flex:1,marginTop:30,paddingTop:20,paddingBottom:20,borderRadius:4}}>
+          <View style={inner_styles.settingItem}>
+            <Text style={inner_styles.tip}>显示英文字幕:</Text>
+            <Switch value={this.state.show_subtitle_en}
+                    onValueChange={(val)=>{this.setState({show_subtitle_en:!this.state.show_subtitle_en})}}></Switch>
+          </View>
+
+          <View style={inner_styles.settingItem}>
+
+            <Text style={inner_styles.tip}>显示中文字幕:</Text>
+
+            <Switch value={this.state.show_subtitle_other}
+                    onValueChange={(val)=>{this.setState({show_subtitle_other:!this.state.show_subtitle_other})}}></Switch>
+          </View>
+
+          <View style={{height:90,justifyContent:"flex-start",alignItems:"center",backgroundColor:"gray"}}>
+          <View style={inner_styles.settingItem}>
+
+            <Text style={inner_styles.tip}>字幕大小:</Text>
+
+            <Slider
+              //thumbImage={require('../resources/images/circle2.png')}
+              style={{backgroundColor:"rgba(0,0,0,0.0)",flex:5.5}}
+              value={this.state.subtitleFontSize}
+              step = { 1 }
+              minimumValue = { 14 }
+              maximumValue = { 30 }
+              minimumTrackTintColor = "black"
+              onValueChange={(ChangedValue) => this.setState({subtitleFontSize:ChangedValue})}
+            />
+          </View>
+           <Text style={{fontSize:this.state.subtitleFontSize,color:"yellow"}}>字幕:here we go!</Text>
+          </View>
+
+          <View style={[inner_styles.settingItem,{height:46+20,paddingBottom:30}]}>
+
+            <Text style={inner_styles.tip}>速度:</Text>
+            {speedView}
+          </View>
+
+        </TouchableOpacity>
+
+
+
+
+      </TouchableOpacity>
+
+
+    </Modal>
+
     return (
       <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"black"}}>
         {this.state.showProgressBar == true ?progressBar:null}
+
+        {settingView}
         {loadingView}
         {touchView}
+        {settingModal}
 
         <Video key={121321}
 
@@ -790,7 +887,7 @@ class Video_ extends Component
                ref={(ref) => {
                  this.player = ref
                }}                                      // Store reference
-               rate={1.0}                              // 0 is paused, 1 is normal.
+               rate={this.state.rate}                              // 0 is paused, 1 is normal.
                volume={1.0}                            // 0 is muted, 1 is normal.
                muted={false}                           // Mutes the audio entirely.
                paused={this.state.paused}                          // Pauses playback entirely.
@@ -802,7 +899,7 @@ class Video_ extends Component
                progressUpdateInterval={250.0}          // [iOS] Interval to fire onProgress (default to ~250ms)
                onLoadStart={this.loadStart}            // Callback when video starts to load
                onLoad={(res)=>{
-                 setTimeout(()=>this.onLoad(res,"Portrait"), 10);}}               // Callback when video loads
+                 setTimeout(()=>this.onLoad(res,"Landscape"), 1);}}               // Callback when video loads
                onProgress={this.setTime}               // Callback every ~250ms with currentTime
                onEnd={this.onEnd}                      // Callback when playback finishes
                onError={this.videoError}               // Callback when video cannot be loaded
@@ -812,10 +909,10 @@ class Video_ extends Component
 
 
 
-        <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.4)"}}>
+        <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.7)"}}>
 
           {this.state.cur_subtitle && (this.state.show_subtitle_en)?
-          <View style={{backgroundColor:"rgba(255,255,255,0.4)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom:4,paddingTop:2}} ref={(ref) => {
+          <View style={{backgroundColor:"rgba(255,255,255,0.6)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom:2,paddingTop:2}} ref={(ref) => {
             this.subtitle_view = ref
           }}>
             {this.state.cur_subtitle}
@@ -824,7 +921,7 @@ class Video_ extends Component
 
           {(this.state.otherText && _.trim(this.state.otherText) != "" && this.state.show_subtitle_other)?
             <View style={{
-              paddingBottom: 6,
+              paddingBottom: 2,
               backgroundColor: "rgba(255,255,255,0.4)",
               justifyContent: "center",
               alignItems: "center"
@@ -837,8 +934,8 @@ class Video_ extends Component
 
 
 
-        <View style={{flex:2,width:meanWidth,height:170,
-          backgroundColor:"black",borderColor:"white",borderWidth:1,justifyContent:"center",alignItems:"center",position:"absolute",
+        <View style={{flex:2,width:meanWidth,minHeight:120,
+          backgroundColor:"rgba(0,0,0,0.8)",justifyContent:"center",alignItems:"center",position:"absolute",borderRadius:6,
           left:this.state.popup_left,bottom:this.state.popup_top,
           zIndex:1000
         }}>
@@ -974,7 +1071,21 @@ const inner_styles = {
     fontSize:14,
     color:"rgb(177,180,183)"
 
-  }
+  },
+  settingItem:{
+    height:46,
+    flexDirection:"row",
+    justifyContent:"flex-start",
+    alignItems:"center",
+    backgroundColor:"gray",
+    padding:4
+  },
+
+  tip:{
+    fontSize:14,
+    color:"white",
+    margin:4
+    }
 
 };
 

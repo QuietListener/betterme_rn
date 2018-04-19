@@ -151,7 +151,7 @@ class LoginPassword extends Component {
     {
       show_view =  <View style={[BaseStyle.base_styles.base_view_style, {flex: 10, justifyContent: "flex-start"}]}>
 
-          <TextInput underlineColorAndroid="transparent" style={[styles.input_text, {marginTop: 40}]} placeholderTextColor="rgb(153, 153, 153)"
+          <TextInput underlineColorAndroid="transparent" style={[styles.input_text, {marginTop: 4}]} placeholderTextColor="rgb(153, 153, 153)"
                      placeholder={"  手机号"} autoCapitalize={"none"}
                      onChangeText={txt => this.setState({account: txt})}/>
 
@@ -161,14 +161,14 @@ class LoginPassword extends Component {
 
 
           <TouchableOpacity onPress={() => {this.login()}}
-                            style={[styles.login_item, {marginTop: 20}]}>
+                            style={[styles.login_item, ]}>
             <Text style={styles.login_text}>登录</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {
             this.toggle();
           }}
-                            style={[styles.tip_item, {marginTop: 20}]}>
+                            style={[styles.tip_item]}>
             <Text style={styles.login_text}>没有账号去注册</Text>
           </TouchableOpacity>
 
@@ -199,7 +199,7 @@ class LoginPassword extends Component {
 
         <View style={[BaseStyle.base_styles.base_view_style, {flex: 10, justifyContent: "flex-start"}]}>
 
-          <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center"},{marginTop: 40}]}>
+          <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center"},{marginTop: 4}]}>
           <TextInput underlineColorAndroid="transparent" style={[styles.input_text, ]} placeholderTextColor="rgb(153, 153, 153)"
                      placeholder={"  邮箱/手机号"} autoCapitalize={"none"}
                      onChangeText={txt => this.setState({account: txt})}/>
@@ -226,12 +226,12 @@ class LoginPassword extends Component {
           <TouchableOpacity onPress={() => {
             this.register()
           }}
-                            style={[styles.login_item, {marginTop: 20}]}>
+                            style={[styles.login_item,]}>
             <Text style={styles.login_text}>注册</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => {this.toggle();}}
-                            style={[styles.tip_item, {marginTop: 20}]}>
+                            style={[styles.tip_item,]}>
             <Text style={styles.login_text}>我有账号去登陆</Text>
           </TouchableOpacity>
         </View>
@@ -241,9 +241,6 @@ class LoginPassword extends Component {
     return (
       <View style={BaseStyle.base_styles.base_view_style}>
         {tip}
-        <View style={[BaseStyle.base_styles.base_view_style]}>
-          <Text style={[BaseStyle.base_text_style.bigFont]}></Text>
-        </View>
 
         {show_view}
       </View>
@@ -257,30 +254,30 @@ const styles = StyleSheet.create(
     input_text: {
       width: 275,
       lineHeight: 30,
-      height:40,
+      height:34,
       borderRadius: 20,
       borderStyle: "solid",
       borderWidth: 0.5,
       borderColor: "#cccccc",
       padding:4,
       color:"black",
-      margin:10,
-      fontSize:20
+      margin:2,
+      fontSize:16
     },
     tip_item:{
       flexDirection:"row",
       width: 275,
-      height: 44,
+      height: 34,
       borderRadius: 23,
       backgroundColor: "gray",
       justifyContent:"center",
       alignItems:"center",
-      marginTop:20
+      marginTop:6
     },
     login_item:{
       flexDirection:"row",
       width: 275,
-      height: 44,
+      height: 34,
       borderRadius: 23,
       backgroundColor: "#1abd0a",
       justifyContent:"center",
