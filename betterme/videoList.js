@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Tts from 'react-native-tts';
 var SQLite = require('react-native-sqlite-storage')
 var RNFS = require('react-native-fs');
+import CPagination from "../betterme/common/component/c_pagination"
 
 //const fromUrl = 'http://wvoice.spriteapp.cn/voice/2015/0818/55d2248309b09.mp3';
 const downloadDir = `${RNFS.DocumentDirectoryPath}/files/`;
@@ -51,15 +52,20 @@ class VideoList extends Component
     var headerStyle = params.headerStyle;
     return {headerStyle, headerLeft:null, headerRight};
   };
+
+
   constructor(props)
   {
     super(props)
-    this.state={
-    }
+    this.state= {
+        page:1,
+        total_page:1
+      }
 
+    this.paginate = this.paginate.bind(this);
+    this.goTo = this.goTo.bind(this);
     //this.realm = new Realm({schema: [DownloadItem]});
   }
-
 
   async componentDidMount()
   {
@@ -70,8 +76,9 @@ class VideoList extends Component
     video_list = [
     ];
 
-    this.props.videos(1);
+    this.props.videos(this.state.page,null,this.paginate);
     this.props.user_info();
+    this.props.utypes();
     //
     //  var url = `${base.HOBBY_DOMAIN}/api/videos.json`
     //
@@ -125,6 +132,16 @@ class VideoList extends Component
     this.setState({video_list, orgin_download_state});
   }
 
+  paginate(data)
+  {
+    if(data && data.data && data.data.total_page)
+    {
+      this.setState({total_page:data.data.total_page} );
+    }
+
+    console.log("paginate",data)
+    return data;
+  }
 
   componentWillUnmount()
   {
@@ -232,6 +249,20 @@ class VideoList extends Component
   //
   // }
 
+
+  goTo(page)
+  {
+    if(page <= 0)
+      return;
+
+    if(page > this.state.total_page)
+      return;
+
+    this.setState({page:page});
+    this.props.videos(this.state.page,null,this.paginate);
+  }
+
+
   render()
   {
 
@@ -240,6 +271,8 @@ class VideoList extends Component
       || !this.props.data[base.URLS.videos.name].data
       || !this.props.data[base.URLS.user_info.name]
       || !this.props.data[base.URLS.user_info.name].data
+      || !this.props.data[base.URLS.utypes.name]
+      || !this.props.data[base.URLS.utypes.name].data
     )
       return null;
 
@@ -249,14 +282,17 @@ class VideoList extends Component
     var user_info = this.props.data[base.URLS.user_info.name].data;
     var user_info_status = this.props.data[base.URLS.user_info.name].status;
 
+    var utypes = this.props.data[base.URLS.utypes.name].data;
+    var utypes_status = this.props.data[base.URLS.utypes.name].status;
+
 
     var words_data = data.data;
     var show_view = null;
-    if(user_info_status == UPDATE_DATA_STATUS.FAILED || status == UPDATE_DATA_STATUS.FAILED || (data && data.status !=1))
+    if(utypes_status == UPDATE_DATA_STATUS.FAILED || user_info_status == UPDATE_DATA_STATUS.FAILED || status == UPDATE_DATA_STATUS.FAILED || (data && data.status !=1))
     {
       show_view=<Text>加载失败</Text>
     }
-    else if(user_info_status == UPDATE_DATA_STATUS.LOADING || status == UPDATE_DATA_STATUS.LOADING)
+    else if(utypes_status == UPDATE_DATA_STATUS.LOADING || user_info_status == UPDATE_DATA_STATUS.LOADING || status == UPDATE_DATA_STATUS.LOADING)
     {
       show_view=<View style={{
         flex: 1,
@@ -277,7 +313,21 @@ class VideoList extends Component
     else if(status == UPDATE_DATA_STATUS.SUCCEED)
     {
       console.log(data);
-      var data = data.data;
+      var data = data.data.videos;
+
+      var utype_datas = [];
+      var utype_map = {}
+      console.log("utypes.data",utypes.data);
+      if(utypes && utypes.data)
+      {
+        utype_datas = utypes.data;
+        utype_datas.forEach(item=>{
+          utype_map[item.id] = item;
+        })
+      }
+
+      console.log("utype_map",utype_map);
+
       var videos_views = [];
       videos_views = data.map((item_) => {
 
@@ -290,7 +340,8 @@ class VideoList extends Component
                    srtFileName:   item_.srt_file_name,
                    otherSrtFileName:   item_.other_srt_file_name,
                    otherSrtUrl:  item_.other_srt_url,
-                   id:item_.id
+                   id:item_.id,
+                   utype_id:item_.utype_id
                  }
 
 
@@ -352,6 +403,13 @@ class VideoList extends Component
 
         let width_ = base.ScreenWidth / 2 - 20
 
+        var utype_view = null;
+        if(item.utype_id && utype_map[item.utype_id])
+        {
+          let utype_ = utype_map[item.utype_id];
+          utype_view = <TouchableOpacity style={{position:"absolute",top:4,right:4,padding:6,backgroundColor:"rgba(0,0,0,0.6)",borderRadius:2}}><Text style={{color:"white"}}>{utype_.name}</Text></TouchableOpacity>
+          //console.log("utype_.name",utype_.name);
+        }
 
         return <TouchableOpacity
           style={{height: 200, width: width_, flexDirection: "row", margin: 10, backgroundColor: "white"}}
@@ -369,11 +427,13 @@ class VideoList extends Component
 
           <Image style={{width:width_,height:200,}} source={{uri:item.poster}} />
 
+          {utype_view}
 
           <View style={{
             position: "absolute", bottom: 0, width: width_,padding:4
             , justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)"
           }}>
+
             <Text style={{fontSize:16,color: "white",textAlign:"center"}}>{item.title}</Text>
           </View>
 
@@ -418,6 +478,8 @@ class VideoList extends Component
 
         <ScrollView style={{flex:1,width:base.ScreenWidth}}>
           {show_view}
+          <CPagination page={this.state.page} total_page={this.state.total_page} goTo={this.goTo}></CPagination>
+
         </ScrollView>
 
     )
@@ -471,7 +533,7 @@ _.mixin(VideoList.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {videos,user_info} from "./common/redux/actions/actions.js"
+import {videos,user_info,utypes} from "./common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {
@@ -482,13 +544,15 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-
-    videos:(page,utype_id)=>{
-      dispatch(videos({utype_id:utype_id,page:page}))
+    videos:(page,utype_id,callback)=>{
+      dispatch(videos({utype_id:utype_id,page:page},callback))
     },
     user_info:()=>{
       dispatch(user_info())
-    }
+    },
+    utypes:()=>{
+      dispatch(utypes())
+    },
 
   }
 }

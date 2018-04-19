@@ -10,6 +10,7 @@ import * as base from "./common/base"
 const DeviceInfo = require('react-native-device-info');
 import Orientation from 'react-native-orientation';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import CPagination from "../betterme/common/component/c_pagination"
 
 const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = require('subtitle')
 //import fs from "fs"
@@ -60,17 +61,6 @@ class Wordbook extends Component
   }
 
 
-  goTo(page)
-  {
-    if(page <= 0)
-      return;
-
-    if(page > this.state.total_page)
-      return;
-
-    this.setState({page:page});
-    this.props.get_my_words(page,this.paginate)
-  }
 
   componentWillUnmount()
   {
@@ -113,44 +103,17 @@ class Wordbook extends Component
   }
 
 
-  getPaginateView()
+
+  goTo(page)
   {
-    var cur_page = this.state.page;
-    var total_page = this.state.total_page;
+    if(page <= 0)
+      return;
 
-    var views = [];
+    if(page > this.state.total_page)
+      return;
 
-    var pre = <TouchableOpacity activeOpacity={0.8}
-                                style={{width:30,flexDirection:"row",justifyContent:"center",alignItems:"center"}}
-                                onPress={()=>{this.goTo(this.state.page - 1)}}
-    >
-      <Icon name={'angle-left'} size={26} color="black" />
-      <Text style={{fontSize:14,color:"black"}}>  </Text>
-    </TouchableOpacity>
-
-    var next = <TouchableOpacity activeOpacity={0.8}
-                                 style={{width:30,flexDirection:"row",justifyContent:"center",alignItems:"center"}}
-                                 onPress={()=>{this.goTo(this.state.page + 1)}}
-    >
-      <Icon name={'angle-right'} size={26} color="black" />
-      <Text style={{fontSize:14,color:"black"}}>  </Text>
-    </TouchableOpacity>
-
-
-    if(cur_page > 1)
-        views.push(pre);
-
-    for(let i = 1; i <= total_page; i++)
-    {
-      var active = (i == cur_page);
-      let v = <Text style={{padding:4,margin:4,fontSize:14,color: active? "black" : "black",borderWidth:active?1:0,borderColor:"black"}} onPress={()=>this.goTo(i)}>{i}</Text>
-      views.push(v);
-    }
-
-    if(cur_page < total_page)
-      views.push(next);
-
-    return views;
+    this.setState({page:page});
+    this.props.get_my_words(page,this.paginate)
   }
 
   render()
@@ -267,14 +230,9 @@ class Wordbook extends Component
       })
     }
 
-    var paginates = this.getPaginateView();
-    var paginate_views =  <View style={{padding:4,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
-        {paginates}
-      </View>
-
     show_view =  <View style={{flex:1,justifyContent:"flex-start",alignItems:"center"}}>
               {words_view}
-              {paginate_views}
+              <CPagination page={this.state.page} total_page={this.state.total_page} goTo={this.goTo}></CPagination>
          </View>
     }
 

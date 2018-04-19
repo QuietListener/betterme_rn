@@ -282,11 +282,11 @@ export function get_my_words(params,call_back)
 }
 
 
-export function videos(params)
+export function videos(params,call_back)
 {
   console.log("videos");
   return function(dispatch,getState) {
-    return_get_data_func(base.URLS.videos,dispatch,getState,null,params);
+    return_get_data_func(base.URLS.videos,dispatch,getState,call_back,params);
   }
 }
 
@@ -301,8 +301,8 @@ export function user_info()
 
 export function utypes()
 {
-  console.log("user_info");
+  console.log("utypes");
   return function(dispatch,getState) {
-    return_get_data_func(base.URLS.user_info,dispatch,getState,null,{});
+    return_get_data_func(base.URLS.utypes,dispatch,getState,null,{});
   }
 }
