@@ -238,11 +238,20 @@ class LoginPassword extends Component {
 
     }
 
+    var show_view_ = <View style={{flex:1,flexDirection:"row"}}>
+      <View style={{flex:1,justifyContent:"flex-start",paddingTop:80,alignItems:"center",backgroundColor:"#f2f2f2"}}>
+        <Text style={{marginBottom:8,fontSize:30,marginLeft:-90,fontWeight:"bold",fontFamily: 'System'}}>学英语</Text>
+        <Text style={{fontSize:30,marginLeft:30,fontWeight:"bold",fontFamily: 'System'}}>很有趣</Text>
+
+      </View>
+      <View style={{flex:2,marginTop:8}}>{show_view}</View>
+    </View>
+
     return (
       <View style={BaseStyle.base_styles.base_view_style}>
         {tip}
 
-        {show_view}
+        {show_view_}
       </View>
     );
   }
