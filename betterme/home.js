@@ -151,7 +151,7 @@ const styles = StyleSheet.create(
 
 const mapStateToProps = state => {
   return {
-    user_info: state.update_state.user_info
+    user_info: state.update_state.login
   }
 }
 

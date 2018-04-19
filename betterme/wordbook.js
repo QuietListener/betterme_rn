@@ -26,6 +26,12 @@ import {UPDATE_DATA_STATUS} from "./common/redux/actions/actions.js"
 const DownloadError = -100;
 class Wordbook extends Component
 {
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return { title:"我收藏的单词"};
+  };
+
   constructor(props)
   {
     super(props)

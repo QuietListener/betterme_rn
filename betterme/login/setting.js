@@ -12,6 +12,11 @@ const DeviceInfo = require('react-native-device-info');
 class Setting extends Component
 {
 
+
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return { title:"设置"};
+  };
   constructor(props)
   {
     super(props)

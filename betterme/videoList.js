@@ -50,7 +50,7 @@ class VideoList extends Component
 
 
     var headerStyle = params.headerStyle;
-    return {headerStyle, headerLeft:null, headerRight};
+    return {headerStyle, headerLeft:null, headerRight,title:"主页"};
   };
 
 
