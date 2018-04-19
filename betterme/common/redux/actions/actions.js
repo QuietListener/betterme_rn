@@ -273,11 +273,11 @@ export function ensure_code(params, call_back)
 }
 
 
-export function get_my_words(params)
+export function get_my_words(params,call_back)
 {
   console.log("get_my_words");
   return function(dispatch,getState) {
-    return_get_data_func(base.URLS.my_words,dispatch,getState,null,params);
+    return_get_data_func(base.URLS.my_words,dispatch,getState,call_back,params);
   }
 }
 

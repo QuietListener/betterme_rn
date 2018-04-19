@@ -29,28 +29,54 @@ class Wordbook extends Component
   {
     super(props)
     this.state={
-      show_mean:true
+      show_mean:true,
+      page:1,
+      total_page:1,
     }
 
     this.read_word = this.read_word.bind(this);
+    this.paginate = this.paginate.bind(this);
+    this.goTo = this.goTo.bind(this);
   }
 
 
   componentDidMount()
   {
     //base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "172.16.35.224")
-
-    base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "192.168.1.101")
-
-
-    this.props.get_my_words(1)
+    //
+    // base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "192.168.1.101")
+    this.goTo(this.state.page);
   }
 
+  paginate(data)
+  {
+    if(data && data.data && data.data.total_page)
+    {
+      this.setState({total_page:data.data.total_page} );
+    }
+
+    console.log("paginate",data)
+    return data;
+  }
+
+
+  goTo(page)
+  {
+    if(page <= 0)
+      return;
+
+    if(page > this.state.total_page)
+      return;
+
+    this.setState({page:page});
+    this.props.get_my_words(page,this.paginate)
+  }
 
   componentWillUnmount()
   {
 
   }
+
 
   read_word(word)
   {
@@ -84,6 +110,47 @@ class Wordbook extends Component
     }
 
     return ret;
+  }
+
+
+  getPaginateView()
+  {
+    var cur_page = this.state.page;
+    var total_page = this.state.total_page;
+
+    var views = [];
+
+    var pre = <TouchableOpacity activeOpacity={0.8}
+                                style={{width:30,flexDirection:"row",justifyContent:"center",alignItems:"center"}}
+                                onPress={()=>{this.goTo(this.state.page - 1)}}
+    >
+      <Icon name={'angle-left'} size={26} color="black" />
+      <Text style={{fontSize:14,color:"black"}}>  </Text>
+    </TouchableOpacity>
+
+    var next = <TouchableOpacity activeOpacity={0.8}
+                                 style={{width:30,flexDirection:"row",justifyContent:"center",alignItems:"center"}}
+                                 onPress={()=>{this.goTo(this.state.page + 1)}}
+    >
+      <Icon name={'angle-right'} size={26} color="black" />
+      <Text style={{fontSize:14,color:"black"}}>  </Text>
+    </TouchableOpacity>
+
+
+    if(cur_page > 1)
+        views.push(pre);
+
+    for(let i = 1; i <= total_page; i++)
+    {
+      var active = (i == cur_page);
+      let v = <Text style={{padding:4,margin:4,fontSize:14,color: active? "black" : "black",borderWidth:active?1:0,borderColor:"black"}} onPress={()=>this.goTo(i)}>{i}</Text>
+      views.push(v);
+    }
+
+    if(cur_page < total_page)
+      views.push(next);
+
+    return views;
   }
 
   render()
@@ -187,14 +254,25 @@ class Wordbook extends Component
       })
     }
 
+    var paginates = this.getPaginateView();
+    var paginate_views =  <View style={{padding:4,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+        {paginates}
+      </View>
+
     show_view =  <View style={{flex:1,justifyContent:"flex-start",alignItems:"center"}}>
               {words_view}
+              {paginate_views}
          </View>
     }
+
+
+
 
     return (
         <ScrollView style={[{flex:1,backgroundColor:"white",width:base.ScreenWidth}]}>
           {show_view}
+          
+
         </ScrollView>
 
     )
@@ -256,7 +334,6 @@ _.mixin(Wordbook.prototype,base.base_component);
 import { connect } from "react-redux";
 import {get_my_words} from "./common/redux/actions/actions.js"
 
-
 const mapStateToProps = state => {
   return {
     data: state.update_state
@@ -265,8 +342,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_my_words:(page)=>{
-      dispatch(get_my_words({page:page}))
+    get_my_words:(page,call_back)=>{
+      dispatch(get_my_words({page:page},call_back))
     }
   }
 }
