@@ -482,8 +482,9 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    videos:(page)=>{
-      dispatch(videos({page:page}))
+
+    videos:(page,utype_id)=>{
+      dispatch(videos({utype_id:utype_id,page:page}))
     },
     user_info:()=>{
       dispatch(user_info())
