@@ -33,7 +33,7 @@ class Home extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
-    var headerStyle = {}
+    var headerStyle = {height:0}
     return {headerStyle};
   };
 

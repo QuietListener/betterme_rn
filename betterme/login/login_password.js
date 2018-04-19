@@ -29,7 +29,8 @@ class LoginPassword extends Component {
 
   static navigationOptions = ({ navigation }) => {
     const {params = {}} = navigation.state;
-    return {title:"登录"}
+    var headerStyle = {height:0}
+    return {header:"登录",headerStyle}
   };
 
   constructor(props)
@@ -153,6 +154,7 @@ class LoginPassword extends Component {
 
           <TextInput underlineColorAndroid="transparent" style={[styles.input_text, {marginTop: 4}]} placeholderTextColor="rgb(153, 153, 153)"
                      placeholder={"  手机号"} autoCapitalize={"none"}
+                     keyboardType={"default"}
                      onChangeText={txt => this.setState({account: txt})}/>
 
           <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
@@ -201,7 +203,8 @@ class LoginPassword extends Component {
 
           <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center"},{marginTop: 4}]}>
           <TextInput underlineColorAndroid="transparent" style={[styles.input_text, ]} placeholderTextColor="rgb(153, 153, 153)"
-                     placeholder={"  邮箱/手机号"} autoCapitalize={"none"}
+                     placeholder={"  手机号"} autoCapitalize={"none"}
+                     keyboardType={"default"}
                      onChangeText={txt => this.setState({account: txt})}/>
 
           <TouchableOpacity style={{position:"absolute",right:18}}
@@ -214,6 +217,7 @@ class LoginPassword extends Component {
 
             <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"验证码"}
                        autoCapitalize={"none"} secureTextEntry={false}
+                       keyboardType={"default"}
                        onChangeText={txt => this.setState({code: txt})}/>
 
 
@@ -221,6 +225,7 @@ class LoginPassword extends Component {
 
           <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
                      autoCapitalize={"none"} secureTextEntry={true}
+
                      onChangeText={txt => this.setState({password: txt})}/>
 
           <TouchableOpacity onPress={() => {
@@ -239,12 +244,12 @@ class LoginPassword extends Component {
     }
 
     var show_view_ = <View style={{flex:1,flexDirection:"row"}}>
-      <View style={{flex:1,justifyContent:"flex-start",paddingTop:80,alignItems:"center",backgroundColor:"#f2f2f2"}}>
+      <View style={{flex:1,justifyContent:"flex-start",paddingTop:base.ScreenHeight/2-60,alignItems:"center",backgroundColor:"#f2f2f2"}}>
         <Text style={{marginBottom:8,fontSize:30,marginLeft:-90,fontWeight:"bold",fontFamily: 'System'}}>学英语</Text>
         <Text style={{fontSize:30,marginLeft:30,fontWeight:"bold",fontFamily: 'System'}}>很有趣</Text>
 
       </View>
-      <View style={{flex:2,marginTop:8}}>{show_view}</View>
+      <View style={{flex:2,paddingTop:30}}>{show_view}</View>
     </View>
 
     return (
@@ -291,7 +296,7 @@ const styles = StyleSheet.create(
       backgroundColor: "#1abd0a",
       justifyContent:"center",
       alignItems:"center",
-      marginTop:20}
+      marginTop:6}
     ,
     login_text:{
       fontSize: 16,
@@ -303,7 +308,7 @@ const styles = StyleSheet.create(
 
 const mapStateToProps = state => {
   return {
-    user_info: state.update_state.user_info,
+    user_info: state.update_state.login,
     nav:state.nav,
   }
 }

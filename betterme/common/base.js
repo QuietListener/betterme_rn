@@ -215,7 +215,7 @@ export const URLS = {
   login: {
     method:HttpType.POST,
     url:()=>`${HOBBY_DOMAIN}/login.json`,
-    name:'user_info'
+    name:'login'
   },
 
   user_info: {
