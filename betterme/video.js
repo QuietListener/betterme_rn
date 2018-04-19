@@ -807,7 +807,7 @@ class Video_ extends Component
 
 
 
-    var speedView =  [0.6,0.8,,0.9,1.0,1.1,1.2,1.4,1.5].map((item)=>{
+    var speedView =  [0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2].map((item)=>{
         var active = this.state.rate == item;
         return <Text style={{borderWidth:1,borderRadius:6,padding:4,margin:4,color:active?"white":"black",borderColor:active?"white":"black",fontSize:14}} onPress={()=>this.setState({rate:item})}>
           {item==1.0?"常速":`${item}x`}

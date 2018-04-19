@@ -153,7 +153,7 @@ class Wordbook extends Component
         var video = item.video;
 
 
-        return <View style={{width:base.ScreenWidth-30,borderBottomWidth:1,borderTopWidth:1, padding:8,margin:6,borderRadius:6}}>
+        return <View style={{width:base.ScreenWidth-30,borderBottomWidth:1,borderTopWidth:1, padding:8,margin:6,borderRadius:6,borderColor:"#f2f2f2"}}>
             <View style={{flex:1,flexDirection:"row"}} >
               <View style={{flexDirection:"row",flex:6,justifyContent:"flex-start",alignItems:"center",marginBottom:4}}>
                 <Text style={{fontSize:20}}>{learn_word.word}</Text>

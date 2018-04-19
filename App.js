@@ -41,9 +41,9 @@ const RootStack =  StackNavigator(
     navigationOptions: ({navigation}) => {
 
       const { params } = navigation.state;
-      var left = <TouchableOpacity style={{flex:1,flexDirection:"row",paddingLeft:10,alignItems:"center"}} onPress={
+      var left = <TouchableOpacity style={{flex:1,flexDirection:"row",paddingLeft:10,paddingRight:10,alignItems:"center"}} onPress={
         ()=>{navigation.goBack();} }>
-        <Icon name={'angle-left'} size={25} color="black" />
+        <Icon name={'angle-left'} size={30} color="black" />
       </TouchableOpacity>;
         return {headerLeft:left}
     }

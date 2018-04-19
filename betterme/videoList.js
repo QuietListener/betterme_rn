@@ -42,7 +42,7 @@ class VideoList extends Component
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
 
-    var headerRight =   <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center",marginRight:8}}  activeOpacity={0.9}
+    var headerRight =   <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center",paddingRight:8,paddingLeft:8}}  activeOpacity={0.9}
                                           onPress={()=>navigation.navigate("Setting")}>
       <Icon name="cog" size={26} color="black" />
     </TouchableOpacity>
