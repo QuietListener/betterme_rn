@@ -28,7 +28,9 @@ class Wordbook extends Component
   constructor(props)
   {
     super(props)
-    this.state={}
+    this.state={
+      show_mean:true
+    }
 
     this.read_word = this.read_word.bind(this);
   }
@@ -151,7 +153,7 @@ class Wordbook extends Component
         var video = item.video;
 
 
-        return <View style={{width:base.ScreenWidth-10,borderWidth:1, padding:4,margin:4}}>
+        return <View style={{width:base.ScreenWidth-30,borderBottomWidth:1,borderTopWidth:1, padding:8,margin:6,borderRadius:6}}>
             <View style={{flex:1,flexDirection:"row"}} >
               <View style={{flexDirection:"row",flex:6,justifyContent:"flex-start",alignItems:"center",marginBottom:4}}>
                 <Text style={{fontSize:20}}>{learn_word.word}</Text>
@@ -169,17 +171,17 @@ class Wordbook extends Component
             </View>
 
           <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start"}} >
-            <Text style={{marginRight:8,fontSize:14}}>词意:</Text><Text style={{flex:1}}>{this.mean_cn_view(learn_word.mean_cn)}</Text>
+            <Text style={inner_styles.tip}>词意</Text><Text style={{flex:1,fontWeight:"bold"}}>{this.mean_cn_view(learn_word.mean_cn)}</Text>
           </View>
 
           {subtitle_text?
           <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
-            <Text style={{marginRight:8}}>字幕:</Text><Text style={{flex:1}}>{subtitle_text}</Text>
+            <Text style={inner_styles.tip}>字幕</Text><Text style={{flex:1}}>{subtitle_text}</Text>
           </View>:null}
 
           {video && video.title?
             <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
-              <Text style={{marginRight:8,fontSize:14}}>视频:</Text><Text style={{flex:1,fontSize:12}}>{video.title}</Text>
+              <Text style={inner_styles.tip}>视频</Text><Text style={{flex:1,fontSize:12}}>{video.title}</Text>
             </View>:null}
         </View>
       })
@@ -191,7 +193,7 @@ class Wordbook extends Component
     }
 
     return (
-        <ScrollView style={{flex:1,width:base.ScreenWidth}}>
+        <ScrollView style={[{flex:1,backgroundColor:"white",width:base.ScreenWidth}]}>
           {show_view}
         </ScrollView>
 
@@ -235,6 +237,12 @@ const inner_styles = {
     fontSize:14,
     color:"rgb(177,180,183)"
 
+  },
+
+  tip:{
+    marginRight:8,
+    fontSize:12,
+    borderWidth:1
   }
 
 };

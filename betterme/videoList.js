@@ -44,7 +44,7 @@ class VideoList extends Component
 
     var headerRight =   <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center",marginRight:8}}  activeOpacity={0.9}
                                           onPress={()=>navigation.navigate("Setting")}>
-      <Icon name="cog" size={20} color="black" />
+      <Icon name="cog" size={26} color="black" />
     </TouchableOpacity>
 
 
@@ -367,14 +367,14 @@ class VideoList extends Component
             })
           }}>
 
-          {/*<Image style={{width:width_,height:200,}} source={{uri:item.poster}} />*/}
+          <Image style={{width:width_,height:200,}} source={{uri:item.poster}} />
 
 
           <View style={{
-            position: "absolute", bottom: 0, width: width_
-            , justifyContent: "center", alignItems: "center", backgroundColor: "black"
+            position: "absolute", bottom: 0, width: width_,padding:4
+            , justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)"
           }}>
-            <Text style={{color: "white"}}>{item.title}</Text>
+            <Text style={{fontSize:16,color: "white",textAlign:"center"}}>{item.title}</Text>
           </View>
 
           <View style={{width: width_ - 180}}>
@@ -402,7 +402,7 @@ class VideoList extends Component
 
           <View style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
             <TouchableOpacity style={{borderWidth:1,padding:4,borderRadius:4}} onPress={()=>this.props.navigation.navigate("Wordbook")}>
-              <Text style={{fontSize:12}}>{'收藏的单词'}</Text>
+              <Text style={{fontSize:16}}>{'收藏的单词'}</Text>
             </TouchableOpacity>
           </View>
 
