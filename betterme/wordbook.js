@@ -199,6 +199,14 @@ class Wordbook extends Component
           return null;
 
 
+        var date = null;
+        try
+        {
+          date = new Moment(item.updated_at).format("YYYY-MM-DD");
+        }catch(e)
+        {
+          console.error(e);
+        }
         var subtitle = item.subtitle;
 
         var subtitle_text = null;
@@ -250,6 +258,11 @@ class Wordbook extends Component
             <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
               <Text style={inner_styles.tip}>视频</Text><Text style={{flex:1,fontSize:12}}>{video.title}</Text>
             </View>:null}
+
+          <View style={{flex:1,flexDirection:"row",justifyContent:'flex-end',flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
+            <Text style={[inner_styles.tip,{borderWidth:0}]}>{date}</Text>
+          </View>
+
         </View>
       })
     }
