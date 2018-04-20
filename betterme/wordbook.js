@@ -140,7 +140,8 @@ class Wordbook extends Component
     }
     else if(status == UPDATE_DATA_STATUS.LOADING)
     {
-      show_view=<ActivityIndicator
+      show_view=<View style={{flex:1,paddingTop:30,justifyContent:"center",alignItems:"center"}}>
+        <ActivityIndicator
         animating={true}
         style={{
           alignItems: 'center',
@@ -149,6 +150,7 @@ class Wordbook extends Component
         }}
         size="small"
       />
+      </View>
     }
     else if(status == UPDATE_DATA_STATUS.SUCCEED)
     {

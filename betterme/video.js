@@ -975,7 +975,7 @@ class Video_ extends Component
             }}>
               { this.state.word_info && this.state.word_info.word?
                 <View style={{flex:1}}>
-                <View style={{backgroundColor:"black",height: 32,  margin:2, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+                <View style={{height: 32,  margin:2, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
 
                   <Text style={{
                     flex: 6,
@@ -1006,7 +1006,7 @@ class Video_ extends Component
 
                 </View>
 
-                <View  style={{backgroundColor:"black",height: 32,   margin:2,flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+                <View  style={{height: 32,   margin:2,flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
 
                   <Text style={{
                     flex: 6,
