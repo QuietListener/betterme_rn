@@ -106,59 +106,67 @@ class Video_ extends Component
     this._orientationLisener = this._orientationLisener.bind(this);
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
 
+    this.load_file = this.load_file
     var that = this;
     [{path:srtPath,url:srtUrl},{path:otherSrtPath,url:otherSrtUrl}].forEach((item_,index)=>{
 
       var filePath_ = item_.path;
       var srtUrl_ = item_.url;
+      this.load_file(filePath_,srtUrl_,index);
 
-      RNFS.exists(filePath_).then((srtFileExist)=>{
-        console.log("##>>",index);
-
-        if(srtFileExist == true)
-        {
-          //alert("srt exist")
-          RNFS.readFile(filePath_).then(data=>{
-            //console.log("srt",data);
-            var srt_data = parse(data);
-            if(index == 0)
-            {
-              that.setState({srt_data});
-            }
-            else
-            {
-              that.setState({srt_data1:srt_data});
-            }
-            console.log(srt_data[1])
-          })
-        }
-        else if(srtUrl_)
-        {
-          //alert("srt not exist,url = ",srtUrl_)
-          base.axios({method:"get" , url:srtUrl_ }).then(res3=>{
-            console.log("subtitle",res3.data);
-            var srt_data = parse(res3.data);
-            if(index == 0)
-            {
-              that.setState({srt_data});
-            }
-            else
-            {
-              that.setState({srt_data1:srt_data});
-            }
-            console.log(srt_data[1])
-            console.log(`load  subtitle : ${srtUrl_} 成功`);
-          }).catch(e=>{
-            console.error(e);
-            alert("加载字幕失败...");
-          });
-
-        }
-      });
     });
 
     Orientation.lockToLandscape();
 
+  }
+
+
+  load_file(filePath_,srtUrl_,index)
+  {
+    var that = this;
+    RNFS.exists(filePath_).then((srtFileExist)=>{
+    console.log("##>>",index);
+
+    if(srtFileExist == true)
+    {
+      //alert("srt exist")
+      RNFS.readFile(filePath_).then(data=>{
+        //console.log("srt",data);
+        var srt_data = parse(data);
+        if(index == 0)
+        {
+          that.setState({srt_data});
+        }
+        else
+        {
+          that.setState({srt_data1:srt_data});
+        }
+        console.log(srt_data[1])
+      })
+    }
+    else if(srtUrl_)
+    {
+      //alert("srt not exist,url = ",srtUrl_)
+      base.axios({method:"get" , url:srtUrl_ }).then(res3=>{
+        console.log("subtitle",res3.data);
+        var srt_data = parse(res3.data);
+        if(index == 0)
+        {
+          that.setState({srt_data});
+        }
+        else
+        {
+          that.setState({srt_data1:srt_data});
+        }
+        console.log(srt_data[1])
+        console.log(`load  subtitle : ${srtUrl_} 成功`);
+      }).catch(e=>{
+        console.error(e);
+        alert("字幕加载失败,重新进入视频试试呢?")
+      });
+
+    }
+    });
   }
 
   componentWillUnmount()
