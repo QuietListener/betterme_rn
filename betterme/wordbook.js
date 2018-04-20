@@ -148,7 +148,7 @@ class Wordbook extends Component
           justifyContent: 'center',
           width:16,height:16,
         }}
-        size="small"
+        size="large"
       />
       </View>
     }
@@ -208,7 +208,7 @@ class Wordbook extends Component
 
               <View  style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
 
-              <TouchableOpacity style={{justifyContent:"center",alignItems:"flex-end",padding:4}}
+              <TouchableOpacity style={{justifyContent:"center",alignItems:"flex-end",padding:8,paddingBottom:4}}
                                 onPress={() => { this.read_word(learn_word.word)} }>
                 <Icon name="volume-up" size={18} color="black" />
               </TouchableOpacity>
@@ -222,7 +222,7 @@ class Wordbook extends Component
 
           {subtitle_text?
           <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
-            <Text style={inner_styles.tip}>字幕</Text><Text style={{flex:1}}>{subtitle_text}</Text>
+            <Text style={inner_styles.tip}>字幕</Text><Text style={{fontWeight:"bold",flex:1}}>{subtitle_text}</Text>
           </View>:null}
 
           {video && video.title?
