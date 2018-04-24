@@ -6,7 +6,7 @@
 
 import React, { Component} from 'react';
 import * as base from "../common/base.js"
-import {TouchableOpacity,Image,Button,TextInput,Alert,NativeModules} from "react-native"
+import {TouchableOpacity,Image,Button,TextInput,Alert,NativeModules,Modal} from "react-native"
 import * as BaseStyle from  "../styles/base_style.js"
 import {
   Platform,
@@ -136,6 +136,34 @@ class LoginPassword extends Component {
   //   }
   // }
 
+
+
+  loading()
+  {
+    if(!this.props.data
+      || !this.props.data[base.URLS.login.name]
+      || !this.props.data[base.URLS.login.name].data
+      || !this.props.data[base.URLS.register.name]
+      || !this.props.data[base.URLS.register.name].data
+    )
+      return null;
+
+    var login_data = this.props.data[base.URLS.login.name].data;
+    var login_status = this.props.data[base.URLS.login.name].status;
+
+    var register_data = this.props.data[base.URLS.register.name].data;
+    var register_status = this.props.data[base.URLS.register.name].status;
+
+    if(login_status == UPDATE_DATA_STATUS.LOADING || register_status == UPDATE_DATA_STATUS.LOADING)
+    {
+      return <Modal>
+        <View>
+          <Text>loading</Text>
+        </View>
+      </Modal>
+    }
+
+  }
   render() {
 
 
@@ -255,16 +283,17 @@ class LoginPassword extends Component {
     }
 
     var show_view_ = <View style={{flex:1,flexDirection:"row"}}>
-      <View style={{flex:1,justifyContent:"flex-start",paddingTop:base.ScreenHeight/2-120,alignItems:"center",backgroundColor:"#f2f2f2"}}>
+      <View style={{flex:2,justifyContent:"flex-start",paddingTop:base.ScreenHeight/2-120,alignItems:"center",backgroundColor:"#f2f2f2"}}>
         <Image source={require("../resources/images/bee.png")} style={{marginBottom:20,width:100,height:100}}/>
         <Text style={{marginBottom:8,fontSize:24,textAlign:"left",fontWeight:"bold",fontFamily: 'System'}}>小蜜蜂播放器</Text>
         <Text style={{fontSize:20,fontWeight:"bold",textAlign:"left",fontFamily: 'System'}}>为学习而生</Text>
       </View>
-      <View style={{flex:2,paddingTop:this.state.marginTop}}>{show_view}</View>
+      <View style={{flex:3,paddingTop:this.state.marginTop}}>{show_view}</View>
     </View>
 
     return (
       <View style={BaseStyle.base_styles.base_view_style}>
+        {this.loading()}
         {tip}
         {show_view_}
       </View>

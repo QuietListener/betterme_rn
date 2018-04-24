@@ -226,7 +226,7 @@ export const URLS = {
   register: {
     method:HttpType.POST,
     url:()=>`${HOBBY_DOMAIN}/register.json`,
-    name:'user_info'
+    name:'register'
   },
 
   ensure_code: {
