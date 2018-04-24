@@ -6,7 +6,7 @@
 
 import React, { Component} from 'react';
 import * as base from "../common/base.js"
-import {TouchableOpacity,Button,TextInput,Alert,NativeModules} from "react-native"
+import {TouchableOpacity,Image,Button,TextInput,Alert,NativeModules} from "react-native"
 import * as BaseStyle from  "../styles/base_style.js"
 import {
   Platform,
@@ -42,7 +42,8 @@ class LoginPassword extends Component {
       code:null,
       register:true,
       codeBtnText:codeBtnText,
-      tip:null
+      tip:null,
+      marginTop:50,
     }
 
     this.countdown = this.countdown.bind(this);
@@ -155,10 +156,14 @@ class LoginPassword extends Component {
           <TextInput underlineColorAndroid="transparent" style={[styles.input_text, {marginTop: 4}]} placeholderTextColor="rgb(153, 153, 153)"
                      placeholder={"  手机号"} autoCapitalize={"none"}
                      keyboardType={"default"}
+                     onFocus={()=>{this.setState({marginTop:4})}}
+                     onBlur={()=>{this.setState({marginTop:50})}}
                      onChangeText={txt => this.setState({account: txt})}/>
 
           <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
                      autoCapitalize={"none"} secureTextEntry={true}
+                     onFocus={()=>{this.setState({marginTop:4})}}
+                     onBlur={()=>{this.setState({marginTop:50})}}
                      onChangeText={txt => this.setState({password: txt})}/>
 
 
@@ -205,6 +210,8 @@ class LoginPassword extends Component {
           <TextInput underlineColorAndroid="transparent" style={[styles.input_text, ]} placeholderTextColor="rgb(153, 153, 153)"
                      placeholder={"  手机号"} autoCapitalize={"none"}
                      keyboardType={"default"}
+                     onFocus={()=>{this.setState({marginTop:4})}}
+                     onBlur={()=>{this.setState({marginTop:50})}}
                      onChangeText={txt => this.setState({account: txt})}/>
 
           <TouchableOpacity style={{position:"absolute",right:18}}
@@ -218,6 +225,8 @@ class LoginPassword extends Component {
             <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"验证码"}
                        autoCapitalize={"none"} secureTextEntry={false}
                        keyboardType={"default"}
+                       onFocus={()=>{this.setState({marginTop:4})}}
+                       onBlur={()=>{this.setState({marginTop:50})}}
                        onChangeText={txt => this.setState({code: txt})}/>
 
 
@@ -225,6 +234,8 @@ class LoginPassword extends Component {
 
           <TextInput underlineColorAndroid="transparent" style={styles.input_text} placeholderTextColor="rgb(153, 153, 153)" placeholder={"  密码"}
                      autoCapitalize={"none"} secureTextEntry={true}
+                     onFocus={()=>{this.setState({marginTop:4})}}
+                     onBlur={()=>{this.setState({marginTop:50})}}
 
                      onChangeText={txt => this.setState({password: txt})}/>
 
@@ -244,18 +255,17 @@ class LoginPassword extends Component {
     }
 
     var show_view_ = <View style={{flex:1,flexDirection:"row"}}>
-      {/*<View style={{flex:1,justifyContent:"flex-start",paddingTop:base.ScreenHeight/2-60,alignItems:"center",backgroundColor:"#f2f2f2"}}>*/}
-        {/*<Text style={{marginBottom:8,fontSize:30,marginLeft:-90,fontWeight:"bold",fontFamily: 'System'}}>学英语</Text>*/}
-        {/*<Text style={{fontSize:30,marginLeft:30,fontWeight:"bold",fontFamily: 'System'}}>很有趣</Text>*/}
-
-      {/*</View>*/}
-      <View style={{flex:2,paddingTop:30}}>{show_view}</View>
+      <View style={{flex:1,justifyContent:"flex-start",paddingTop:base.ScreenHeight/2-120,alignItems:"center",backgroundColor:"#f2f2f2"}}>
+        <Image source={require("../resources/images/bee.png")} style={{marginBottom:20,width:100,height:100}}/>
+        <Text style={{marginBottom:8,fontSize:24,textAlign:"left",fontWeight:"bold",fontFamily: 'System'}}>小蜜蜂播放器</Text>
+        <Text style={{fontSize:20,fontWeight:"bold",textAlign:"left",fontFamily: 'System'}}>为学习而生</Text>
+      </View>
+      <View style={{flex:2,paddingTop:this.state.marginTop}}>{show_view}</View>
     </View>
 
     return (
       <View style={BaseStyle.base_styles.base_view_style}>
         {tip}
-
         {show_view_}
       </View>
     );
@@ -268,20 +278,20 @@ const styles = StyleSheet.create(
     input_text: {
       width: 275,
       lineHeight: 30,
-      height:34,
+      height:24,
       borderRadius: 20,
       borderStyle: "solid",
       borderWidth: 0.5,
       borderColor: "#cccccc",
       padding:4,
       color:"black",
-      margin:2,
+      margin:4,
       fontSize:16
     },
     tip_item:{
       flexDirection:"row",
       width: 275,
-      height: 34,
+      height: 30,
       borderRadius: 23,
       backgroundColor: "gray",
       justifyContent:"center",
