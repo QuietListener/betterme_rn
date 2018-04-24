@@ -81,6 +81,20 @@ class Setting extends Component
         <View style={inner_styles.item}>
 
           <TouchableOpacity style={inner_styles.subitem1} onPress={()=>this.logout()}>
+            <Text style={inner_styles.bold_text}>qq群:</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={inner_styles.subitem2} onPress={()=>this.logout()}>
+            <Text style={inner_styles.normal_text}>></Text>
+          </TouchableOpacity>
+
+
+        </View>
+
+
+        <View style={inner_styles.item}>
+
+          <TouchableOpacity style={inner_styles.subitem1} onPress={()=>this.logout()}>
             <Text style={inner_styles.bold_text}>版本(0.1.0)</Text>
           </TouchableOpacity>
 
