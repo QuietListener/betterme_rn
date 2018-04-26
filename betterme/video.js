@@ -926,13 +926,6 @@ class Video_ extends Component
 
         <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.9)"}}>
 
-          {this.state.cur_subtitle && (this.state.show_subtitle_en)?
-          <View style={{backgroundColor:"rgba(255,255,255,0.6)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom:2,paddingTop:2}} ref={(ref) => {
-            this.subtitle_view = ref
-          }}>
-            {this.state.cur_subtitle}
-          </View>
-          :null}
 
           {(this.state.otherText && _.trim(this.state.otherText) != "" && this.state.show_subtitle_other)?
             <View style={{
@@ -944,6 +937,15 @@ class Video_ extends Component
               <Text style={{fontSize:this.state.subtitleFontSize}}>{this.state.otherText}</Text>
             </View>:null
           }
+
+          {this.state.cur_subtitle && (this.state.show_subtitle_en)?
+          <View style={{backgroundColor:"rgba(255,255,255,0.6)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom:2,paddingTop:2}} ref={(ref) => {
+            this.subtitle_view = ref
+          }}>
+            {this.state.cur_subtitle}
+          </View>
+          :null}
+
 
         </View>
 
