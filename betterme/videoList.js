@@ -194,6 +194,7 @@ class VideoList extends Component
               video_id: item.id,
               otherSrtUrl:item.otherSrtUrl,
               otherSrtPath:other_srt_path,
+              package_id: package_.id
             })
           }}>
 

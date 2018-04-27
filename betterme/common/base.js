@@ -21,7 +21,7 @@ export const axios = instance
 
 export const is_android = Platform.OS === "android";
 export const is_ios = Platform.OS === "ios";
-export const Domain =  "172.16.35.224"//"192.168.1.101";//"139.129.86.178";
+export const Domain = "192.168.1.101"// "172.16.35.224"//"139.129.86.178";
 port = ":3000"
 
 export const HOBBY_DOMAIN = `http://${Domain}${port}`;
@@ -288,6 +288,14 @@ export const URLS = {
     url:()=>`${HOBBY_DOMAIN}/api/watch_video.json`,
     name:'watch_video',
   }
+
+  ,
+  my_packages: {
+    method:HttpType.GET,
+    url:()=>`${HOBBY_DOMAIN}/api/my_packages.json`,
+    name:'my_packages',
+  }
+
 
 }
 

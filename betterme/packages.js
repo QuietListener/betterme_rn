@@ -70,6 +70,7 @@ class Packages extends Component
   async componentDidMount()
   {
     this.props.packages(this.state.page,this.paginate);
+    this.props.my_packages(1,null)
   }
 
   paginate(data)
@@ -107,19 +108,24 @@ class Packages extends Component
     if(!this.props.data
       || !this.props.data[base.URLS.packages.name]
       || !this.props.data[base.URLS.packages.name].data
+      || !this.props.data[base.URLS.my_packages.name]
+      || !this.props.data[base.URLS.my_packages.name].data
     )
       return null;
 
     var data = this.props.data[base.URLS.packages.name].data;
     var status = this.props.data[base.URLS.packages.name].status;
 
+    var my_package_data = this.props.data[base.URLS.my_packages.name].data;
+    var my_package_status = this.props.data[base.URLS.my_packages.name].status;
+
     var words_data = data.data;
     var show_view = null;
-    if(status == UPDATE_DATA_STATUS.FAILED ||  (data && data.status !=1))
+    if(my_package_status == UPDATE_DATA_STATUS.FAILED || status == UPDATE_DATA_STATUS.FAILED ||  (data && data.status !=1)||(my_package_data&&my_package_data.status !=1))
     {
       show_view=<Text>加载失败</Text>
     }
-    else if (status == UPDATE_DATA_STATUS.LOADING)
+    else if (status == UPDATE_DATA_STATUS.LOADING || my_package_status == UPDATE_DATA_STATUS.LOADING)
     {
       show_view=<View style={{
         flex: 1,
@@ -137,7 +143,7 @@ class Packages extends Component
         />
       </View>
     }
-    else if(status == UPDATE_DATA_STATUS.SUCCEED)
+    else if(status == UPDATE_DATA_STATUS.SUCCEED || my_package_status == UPDATE_DATA_STATUS.LOADING)
     {
       var package_views = [];
       var packages = data.data.packages;
@@ -146,13 +152,18 @@ class Packages extends Component
 
       console.log("packages+++",data)
 
+      var my_packages = my_package_data.data;
+      console.log("my_packages",my_packages);
+
       if(packages)
       {
         package_views = packages.map(item=>{
+
+          var finished = my_packages.filter(item1=>{return (item.id == item1.package_id && item1.ttype==0) }).length > 0
           return <TouchableOpacity
             style={{height: 200, width: width_, flexDirection: "row", margin: 10, backgroundColor: "white"}}
             onPress={() => {
-              this.props.navigation.navigate("Package_")
+              this.props.navigation.navigate("Package_",{package_id:item.id})
             }}>
 
             <Image style={{width:width_,height:200,}} source={{uri:item.poster}} />
@@ -166,9 +177,10 @@ class Packages extends Component
               <Text style={{fontSize:16,color: "white",textAlign:"center"}}>{item.title}</Text>
             </View>
 
-            <View style={{width: width_ - 180}}>
-
-            </View>
+            { finished == true?
+              <View style={{width:30,height:30,borderRadius:15,backgroundColor:"green",justifyContent:"center",alignItems:"center",position:"absolute",right:4,top:4}}>
+                <Icon name="check" size={20} color="white" />
+              </View>:null}
           </TouchableOpacity>
         })
       }
@@ -180,7 +192,7 @@ class Packages extends Component
     return (
 
         <ScrollView style={{flex:1,width:base.ScreenWidth}}>
-          {package_views}
+          <View style={{flexWrap:"wrap",flexDirection:"row"}}>{package_views}</View>
           <CPagination page={this.state.page} total_page={this.state.total_page} goTo={this.goTo}></CPagination>
         </ScrollView>
 
@@ -235,7 +247,7 @@ _.mixin(Packages.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {videos,user_info,utypes,packages} from "./common/redux/actions/actions.js"
+import {videos,user_info,utypes,packages,my_packages} from "./common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {
@@ -258,6 +270,10 @@ const mapDispatchToProps = dispatch => {
 
     packages:(page,callback)=>{
       dispatch(packages({page:page},callback))
+    },
+
+    my_packages:(page,callback)=>{
+      dispatch(my_packages({page:page},callback))
     },
 
   }

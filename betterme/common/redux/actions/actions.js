@@ -362,3 +362,13 @@ export function watch_video(params,call_back)
   }
 }
 
+
+export function my_packages(params,call_back)
+{
+  console.log("my_packages");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.my_packages,dispatch,getState,call_back,params);
+  }
+}
+
+

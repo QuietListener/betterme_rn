@@ -28,7 +28,7 @@ import Package_ from "../betterme/betterme/package"
 
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-const initialRouteName = "VideoList"
+const initialRouteName = "Home"
 const RootStack =  StackNavigator(
   {
     LoginPassword:{screen:LoginPassword},

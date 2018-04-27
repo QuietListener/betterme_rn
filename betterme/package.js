@@ -56,9 +56,12 @@ class Package extends Component
   constructor(props)
   {
     super(props)
+    const { state, setParams } = this.props.navigation;
+    console.log("state.params.package_id",state.params.package_id);
+
     this.state= {
         page:1,
-        package_id:1,
+        package_id: state.params.package_id,
         total_page:1
       }
 
