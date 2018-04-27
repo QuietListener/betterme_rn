@@ -291,11 +291,11 @@ export function videos(params,call_back)
 }
 
 
-export function user_info()
+export function user_info(call_back)
 {
   console.log("user_info");
   return function(dispatch,getState) {
-    return_get_data_func(base.URLS.user_info,dispatch,getState,null,{});
+    return_get_data_func(base.URLS.user_info,dispatch,getState,call_back,null);
   }
 }
 
@@ -306,3 +306,59 @@ export function utypes()
     return_get_data_func(base.URLS.utypes,dispatch,getState,null,{});
   }
 }
+
+
+
+export function packages(params,call_back)
+{
+  console.log("packages");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.packages,dispatch,getState,call_back,params);
+  }
+}
+
+
+
+export function package_(params,call_back)
+{
+  console.log("packages");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.package,dispatch,getState,call_back,params);
+  }
+}
+
+export function like_package(params,call_back)
+{
+  console.log("like_package");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.like_package,dispatch,getState,call_back,params);
+  }
+}
+
+export function unlike_package(params,call_back)
+{
+  console.log("unlike_package");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.unlike_package,dispatch,getState,call_back,params);
+  }
+}
+
+
+export function add_my_package(params,call_back)
+{
+  console.log("add_my_package");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.add_my_package,dispatch,getState,call_back,params);
+  }
+}
+
+
+
+export function watch_video(params,call_back)
+{
+  console.log("add_my_package");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.watch_video,dispatch,getState,call_back,params);
+  }
+}
+

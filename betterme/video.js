@@ -11,6 +11,8 @@ const DeviceInfo = require('react-native-device-info');
 import Video from "react-native-video"
 import Orientation from 'react-native-orientation';
 var RNFS = require('react-native-fs');
+import {UPDATE_DATA_STATUS} from "./common/redux/actions/actions.js"
+
 
 
 const Subtitle = require('subtitle')
@@ -50,6 +52,7 @@ class Video_ extends Component
     var srtUrl = null;
     var otherSrtUrl = null;
     var video_id = null;
+    var package_id = null;
 
     if(state && state.params)
     {
@@ -60,6 +63,7 @@ class Video_ extends Component
       video_id = state.params.video_id
       otherSrtUrl = state.params.otherSrtUrl;
       otherSrtPath = state.params.otherSrtPath;
+      package_id = state.params.package_id;
     }
 
     console.log({srtPath,otherSrtUrl,videoPath})
@@ -88,6 +92,8 @@ class Video_ extends Component
       show_subtitle_other:true,
       rate:1.0,
       showSettingModal:false,
+      startTime:new Moment(),
+      package_id:package_id
     }
 
     console.log('video state:',this.state);
@@ -104,6 +110,10 @@ class Video_ extends Component
     this.save_word = this.save_word.bind(this);
     this.englishPercent = this.englishPercent.bind(this);
     this._orientationLisener = this._orientationLisener.bind(this);
+    this.onEnd = this.onEnd.bind(this);
+    this.finished_video = this.finished_video.bind(this);
+
+
     RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
 
     this.load_file = this.load_file
@@ -162,7 +172,7 @@ class Video_ extends Component
         console.log(`load  subtitle : ${srtUrl_} 成功`);
       }).catch(e=>{
         console.error(e);
-        alert("字幕加载失败,重新进入视频试试呢?")
+        Alert.alert("","字幕加载失败,重新进入视频试试呢?")
       });
 
     }
@@ -292,8 +302,6 @@ class Video_ extends Component
         that.setState({cur_word:word,word_info:word_info});
       })
     }
-
-
   }
 
   hide_mean_box()
@@ -442,6 +450,8 @@ class Video_ extends Component
     }
 
     this.setState({cur_time:cur_time/1000});
+
+
     console.log("cur_time",this.state.cur_time,this.state.cur_subtitle_org,this.state.otherText,);
   }
 
@@ -500,11 +510,43 @@ class Video_ extends Component
     this.setState({videoLoading:false});
     alert("视频加载失败");
   }
-  //
-  // onEnd()
-  // {
-  //   console.log("onEnd");
-  // }
+
+  finished_video()
+  {
+    if(this.state.duration>0 && this.state.startTime)
+    {
+      var now = new Moment();
+      var time_elapsed = (now - this.state.startTime)/1000;
+
+      var time_elapsed_percent = time_elapsed*1.0/this.state.duration;
+
+      if(time_elapsed_percent < 0.01)
+      {
+        Alert.alert("你是超人吗?","你看得太快了吧");
+        return;
+      }
+
+      this.props.watch_video(this.state.video_id,this.state.package_id,(data)=>{
+        if(data.status == 1)
+        {
+          this.setState({video_finished:true});
+          Alert.alert("","完成了这个视频,加油");
+        }
+        else
+        {
+          Alert.alert("opps!","网络错误,重试一下呢~");
+        }
+      });
+    }
+
+  }
+
+
+  onEnd()
+  {
+
+  }
+
   //
   // onTimedMetadata()
   // {
@@ -692,6 +734,14 @@ class Video_ extends Component
 
     var loadingView = null;
 
+    var watched_loading = false
+    if(this.props.data[base.URLS.package.name] && this.props.data[base.URLS.package.name].status )
+    {
+      watched_loading = this.props.data[base.URLS.package.name].status ;
+    }
+
+
+
     if(this.state.videoLoading == true)
     {
       var playView = null;
@@ -746,8 +796,6 @@ class Video_ extends Component
         <Text style={{fontSize:14,color:"black"}}>  </Text>
 
       </TouchableOpacity>
-
-
         <Text style={{alignSelf:"center",fontSize:15,color:"black"}} > {this.formatedCurrentTime(this.state.cur_time)} </Text>
 
         <Slider
@@ -778,6 +826,26 @@ class Video_ extends Component
         </TouchableOpacity>:null
 
 
+
+    var finishedView =  <TouchableOpacity
+      onPress={()=>{this.state.video_finished == true ?null:this.finished_video()}}
+      style={{width:40,height:40,position:"absolute",top:100,right:10 ,
+        justifyContent:"center",padding:10,alignItems:"center"
+        ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
+        ,borderRadius:20,
+      }}>
+
+      { watched_loading == UPDATE_DATA_STATUS.LOADING ? <ActivityIndicator
+            animating={true}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              width:20,height:20,
+            }}
+            size="small"
+          />:<Icon name={'check'} size={this.state.video_finished == true?20:10} color={this.state.video_finished == true?"yellow":"white"} />
+      }
+    </TouchableOpacity>
 
     var touchView = <TouchableOpacity activeOpacity={0.8}
       style={{position:"absolute",left:0,top:0,zIndex:101,
@@ -889,6 +957,7 @@ class Video_ extends Component
       <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"black"}}>
         {this.state.showProgressBar == true ?progressBar:null}
 
+        {finishedView}
         {settingView}
         {loadingView}
         {touchView}
@@ -907,7 +976,7 @@ class Video_ extends Component
                muted={false}                           // Mutes the audio entirely.
                paused={this.state.paused}                          // Pauses playback entirely.
                resizeMode="cover"                      // Fill the whole screen at aspect ratio.*
-               repeat={true}                           // Repeat forever.
+               repeat={false}                           // Repeat forever.
                playInBackground={false}                // Audio continues to play when app entering background.
                playWhenInactive={false}                // [iOS] Video continues to play when control or notification center are shown.
                ignoreSilentSwitch={"ignore"}           // [iOS] ignore | obey - When 'ignore', audio will still play with the iOS hard silent switch set to silent. When 'obey', audio will toggle with the switch. When not specified, will inherit audio settings as usual.
@@ -1113,7 +1182,7 @@ _.mixin(Video_.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {get_my_words} from "./common/redux/actions/actions.js"
+import {get_my_words,watch_video} from "./common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {
@@ -1126,6 +1195,9 @@ const mapDispatchToProps = dispatch => {
   return {
     get_my_words:(page)=>{
       dispatch(get_my_words({page:page}))
+    },
+    watch_video:(video_id,package_id,call_back)=>{
+      dispatch(watch_video({video_id:video_id,package_id:package_id},call_back))
     }
   }
 }

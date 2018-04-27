@@ -21,10 +21,10 @@ export const axios = instance
 
 export const is_android = Platform.OS === "android";
 export const is_ios = Platform.OS === "ios";
-export const Domain = "139.129.86.178"; //"192.168.1.101";//
+export const Domain =  "172.16.35.224"//"192.168.1.101";//"139.129.86.178";
+port = ":3000"
 
-
-export const HOBBY_DOMAIN = `http://${Domain}`;
+export const HOBBY_DOMAIN = `http://${Domain}${port}`;
 
 export const UGC_PACKAGE_START = 10000000;
 
@@ -251,6 +251,42 @@ export const URLS = {
     method:HttpType.GET,
     url:()=>`${HOBBY_DOMAIN}/api/utypes.json`,
     name:'utypes',
+  }
+  ,
+  packages: {
+    method:HttpType.GET,
+    url:()=>`${HOBBY_DOMAIN}/api/packages.json`,
+    name:'packages',
+  },
+  package: {
+    method:HttpType.GET,
+    url:()=>`${HOBBY_DOMAIN}/api/package.json`,
+    name:'package',
+  },
+
+  like_package: {
+    method:HttpType.POST,
+    url:()=>`${HOBBY_DOMAIN}/api/like_package.json`,
+    name:'like_package',
+  }
+  ,
+  unlike_package: {
+    method:HttpType.POST,
+    url:()=>`${HOBBY_DOMAIN}/api/unlike_package.json`,
+    name:'unlike_package',
+  }
+  ,
+  add_my_package: {
+    method:HttpType.POST,
+    url:()=>`${HOBBY_DOMAIN}/api/add_package.json`,
+    name:'add_my_package',
+  }
+
+  ,
+  watch_video: {
+    method:HttpType.POST,
+    url:()=>`${HOBBY_DOMAIN}/api/watch_video.json`,
+    name:'watch_video',
   }
 
 }

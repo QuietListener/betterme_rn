@@ -62,237 +62,67 @@ class VideoList extends Component
         total_page:1
       }
 
-    this.paginate = this.paginate.bind(this);
-    this.goTo = this.goTo.bind(this);
-    //this.realm = new Realm({schema: [DownloadItem]});
+    this.load_package = this.load_package.bind(this);
+  }
+
+  load_package(data)
+  {
+
+    try
+    {
+      //console.log("+++",data)
+      if(data && data.data && data.data.package_id)
+      {
+        this.props.package_(data.data.package_id,(data)=>{this.setState({my_package:data})});
+      }
+    }
+    catch (e)
+    {
+      console.error(e);
+    }
+
+    return data;
   }
 
   async componentDidMount()
   {
 
-    // base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",expire_in_seconds = 31536000, domain = "172.16.35.224")
-
     var video_list = [];
-    video_list = [
-    ];
+    video_list = [];
 
-    this.props.videos(this.state.page,null,this.paginate);
-    this.props.user_info();
-    this.props.utypes();
-    //
-    //  var url = `${base.HOBBY_DOMAIN}/api/videos.json`
-    //
-    // console.log(`HTTP: begin ${url}`);
-    //  try
-    //  {
-    //    var res3 = await base.axios({method: "get", url: url});
-    //    console.log(`HTTP: ${url} : res=${JSON.stringify(res3)}`);
-    //    let data = res3.data;
-    //    if(data && data.data)
-    //    {
-    //      video_list = data.data.map(item=>{
-    //       return  {
-    //          title:item.title,
-    //          poster: item.poster,
-    //          title_cn: item.title_cn,
-    //          videoUrl: item.video_url,
-    //          srtUrl:  item.srt_url,
-    //          videoFileName:  item.video_file_name,
-    //          srtFileName:   item.srt_file_name,
-    //        }
-    //      })
-    //    }
-    //  }
-    //  catch(e)
-    //  {
-    //     console.error(e);
-    //     alert("加载数据失败");
-    //  }
+    this.props.user_info(this.load_package);
 
     var video_key_list = video_list.map((item)=>{});
-
     var orgin_download_state = {};
-    // try
-    // {
-    //   if(this.realm == null)
-    //   {
-    //     this.realm = await Realm.open({schema: [DownloadItem], deleteRealmIfMigrationNeeded: true});
-    //   }
-    //
-    //   var download_items = this.realm.objects(DownloadItem.name)
-    //   download_items.forEach((item)=>{
-    //     orgin_download_state[item.id] = item.progress;
-    //   })
-    // }
-    // catch(e)
-    // {
-    //     console.error(e);
-    // }
-
     this.setState({video_list, orgin_download_state});
   }
 
-  paginate(data)
-  {
-    if(data && data.data && data.data.total_page)
-    {
-      this.setState({total_page:data.data.total_page} );
-    }
 
-    console.log("paginate",data)
-    return data;
-  }
 
   componentWillUnmount()
   {
-    if(this.realm)
-    {
-      try
-      {
-        this.realm.close()
-      }
-      catch(e)
-      {
-        e.close();
-      }
-    }
   }
-  //
-  // async createOrUpdate(modal,value)
-  // {
-  //
-  //   try
-  //   {
-  //     if(this.realm == null)
-  //     {
-  //       this.realm = await Realm.open({schema: [modal], deleteRealmIfMigrationNeeded: true});
-  //     }
-  //
-  //     this.realm.write(() => {
-  //       this.realm.create(modal.name, value,true);
-  //     });
-  //   }
-  //   catch(e)
-  //   {
-  //     console.error(e);
-  //     try
-  //     {
-  //       this.realm.close();
-  //     }
-  //     catch(e1)
-  //     {
-  //       console.error(e1);
-  //     }
-  //   }
-  // }
 
-  // async download(url,path,key)
-  // {
-  //   RNFS.mkdir(downloadDir);
-  //   console.log(`###download: ${url} \r\n###to ${path}`);
-  //   alert(`###download: ${url} \r\n###to ${path}`)
-  //
-  //   var that = this;
-  //   const options = {
-  //     fromUrl: url,
-  //     toFile: path,
-  //     readTimeout:5000,
-  //     background: true,
-  //     begin: (res) => {
-  //       alert(`开始下载`)
-  //       console.log('begin', res);
-  //       console.log('contentLength:', res.contentLength / 1024 / 1024, 'M');
-  //
-  //     },
-  //     progress: (res) => {
-  //
-  //       let pro = res.bytesWritten*100.0 / res.contentLength
-  //       console.log("progress:",res,pro)
-  //
-  //       if(pro%5 < 0.1)
-  //       {
-  //         that.createOrUpdate(DownloadItem,{id:key,progress:pro})
-  //       }
-  //       var params = {}
-  //       params[key] = pro;
-  //       that.setState(params);
-  //     }
-  //   };
-  //   try {
-  //     const ret = RNFS.downloadFile(options);
-  //     ret.promise.then(res => {
-  //       console.log('success', res);
-  //       console.log('file://' + downloadDest)
-  //       var params = {}
-  //       params[key] = 100;
-  //       this.setState(params);
-  //       this.createOrUpdate(DownloadItem,{id:key,progress:100})
-  //     }).catch(err => {
-  //       console.log('err', err);
-  //
-  //       alert(err)
-  //       that.createOrUpdate(DownloadItem,{id:key,progress:DownloadError})
-  //       var params = {}
-  //       params[key] = DownloadError;
-  //       that.setState(params);
-  //     });
-  //   }
-  //   catch (e) {
-  //     console.error(e);
-  //     alert(e)
-  //
-  //     that.createOrUpdate(DownloadItem,{id:key,progress:DownloadError})
-  //     var params = {}
-  //     params[key] = DownloadError;
-  //     that.setState(params);
-  //   }
-  //
-  // }
-
-
-  goTo(page)
-  {
-    if(page <= 0)
-      return;
-
-    if(page > this.state.total_page)
-      return;
-
-    this.setState({page:page});
-    this.props.videos(this.state.page,null,this.paginate);
-  }
 
 
   render()
   {
 
-    if(!this.props.data
-      || !this.props.data[base.URLS.videos.name]
-      || !this.props.data[base.URLS.videos.name].data
-      || !this.props.data[base.URLS.user_info.name]
+    if(!this.props.data[base.URLS.user_info.name]
       || !this.props.data[base.URLS.user_info.name].data
-      || !this.props.data[base.URLS.utypes.name]
-      || !this.props.data[base.URLS.utypes.name].data
     )
       return null;
-
-    var data = this.props.data[base.URLS.videos.name].data;
-    var status = this.props.data[base.URLS.videos.name].status;
 
     var user_info = this.props.data[base.URLS.user_info.name].data;
     var user_info_status = this.props.data[base.URLS.user_info.name].status;
 
-    var utypes = this.props.data[base.URLS.utypes.name].data;
-    var utypes_status = this.props.data[base.URLS.utypes.name].status;
 
-
-    var words_data = data.data;
     var show_view = null;
-    if(utypes_status == UPDATE_DATA_STATUS.FAILED || user_info_status == UPDATE_DATA_STATUS.FAILED || status == UPDATE_DATA_STATUS.FAILED || (data && data.status !=1))
+    if(user_info_status == UPDATE_DATA_STATUS.FAILED ||  (user_info && user_info.status !=1))
     {
       show_view=<Text>加载失败</Text>
     }
-    else if(utypes_status == UPDATE_DATA_STATUS.LOADING || user_info_status == UPDATE_DATA_STATUS.LOADING || status == UPDATE_DATA_STATUS.LOADING)
+    else if( user_info_status == UPDATE_DATA_STATUS.LOADING)
     {
       show_view=<View style={{
         flex: 1,
@@ -310,28 +140,23 @@ class VideoList extends Component
         />
       </View>
     }
-    else if(status == UPDATE_DATA_STATUS.SUCCEED)
+    else if(user_info_status == UPDATE_DATA_STATUS.SUCCEED)
     {
-      console.log(data);
-      var data = data.data.videos;
-
-      var utype_datas = [];
-      var utype_map = {}
-      console.log("utypes.data",utypes.data);
-      if(utypes && utypes.data)
-      {
-        utype_datas = utypes.data;
-        utype_datas.forEach(item=>{
-          utype_map[item.id] = item;
-        })
-      }
-
-      console.log("utype_map",utype_map);
+      var user_info_data = {};
+      user_info_data = user_info.data;
+      var package_ = user_info_data.package
 
       var videos_views = [];
-      videos_views = data.map((item_) => {
+      var package1 = null;
+      if(this.state.my_package && this.state.my_package.data && this.state.my_package.data.videos)
+      {
+        var package1 = this.state.my_package.data;
+        console.log("package1",package1)
+        var videos_status = package1.videos_status
 
-        var item = { title:item_.title,
+        videos_views = this.state.my_package.data.videos.map((item_) => {
+          var vses = videos_status.filter(item1=>{return (item1[0]==item_.id && item1[1] == 2)}) //2是watched
+          var item = { title:item_.title,
                    poster: item_.poster,
                    title_cn: item_.title_cn,
                    videoUrl: item_.video_url,
@@ -341,7 +166,8 @@ class VideoList extends Component
                    otherSrtFileName:   item_.other_srt_file_name,
                    otherSrtUrl:  item_.other_srt_url,
                    id:item_.id,
-                   utype_id:item_.utype_id
+                   utype_id:item_.utype_id,
+                    finished:vses.length > 0
                  }
 
 
@@ -354,65 +180,11 @@ class VideoList extends Component
         var srt_path = `${downloadDir}/${item.srtFileName}`;
         var other_srt_path = `${downloadDir}/${item.otherSrtFileName}`;
 
-        var progress_video = null;
-        if (this.state[key_video])
-        {
-          progress_video = this.state[key_video];
-        }
-        else if (this.state.orgin_download_state)
-        {
-          progress_video = this.state.orgin_download_state[key_video];
-        }
 
-        var progress_video_str = null;
-        if (progress_video)
-        {
-          if (progress_video >= 0)
-          {
-            progress_video_str = `${progress_video.toFixed(1)}%`;
-          }
-          else if (progress_video == DownloadError)
-          {
-            progress_video_str = "下载失败请重试"
-          }
-        }
-
-
-        var progress_srt = null;
-        if (this.state[key_video])
-        {
-          progress_srt = this.state[key_srt];
-        }
-        else if (this.state.orgin_download_state)
-        {
-          progress_srt = this.state.orgin_download_state[key_srt];
-        }
-
-        var progress_srt_str = null;
-        if (progress_srt)
-        {
-          if (progress_srt >= 0)
-          {
-            progress_srt_str = `${progress_srt.toFixed(1)}%`;
-          }
-          else if (progress_srt == DownloadError)
-          {
-            progress_srt_str = "下载失败请重试"
-          }
-        }
-
-        let width_ = base.ScreenWidth / 2 - 20
-
-        var utype_view = null;
-        if(item.utype_id && utype_map[item.utype_id])
-        {
-          let utype_ = utype_map[item.utype_id];
-          utype_view = <TouchableOpacity style={{position:"absolute",top:4,right:4,padding:6,backgroundColor:"rgba(0,0,0,0.6)",borderRadius:2}}><Text style={{color:"white"}}>{utype_.name}</Text></TouchableOpacity>
-          //console.log("utype_.name",utype_.name);
-        }
+        let width_ = base.ScreenWidth / 3 - 20
 
         return <TouchableOpacity
-          style={{height: 200, width: width_, flexDirection: "row", margin: 10, backgroundColor: "white"}}
+          style={{height: 150, width: width_, flexDirection: "row", margin: 10, backgroundColor: "white"}}
           onPress={() => {
             this.props.navigation.navigate("Video", {
               videoUrl: item.videoUrl,
@@ -425,30 +197,26 @@ class VideoList extends Component
             })
           }}>
 
-          <Image style={{width:width_,height:200,}} source={{uri:item.poster}} />
-
-          {utype_view}
+          <Image style={{width:width_,height:150,}} source={{uri:item.poster}} />
 
           <View style={{
             position: "absolute", bottom: 0, width: width_,padding:4
             , justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)"
           }}>
-
             <Text style={{fontSize:16,color: "white",textAlign:"center"}}>{item.title}</Text>
           </View>
 
+          { item.finished == true?
+            <View style={{width:30,height:30,borderRadius:15,backgroundColor:"green",justifyContent:"center",alignItems:"center",position:"absolute",right:4,top:4}}>
+              <Icon name="check" size={20} color="white" />
+            </View>:null}
+
           <View style={{width: width_ - 180}}>
-
-            {/*<Text style={{margin:10}} onPress={()=>this.download(item.videoUrl,video_path, key_video)}>下载视频 {progress_video_str}</Text>*/}
-
-            {/*<Text  style={{margin:10}} onPress={()=>this.download(item.srtUrl,srt_path,key_srt)} >下载字幕  {progress_srt_str}</Text>*/}
           </View>
         </TouchableOpacity>
       });
+      }
 
-
-      var user_info_data = {};
-      user_info_data = user_info.data;
 
       show_view = <View>
 
@@ -461,14 +229,51 @@ class VideoList extends Component
 
 
           <View style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
-            <TouchableOpacity style={{borderWidth:1,padding:4,borderRadius:4}} onPress={()=>this.props.navigation.navigate("Wordbook")}>
-              <Text style={{fontSize:16}}>{'收藏的单词'}</Text>
+            <TouchableOpacity style={{borderWidth:1,padding:6,borderRadius:4}} onPress={()=>this.props.navigation.navigate("Wordbook")}>
+              <Text style={{fontSize:18}}>{'收藏的单词'}</Text>
             </TouchableOpacity>
           </View>
 
         </View>
 
-        <View  style={{flex: 4, flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap"}}>
+        {package_ ?
+          <View style={{height: 100, flexDirection: "row", marginTop:4,paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
+            <View style={{width:80,justifyContent:"center",alignItems:"center"}}>
+              <Image style={{width: 75, height: 90,}} source={{uri: package_.poster}}/>
+            </View>
+
+            <View style={{flex: 2, marginLeft: 20, padding: 4}}>
+              <View>
+                <Text style={{fontSize: 20,fontWeight:"bold"}}>{package_.title_cn}</Text>
+              </View>
+
+              <View>
+                <Text style={{fontSize: 16}}>{package_.title}</Text>
+              </View>
+
+              {package1&&package1.finished == true?
+              <View style={{marginTop:6,flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120,padding:4,borderRadius:2,padding:6}}>
+                <Icon name="check" size={16} color="white" /> <Text style={{fontSize:16,color:"white"}}>专辑完成</Text>
+              </View>
+
+                :null}
+
+            </View>
+
+
+            <View style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
+              <TouchableOpacity style={{borderWidth:1,padding:6,borderRadius:4,marginRight:10}} onPress={()=>this.props.navigation.navigate("Packages")}>
+                <Text style={{fontSize:18}}>{'选新专辑'}</Text>
+              </TouchableOpacity>
+            </View>
+
+
+
+          </View>:null
+        }
+
+
+        <View  style={{flex: 4, marginTop:8,backgroundColor:"white",flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap"}}>
           {videos_views}
         </View>
       </View>
@@ -478,8 +283,6 @@ class VideoList extends Component
 
         <ScrollView style={{flex:1,width:base.ScreenWidth}}>
           {show_view}
-          <CPagination page={this.state.page} total_page={this.state.total_page} goTo={this.goTo}></CPagination>
-
         </ScrollView>
 
     )
@@ -533,7 +336,7 @@ _.mixin(VideoList.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {videos,user_info,utypes} from "./common/redux/actions/actions.js"
+import {videos,user_info,utypes,package_} from "./common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {
@@ -547,11 +350,15 @@ const mapDispatchToProps = dispatch => {
     videos:(page,utype_id,callback)=>{
       dispatch(videos({utype_id:utype_id,page:page},callback))
     },
-    user_info:()=>{
-      dispatch(user_info())
+    user_info:(call_back)=>{
+      dispatch(user_info(call_back))
     },
     utypes:()=>{
       dispatch(utypes())
+    },
+
+    package_:(id,callback)=>{
+      dispatch(package_({id:id},callback))
     },
 
   }
