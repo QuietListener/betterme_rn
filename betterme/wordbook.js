@@ -108,7 +108,11 @@ class Wordbook extends Component
     return ret;
   }
 
-
+  subtitlePressed(subtitleObj)
+  {
+    if(this.props.onSubtitlePress)
+      this.props.onSubtitlePress(subtitleObj)
+  }
 
   goTo(page)
   {
@@ -119,7 +123,7 @@ class Wordbook extends Component
       return;
 
     this.setState({page:page});
-    this.props.get_my_words(page,this.paginate)
+    this.props.get_my_words(this.props.video_id||'',page,this.paginate)
   }
 
   render()
@@ -221,11 +225,13 @@ class Wordbook extends Component
           </View>
 
           {subtitle_text?
-          <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
+          <TouchableOpacity
+            onPress={()=>{this.subtitlePressed(subtitleObj)}}
+            style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
             <Text style={inner_styles.tip}>字幕</Text><Text style={{fontWeight:"bold",flex:1}}>{subtitle_text}</Text>
-          </View>:null}
+          </TouchableOpacity>:null}
 
-          {video && video.title?
+          {this.props.show_video_title != false && video && video.title?
             <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
               <Text style={inner_styles.tip}>视频</Text><Text style={{flex:1,fontSize:12}}>{video.title}</Text>
             </View>:null}
@@ -321,8 +327,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_my_words:(page,call_back)=>{
-      dispatch(get_my_words({page:page},call_back))
+    get_my_words:(video_id,page,call_back)=>{
+      dispatch(get_my_words({video_id:video_id,page:page},call_back))
     }
   }
 }

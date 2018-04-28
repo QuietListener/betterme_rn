@@ -282,13 +282,13 @@ class LoginPassword extends Component {
 
     }
 
-    var show_view_ = <View style={{flex:1,flexDirection:"row"}}>
-      <View style={{flex:2,justifyContent:"flex-start",paddingTop:base.ScreenHeight/2-120,alignItems:"center",backgroundColor:"#f2f2f2"}}>
-        <Image source={require("../resources/images/bee.png")} style={{marginBottom:20,width:100,height:100}}/>
-        <Text style={{marginBottom:8,fontSize:24,textAlign:"left",fontWeight:"bold",fontFamily: 'System'}}>小蜜蜂播放器</Text>
-        <Text style={{fontSize:20,fontWeight:"bold",textAlign:"left",fontFamily: 'System'}}>为学习而生</Text>
+    var show_view_ = <View style={{flex:1}}>
+      <View style={{flex:1,justifyContent:"center",paddingTop:20,alignItems:"center",backgroundColor:"white"}}>
+        <Image source={require("../resources/images/bee.png")} style={{marginBottom:20,width:40,height:40}}/>
+        <Text style={{marginBottom:2,fontSize:16,textAlign:"left",fontWeight:"bold",fontFamily: 'System'}}>小蜜蜂播放器</Text>
+        {/*<Text style={{fontSize:14,fontWeight:"bold",textAlign:"left",fontFamily: 'System'}}>为学习而生</Text>*/}
       </View>
-      <View style={{flex:3,paddingTop:this.state.marginTop}}>{show_view}</View>
+      <View style={{flex:5,paddingTop:0}}>{show_view}</View>
     </View>
 
     return (
@@ -306,8 +306,8 @@ const styles = StyleSheet.create(
   {
     input_text: {
       width: 275,
-      lineHeight: 30,
-      height:24,
+      lineHeight: 32,
+      height:36,
       borderRadius: 20,
       borderStyle: "solid",
       borderWidth: 0.5,
@@ -320,7 +320,7 @@ const styles = StyleSheet.create(
     tip_item:{
       flexDirection:"row",
       width: 275,
-      height: 30,
+      height: 36,
       borderRadius: 23,
       backgroundColor: "gray",
       justifyContent:"center",
@@ -330,7 +330,7 @@ const styles = StyleSheet.create(
     login_item:{
       flexDirection:"row",
       width: 275,
-      height: 34,
+      height: 36,
       borderRadius: 23,
       backgroundColor: "#1abd0a",
       justifyContent:"center",

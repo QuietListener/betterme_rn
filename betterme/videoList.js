@@ -36,6 +36,7 @@ const DownloadError = -100;
 //
 // import Realm from "realm"
 import {DownloadItem} from "./db/models"
+import CVideoItem from "./common/component/c_video_item"
 
 class VideoList extends Component
 {
@@ -181,40 +182,22 @@ class VideoList extends Component
         var other_srt_path = `${downloadDir}/${item.otherSrtFileName}`;
 
 
-        let width_ = base.ScreenWidth / 3 - 20
+        let width_ = base.ScreenWidth / 2 - 20
 
-        return <TouchableOpacity
-          style={{height: 150, width: width_, flexDirection: "row", margin: 10, backgroundColor: "white"}}
-          onPress={() => {
-            this.props.navigation.navigate("Video", {
-              videoUrl: item.videoUrl,
-              videoPath: video_path,
-              srtPath: srt_path,
-              srtUrl: item.srtUrl,
-              video_id: item.id,
-              otherSrtUrl:item.otherSrtUrl,
-              otherSrtPath:other_srt_path,
-              package_id: package_.id
-            })
-          }}>
-
-          <Image style={{width:width_,height:150,}} source={{uri:item.poster}} />
-
-          <View style={{
-            position: "absolute", bottom: 0, width: width_,padding:4
-            , justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)"
-          }}>
-            <Text style={{fontSize:16,color: "white",textAlign:"center"}}>{item.title}</Text>
-          </View>
-
-          { item.finished == true?
-            <View style={{width:30,height:30,borderRadius:15,backgroundColor:"green",justifyContent:"center",alignItems:"center",position:"absolute",right:4,top:4}}>
-              <Icon name="check" size={20} color="white" />
-            </View>:null}
-
-          <View style={{width: width_ - 180}}>
-          </View>
-        </TouchableOpacity>
+        return <CVideoItem navigation={this.props.navigation}
+          width={width_} height={150}
+                           videoUrl={item.videoUrl}
+                           srtUrl={item.srtUrl}
+                           otherSrtUrl={item.otherSrtUrl}
+                           video_path={video_path}
+                           srt_path={srt_path}
+                           other_srt_path ={other_srt_path}
+                           package_id={package_.id}
+                           poster={item.poster}
+                           title={item.title}
+                           finished={item.finished}
+                           video_id={item.id}
+        />
       });
       }
 
@@ -223,19 +206,44 @@ class VideoList extends Component
 
         <View style={{flex:1,flexDirection:"row",padding:12,backgroundColor:"white"}}>
 
-          <View style={{flex:3,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}>
+          <TouchableOpacity
+            onPress={()=>this.props.navigation.navigate("Mine")}
+            style={{flex:1,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}>
             <Icon name="id-badge" size={20} color="black" />
             <Text style={{marginLeft:4,fontSize:18} }>{base.getUserName(user_info_data.name)}</Text>
-         </View>
+         </TouchableOpacity>
+
 
 
           <View style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
-            <TouchableOpacity style={{borderWidth:1,padding:6,borderRadius:4}} onPress={()=>this.props.navigation.navigate("Wordbook")}>
-              <Text style={{fontSize:18}}>{'收藏的单词'}</Text>
+            <TouchableOpacity style={[{backgroundColor:"green"},inner_styles.touchItem]} onPress={()=>this.props.navigation.navigate("Packages")}>
+              <Text style={{fontSize:14,color:"white"}}>{' 选新专辑 '}</Text>
             </TouchableOpacity>
           </View>
 
         </View>
+
+
+        <View style={{flex:1,flexDirection:"row",padding:12,backgroundColor:"white",borderTopWidth:1,borderColor:"#f2f2"}}>
+
+        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+          <TouchableOpacity style={inner_styles.touchItem} onPress={()=>this.props.navigation.navigate("Wordbook")}>
+            <Text style={{fontSize:12}}>{'收藏的单词'}</Text>
+          </TouchableOpacity>
+        </View>
+
+
+        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+
+          <TouchableOpacity style={inner_styles.touchItem}
+                            onPress={()=>{this.props.navigation.navigate("MyPackages")}}>
+            <Text style={{fontSize:11}}>    我的专辑    </Text>
+          </TouchableOpacity>
+
+        </View>
+
+        </View>
+
 
         {package_ ?
           <View style={{height: 100, flexDirection: "row", marginTop:4,paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
@@ -254,7 +262,7 @@ class VideoList extends Component
 
               {package1&&package1.finished == true?
               <View style={{marginTop:6,flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120,padding:4,borderRadius:2,padding:6}}>
-                <Icon name="check" size={16} color="white" /> <Text style={{fontSize:16,color:"white"}}>专辑完成</Text>
+                <Icon name="check" size={14} color="white" /> <Text style={{fontSize:14,color:"white"}}>专辑完成</Text>
               </View>
 
                 :null}
@@ -262,11 +270,6 @@ class VideoList extends Component
             </View>
 
 
-            <View style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
-              <TouchableOpacity style={{borderWidth:1,padding:6,borderRadius:4,marginRight:10}} onPress={()=>this.props.navigation.navigate("Packages")}>
-                <Text style={{fontSize:18}}>{'选新专辑'}</Text>
-              </TouchableOpacity>
-            </View>
 
 
 
@@ -326,7 +329,8 @@ const inner_styles = {
     fontSize:14,
     color:"rgb(177,180,183)"
 
-  }
+  },
+  touchItem:{borderWidth:1,padding:6,borderRadius:4,marginRight:10}
 
 };
 

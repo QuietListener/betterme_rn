@@ -38,19 +38,11 @@ const DownloadError = -100;
 // import Realm from "realm"
 import {DownloadItem} from "./db/models"
 
-class Packages extends Component
+class MyPackages extends Component
 {
 
   static navigationOptions = ({ navigation }) => {
-    // const { params = {} } = navigation.state;
-    // var headerRight =   <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center",paddingRight:8,paddingLeft:8}}  activeOpacity={0.9}
-    //                                       onPress={()=>navigation.navigate("Setting")}>
-    //   <Icon name="cog" size={26} color="black" />
-    // </TouchableOpacity>
-    //
-    //
-    // var headerStyle = params.headerStyle;
-    return {title:"选专辑"};
+    return {title:"收藏的专辑"};
   };
 
 
@@ -70,7 +62,6 @@ class Packages extends Component
 
   async componentDidMount()
   {
-    this.props.packages(this.state.page,this.paginate);
     this.props.my_packages(1,null)
   }
 
@@ -106,27 +97,20 @@ class Packages extends Component
   render()
   {
 
-    if(!this.props.data
-      || !this.props.data[base.URLS.packages.name]
-      || !this.props.data[base.URLS.packages.name].data
-      || !this.props.data[base.URLS.my_packages.name]
+    if(!this.props.data[base.URLS.my_packages.name]
       || !this.props.data[base.URLS.my_packages.name].data
     )
       return null;
 
-    var data = this.props.data[base.URLS.packages.name].data;
-    var status = this.props.data[base.URLS.packages.name].status;
-
     var my_package_data = this.props.data[base.URLS.my_packages.name].data;
     var my_package_status = this.props.data[base.URLS.my_packages.name].status;
 
-    var words_data = data.data;
     var show_view = null;
-    if(my_package_status == UPDATE_DATA_STATUS.FAILED || status == UPDATE_DATA_STATUS.FAILED ||  (data && data.status !=1)||(my_package_data&&my_package_data.status !=1))
+    if(my_package_status == UPDATE_DATA_STATUS.FAILED ||(my_package_data&&my_package_data.status !=1))
     {
       show_view=<Text>加载失败</Text>
     }
-    else if (status == UPDATE_DATA_STATUS.LOADING || my_package_status == UPDATE_DATA_STATUS.LOADING)
+    else if ( my_package_status == UPDATE_DATA_STATUS.LOADING)
     {
       show_view=<View style={{
         flex: 1,
@@ -144,38 +128,81 @@ class Packages extends Component
         />
       </View>
     }
-    else if(status == UPDATE_DATA_STATUS.SUCCEED || my_package_status == UPDATE_DATA_STATUS.LOADING)
+    else if(my_package_status == UPDATE_DATA_STATUS.SUCCEED)
     {
-      var package_views = [];
-      var packages = data.data.packages;
+      var liked_package_views = [];
+      var finished_package_views = [];
+      var played_package_views = []
+      var packages = my_package_data.data;
 
+      console.log("packages +++",packages);
       let width_ = base.ScreenWidth / 2 - 20
-
-      console.log("packages+++",data)
 
       var my_packages = my_package_data.data;
       console.log("my_packages",my_packages);
 
       if(packages)
       {
-        package_views = packages.map(item=>{
+        liked_package_views = packages.filter(item1=>{return item1.ttype==1}).map(item12=>{
+          var item =item12.package;
+          if(!item)  return null
 
-          var finished = my_packages.filter(item1=>{return (item.id == item1.package_id && item1.ttype==0) }).length > 0
-
-          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={finished} width={width_} navigation={this.props.navigation}/>
+          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={false} width={width_} navigation={this.props.navigation}/>
         })
+
+
+        finished_package_views = packages.filter(item1=>{return item1.ttype==0}).map(item12=>{
+          var item =item12.package;
+          if(!item)  return null
+
+          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={false} width={width_} navigation={this.props.navigation}/>
+        })
+
+        played_package_views = packages.filter(item1=>{return item1.ttype==2}).map(item12=>{
+          var item =item12.package;
+          if(!item)  return null
+
+          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={false} width={width_} navigation={this.props.navigation}/>
+        })
+
       }
-      console.log("data");
 
     }
 
 
     return (
 
-        <ScrollView style={{flex:1,width:base.ScreenWidth}}>
-          <View style={{flexWrap:"wrap",flexDirection:"row"}}>{package_views}</View>
-          <CPagination page={this.state.page} total_page={this.state.total_page} goTo={this.goTo}></CPagination>
-        </ScrollView>
+      <ScrollView>
+        <View style={{flex:1}}>
+          {show_view}
+
+          <View style={inner_styles.packageBox}>
+            <View style={inner_styles.tiphead}><Text style={{fontSize:16,color:"white"}}>我收藏的专辑</Text></View>
+            <View style={{flex:1,flexWrap:"wrap",flexDirection:"row",marginTop:6}}>
+            {liked_package_views}
+            </View>
+          </View>
+
+          <View style={inner_styles.packageBox}>
+            <View style={inner_styles.tiphead}><Text style={{fontSize:16,color:"white"}}>我完成的专辑</Text></View>
+            <View style={{flex:1,flexWrap:"wrap",flexDirection:"row",marginTop:6}}>
+              {finished_package_views}
+            </View>
+          </View>
+
+
+
+          <View style={inner_styles.packageBox}>
+            <View style={inner_styles.tiphead}><Text style={{fontSize:16,color:"white"}}>我播放过的专辑</Text></View>
+            <View style={{flex:1,flexWrap:"wrap",flexDirection:"row",marginTop:6}}>
+              {played_package_views}
+            </View>
+          </View>
+
+
+
+        </View>
+      </ScrollView>
 
     )
   }
@@ -217,6 +244,16 @@ const inner_styles = {
     fontSize:14,
     color:"rgb(177,180,183)"
 
+  },
+  tiphead:{
+    backgroundColor:"green",
+    padding:6,
+    fontWeight:"bold",
+    alignItems:"flex-start"
+  },
+  packageBox:{
+    flex:1,
+    marginBottom:10
   }
 
 };
@@ -224,7 +261,7 @@ const inner_styles = {
 
 
 import _ from "lodash"
-_.mixin(Packages.prototype,base.base_component);
+_.mixin(MyPackages.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
@@ -239,29 +276,18 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    videos:(page,utype_id,callback)=>{
-      dispatch(videos({utype_id:utype_id,page:page},callback))
-    },
     user_info:()=>{
       dispatch(user_info())
-    },
-    utypes:()=>{
-      dispatch(utypes())
-    },
-
-    packages:(page,callback)=>{
-      dispatch(packages({page:page},callback))
     },
 
     my_packages:(page,callback)=>{
       dispatch(my_packages({page:page},callback))
-    },
-
+    }
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps)
-(Packages);
+(MyPackages);
 

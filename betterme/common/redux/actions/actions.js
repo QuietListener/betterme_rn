@@ -372,3 +372,14 @@ export function my_packages(params,call_back)
 }
 
 
+
+
+export function statistics(call_back)
+{
+  console.log("statistics");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.statistics,dispatch,getState,call_back,null);
+  }
+}
+
+

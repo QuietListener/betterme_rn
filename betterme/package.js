@@ -15,6 +15,7 @@ const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = r
 //import fs from "fs"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Tts from 'react-native-tts';
+import CVideoItem from "../betterme/common/component/c_video_item"
 
 var RNFS = require('react-native-fs');
 import CPagination from "../betterme/common/component/c_pagination"
@@ -121,6 +122,7 @@ class Package extends Component
     var data = this.props.data[base.URLS.package.name].data;
     var status = this.props.data[base.URLS.package.name].status;
 
+
     var words_data = data.data;
     var show_view = null;
     if(status == UPDATE_DATA_STATUS.FAILED ||  (data && data.status !=1))
@@ -150,7 +152,7 @@ class Package extends Component
       var package_views = [];
       var package_ = data.data;
       var videos = package_.videos;
-      let width_ = base.ScreenWidth / 3 - 20
+      let width_ = base.ScreenWidth / 2 - 20
 
       console.log("packages+++",data)
 
@@ -222,40 +224,20 @@ class Package extends Component
           var srt_path = `${downloadDir}/${item.srtFileName}`;
           var other_srt_path = `${downloadDir}/${item.otherSrtFileName}`;
 
-          return <TouchableOpacity
-            style={{height: 100, width: width_, flexDirection: "row", margin: 10, backgroundColor: "white"}}
-            onPress={() => {
-              this.props.navigation.navigate("Video", {
-                videoUrl: item.videoUrl,
-                videoPath: video_path,
-                srtPath: srt_path,
-                srtUrl: item.srtUrl,
-                video_id: item.id,
-                otherSrtUrl:item.otherSrtUrl,
-                otherSrtPath:other_srt_path,
-                package_id:package_.id
-              })
-            }}>
-
-            <Image style={{width:width_,height:100,}} source={{uri:item.poster}} />
-
-            <View style={{
-              position: "absolute", bottom: 0, width: width_,padding:4
-              , justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)"
-            }}>
-
-              <Text style={{fontSize:16,color: "white",textAlign:"center"}}>{item.title_cn}</Text>
-              <Text style={{fontSize:16,color: "white",textAlign:"center"}}>{item.title}</Text>
-            </View>
-
-            { item.finished == true?
-            <View style={{width:30,height:30,borderRadius:15,backgroundColor:"green",justifyContent:"center",alignItems:"center",position:"absolute",right:4,top:4}}>
-              <Icon name="check" size={20} color="white" />
-            </View>:null}
-
-            <View style={{width: width_ - 180}}>
-            </View>
-          </TouchableOpacity>
+          return  <CVideoItem navigation={this.props.navigation}
+                                     width={width_} height={150}
+                                     videoUrl={item.videoUrl}
+                                     srtUrl={item.srtUrl}
+                                     otherSrtUrl={item.otherSrtUrl}
+                                     video_path={video_path}
+                                     srt_path={srt_path}
+                                     other_srt_path ={other_srt_path}
+                                     package_id={package_.id}
+                                     poster={item.poster}
+                                     title={item.title}
+                                     finished={item.finished}
+                                     video_id={item.id}
+          />
         })
       }
       console.log("data");
@@ -267,23 +249,21 @@ class Package extends Component
       <View style={{flex:1}}>
         <ScrollView style={{flex:1,width:base.ScreenWidth}}>
           {package_ ?
-            <View style={{height: 150, flexDirection: "row", paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
-              <View style={{flex: 1}}>
-                <Image style={{width: base.ScreenWidth / 3, height: 140,}} source={{uri: package_.poster}}/>
+            <View style={{backgroundColor: "white"}}>
+            <View style={{height: 100, flexDirection: "row", paddingLeft: 10, paddingTop: 4}}>
+              <View style={{width:base.ScreenWidth / 4}}>
+                <Image style={{width: base.ScreenWidth / 4-10, height: 100,}} source={{uri: package_.poster}}/>
               </View>
 
-              <View style={{flex: 2, marginLeft: 20, padding: 4}}>
+              <View style={{flex: 2, marginLeft: 6, padding: 4}}>
                 <View>
-                  <Text style={{fontSize: 16}}>{package_.title_cn}({package_.title})</Text>
+                  <Text style={{fontSize: 18,fontWeight:"bold"}}>{package_.title_cn}</Text>
+                  <Text style={{fontSize: 16}}>{package_.title}</Text>
                 </View>
-
-                <ScrollView style={{borderTopWidth: 1, marginTop: 6}}>
-
-                  <Text style={{flex:12}}>{package_.desc}</Text>
-                </ScrollView>
-
               </View>
+            </View>
 
+              <Text style={{flex:11,padding:8,fontSize:10}} numberOfLines={6}>{package_.desc}</Text>
             </View>:null
           }
 
@@ -368,7 +348,6 @@ const inner_styles = {
 
 import _ from "lodash"
 _.mixin(Package.prototype,base.base_component);
-
 
 import { connect } from "react-redux";
 import {videos,user_info,utypes,package_,like_package,unlike_package,add_my_package} from "./common/redux/actions/actions.js"

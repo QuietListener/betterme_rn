@@ -12,7 +12,7 @@ import Video from "react-native-video"
 import Orientation from 'react-native-orientation';
 var RNFS = require('react-native-fs');
 import {UPDATE_DATA_STATUS} from "./common/redux/actions/actions.js"
-
+import Wordbook from "./wordbook.js"
 
 
 const Subtitle = require('subtitle')
@@ -25,8 +25,8 @@ Tts.addEventListener('tts-start', (event) => console.log("start", event));
 Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
 Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
 
-const meanWidth = 300
-const ProgressShowTime = 15000
+const meanWidth = base.ScreenWidth*2/3;
+const ProgressShowTime = 10000
 
 var chineseReg = /[\u4e00-\u9fa5]/g
 
@@ -71,7 +71,7 @@ class Video_ extends Component
     this.state={
       backgroundVideo: {
         width:base.ScreenWidth,
-        height:base.ScreenHeight
+        height:base.ScreenWidth*2/3,
       },
       show_srt_index:-1,
       show_srt_index1:-1,
@@ -87,7 +87,7 @@ class Video_ extends Component
       videoUrl:videoUrl,
       showProgressBar:true,
       video_id:video_id,
-      subtitleFontSize:20,
+      subtitleFontSize:14,
       show_subtitle_en:true,
       show_subtitle_other:true,
       rate:1.0,
@@ -112,9 +112,12 @@ class Video_ extends Component
     this._orientationLisener = this._orientationLisener.bind(this);
     this.onEnd = this.onEnd.bind(this);
     this.finished_video = this.finished_video.bind(this);
+    this.onSubtitlePress = this.onSubtitlePress.bind(this);
 
-
-    RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
+    if(videoPath)
+    {
+      RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
+    }
 
     this.load_file = this.load_file
     var that = this;
@@ -126,7 +129,7 @@ class Video_ extends Component
 
     });
 
-    Orientation.lockToLandscape();
+   // Orientation.lockToLandscape();
 
   }
 
@@ -181,8 +184,8 @@ class Video_ extends Component
 
   componentWillUnmount()
   {
-    Orientation.removeOrientationListener(this._orientationLisener);
-    Orientation.lockToPortrait()
+   // Orientation.removeOrientationListener(this._orientationLisener);
+    //Orientation.lockToPortrait()
   }
 
   componentDidMount()
@@ -192,18 +195,17 @@ class Video_ extends Component
 
     //base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "172.16.35.224")
 
-    Orientation.addOrientationListener(this._orientationLisener);
-
+   // Orientation.addOrientationListener(this._orientationLisener);
   }
 
   _orientationLisener(orientation)
   {
       console.log("orientation changed",orientation);
-      Orientation.lockToLandscape();
+      //Orientation.lockToLandscape();
       //this.onLoad(null,orientation);
   }
   componentWillMount(){
-
+    //Orientation.lockToPortrait();
   }
 
 
@@ -234,7 +236,6 @@ class Video_ extends Component
       this.setState({loadingMean:false});
     }
 
-
     console.log()
 
   }
@@ -245,6 +246,33 @@ class Video_ extends Component
     this.setState({paused:!this.state.paused})
 
   }
+
+
+  mean_cn_view(mean_cn)
+  {
+    if(!mean_cn)
+    {
+      return null;
+    }
+
+    var ret = null;
+    try
+    {
+      ret= JSON.parse(mean_cn).map(item => {
+        return item
+      });
+
+      ret = ret.join(";  ")
+    }
+    catch(e)
+    {
+      ret = mean_cn
+    }
+
+    return ret;
+  }
+
+
 
   pause()
   {
@@ -406,7 +434,7 @@ class Video_ extends Component
                 return<TouchableOpacity style={{paddingRight:4,overflow:"visible"}}
                       ref={(e)=>{this.refs_store[index_] = e}}
                       onPress={()=>this.word_click(words,index_,i)}>
-                  <Text style={{fontSize:this.state.subtitleFontSize}}>{word}</Text>
+                  <Text style={{fontSize:this.state.subtitleFontSize,fontWeight:"bold"}}>{word}</Text>
                 </TouchableOpacity>});
 
               console.log("cur_subtitle",cur_subtitle)
@@ -653,6 +681,9 @@ class Video_ extends Component
     }
 
     console.log("popup_left1",popup_left,"base.ScreenWidth",base.ScreenWidth);
+
+    //小屏幕居中吧
+    popup_left = base.ScreenWidth/2 - base.ScreenWidth * 1/3
     var param = {popup_left,popup_top};
     console.log(param);
     this.setState(param);
@@ -663,6 +694,22 @@ class Video_ extends Component
     var miniseconds = seconds*1000;
     var str = new Moment(miniseconds).format("mm:ss");
     return str;
+  }
+
+  onSubtitlePress(subtitleObj)
+  {
+    console.log("onSubtitlePress",subtitleObj);
+    if(subtitleObj && subtitleObj.start && subtitleObj.start > 0)
+    {
+      let start = subtitleObj.start/1000-1;
+      start = start < 0 ? start = 0: start;
+
+      if(this.state.duration > 0  && start < this.state.duration)
+      {
+        this.changeCurrentTime(start);
+        console.log("set subtitle to ", start);
+      }
+    }
   }
 
   goback()
@@ -741,7 +788,6 @@ class Video_ extends Component
     }
 
 
-
     if(this.state.videoLoading == true)
     {
       var playView = null;
@@ -785,17 +831,9 @@ class Video_ extends Component
     }
 
     var progressBar = <View style={{flexDirection:"row",alignItems:"center"
-      ,justifyContent:"center",height:44,width:this.state.orientation == "LANDSCAPE"? base.ScreenHeight: base.ScreenWidth
-      ,position:"absolute",zIndex:1001,top:0, backgroundColor:"rgba(255,255,255,0.4)"}}>
+      ,justifyContent:"center",height:44,marginTop:this.state.subtitleFontSize*2,width:this.state.orientation == "LANDSCAPE"? base.ScreenHeight: base.ScreenWidth
+      , backgroundColor:"rgba(255,255,255,0.4)"}}>
 
-      <TouchableOpacity activeOpacity={0.8}
-                        style={{flex:1,flexDirection:"row",justifyContent:"center",alignItems:"center"}}
-                        onPress={()=>{this.props.navigation.goBack();}}
-      >
-        <Icon name={'angle-left'} size={32} color="black" />
-        <Text style={{fontSize:14,color:"black"}}>  </Text>
-
-      </TouchableOpacity>
         <Text style={{alignSelf:"center",fontSize:15,color:"black"}} > {this.formatedCurrentTime(this.state.cur_time)} </Text>
 
         <Slider
@@ -817,7 +855,7 @@ class Video_ extends Component
 
     var settingView =  this.state.showProgressBar ? <TouchableOpacity
       onPress={()=>{this.pause();this.setState({showSettingModal:true }) }}
-                          style={{width:40,height:40,position:"absolute",top:50,right:10 ,
+                          style={{width:40,height:40,position:"absolute",top:10,right:60 ,
                             justifyContent:"center",padding:10,alignItems:"center"
                             ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
                             ,borderRadius:20,
@@ -827,9 +865,22 @@ class Video_ extends Component
 
 
 
+    var gobackView =  <TouchableOpacity
+      style={{width:40,height:40,position:"absolute",top:10,left:10
+        ,alignItems:"center",justifyContent:"center"
+        ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
+        ,borderRadius:20
+      }}
+    onPress={()=>{this.props.navigation.goBack();}}
+  >
+
+  <Icon name={'angle-left'} size={22} color="white" />
+
+  </TouchableOpacity>
+
     var finishedView =  <TouchableOpacity
       onPress={()=>{this.state.video_finished == true ?null:this.finished_video()}}
-      style={{width:40,height:40,position:"absolute",top:100,right:10 ,
+      style={{width:40,height:40,position:"absolute",top:10,right:10,
         justifyContent:"center",padding:10,alignItems:"center"
         ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
         ,borderRadius:20,
@@ -848,10 +899,10 @@ class Video_ extends Component
     </TouchableOpacity>
 
     var touchView = <TouchableOpacity activeOpacity={0.8}
-      style={{position:"absolute",left:0,top:0,zIndex:101,
-        flexDirection:"row",justifyContent:"center",alignItems:"center"
-        ,width:base.ScreenWidth,height:base.ScreenHeight
-        ,backgroundColor:"rgba(0,0,0,0.0)"}}
+      style={[{position:"absolute",left:0,top:0,zIndex:101,
+        flexDirection:"row",justifyContent:"center",alignItems:"flex-start"
+
+        ,backgroundColor:"rgba(0,0,0,0.0)"},this.state.backgroundVideo]}
 
       onPress={()=>{this.showProgress();
             this.troggle_video();
@@ -864,8 +915,8 @@ class Video_ extends Component
 
       {this.state.showProgressBar?
        <TouchableOpacity onPress={()=>this.goback()}
-         style={{flex:1,justifyContent:"center",padding:10,alignItems:"center",backgroundColor:"rgba(0,0,0,0.1)"}}>
-          <Icon name={'angle-left'} size={36} color="white" />
+         style={{flex:1,marginTop:80,justifyContent:"center",padding:8,alignItems:"center",backgroundColor:"rgba(0,0,0,0.1)"}}>
+          <Icon name={'angle-left'} size={26} color="white" />
        </TouchableOpacity>:null
       }
 
@@ -876,8 +927,8 @@ class Video_ extends Component
       {this.state.showProgressBar?
         <TouchableOpacity
           onPress={()=>this.goforward()}
-          style={{flex:1,justifyContent:"center",padding:10,alignItems:"center",backgroundColor:"rgba(0,0,0,0.1)"}}>
-          <Icon name={'angle-right'} size={36} color="white" />
+          style={{marginTop:80,flex:1,justifyContent:"center",padding:8,alignItems:"center",backgroundColor:"rgba(0,0,0,0.1)"}}>
+          <Icon name={'angle-right'} size={26} color="white" />
       </TouchableOpacity>:null
       }
 
@@ -900,10 +951,9 @@ class Video_ extends Component
       supportedOrientations={['portrait', 'landscape']}>
 
       <TouchableOpacity onPress={()=>{this.setState({showSettingModal:false }) }}
-
         style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"rgba(0,0,0,0.4)"}}>
 
-        <TouchableOpacity activeOpacity={1} style={{flex:1,marginTop:30,paddingTop:20,paddingBottom:20,borderRadius:4}}>
+        <TouchableOpacity activeOpacity={1} style={{marginTop:150,paddingTop:20,paddingBottom:20,borderRadius:4,width:base.ScreenWidth*2/3,height:base.ScreenHeight/2}}>
           <View style={inner_styles.settingItem}>
             <Text style={inner_styles.tip}>显示英文字幕:</Text>
             <Switch value={this.state.show_subtitle_en}
@@ -929,7 +979,7 @@ class Video_ extends Component
               value={this.state.subtitleFontSize}
               step = { 1 }
               minimumValue = { 14 }
-              maximumValue = { 30 }
+              maximumValue = { 20 }
               minimumTrackTintColor = "black"
               onValueChange={(ChangedValue) => this.setState({subtitleFontSize:ChangedValue})}
             />
@@ -937,10 +987,10 @@ class Video_ extends Component
            <Text style={{fontSize:this.state.subtitleFontSize,color:"yellow"}}>字幕:here we go!</Text>
           </View>
 
-          <View style={[inner_styles.settingItem,{height:46+20,paddingBottom:30}]}>
+          <View style={[inner_styles.settingItem,{height:60+20,paddingBottom:20}]}>
 
             <Text style={inner_styles.tip}>速度:</Text>
-            {speedView}
+            <View style={{flexWrap:"wrap",flexDirection:"row"}}>{speedView}</View>
           </View>
 
         </TouchableOpacity>
@@ -954,18 +1004,18 @@ class Video_ extends Component
     </Modal>
 
     return (
-      <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"black"}}>
-        {this.state.showProgressBar == true ?progressBar:null}
+      <View style={{flex:1,justifyContent:"flex-start",alignItems:"center",backgroundColor:"white"}}>
 
-        {finishedView}
-        {settingView}
-        {loadingView}
-        {touchView}
-        {settingModal}
+
+        <View style={[{},this.state.backgroundVideo]}>
+          {finishedView}
+          {settingView}
+          {loadingView}
+          {touchView}
+          {settingModal}
+          {gobackView}
 
         <Video key={121321}
-
-
           source={{uri:this.state.videoFileExist == true? this.state.videoPath:this.state.videoUrl}}   // Can be a URL or a local file.
                //poster="https://baconmockup.com/300/200/" // uri to an image to display until the video plays
                ref={(ref) => {
@@ -991,131 +1041,139 @@ class Video_ extends Component
                onTimedMetadata={this.onTimedMetadata}  // Callback when the stream receive some metadata
                style={this.state.backgroundVideo} />
 
+          {progressBar}
 
 
-        <View style={{flex:2,position:"absolute",bottom:1,width:base.ScreenWidth ,zIndex:1000,backgroundColor:"rgba(255,255,255,0.9)"}}>
+
+          <View style={{flex:2,minHeight:this.state.subtitleFontSize*3,position:"absolute",bottom:-this.state.subtitleFontSize,width:base.ScreenWidth ,zIndex:1000, justifyContent:"center", backgroundColor: "rgba(255,255,255,0.95)",}}>
 
 
-          {(this.state.otherText && _.trim(this.state.otherText) != "" && this.state.show_subtitle_other)?
-            <View style={{
-              paddingBottom: 2,
-              backgroundColor: "rgba(255,255,255,0.8)",
-              justifyContent: "center",
-              alignItems: "center"
-            }}>
-              <Text style={{fontSize:this.state.subtitleFontSize}}>{this.state.otherText}</Text>
-            </View>:null
-          }
+            {(this.state.otherText && _.trim(this.state.otherText) != "" && this.state.show_subtitle_other)?
+              <View style={{
+                paddingBottom: 1,
+                justifyContent: "center",
+                alignItems: "center"
+              }}>
+                <Text style={{fontSize:this.state.subtitleFontSize,fontWeight:"bold",textAlign:"center"}}>{this.state.otherText}</Text>
+              </View>:null
+            }
 
-          {this.state.cur_subtitle && (this.state.show_subtitle_en)?
-          <View style={{backgroundColor:"rgba(255,255,255,0.6)",flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom:2,paddingTop:2}} ref={(ref) => {
-            this.subtitle_view = ref
-          }}>
-            {this.state.cur_subtitle}
+            {this.state.cur_subtitle && (this.state.show_subtitle_en)?
+              <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom:1,paddingTop:1}} ref={(ref) => {
+                this.subtitle_view = ref
+              }}>
+                {this.state.cur_subtitle}
+              </View>
+              :null}
+
+
           </View>
-          :null}
 
 
-        </View>
+          <View style={{flex:2,width:meanWidth,minHeight:120,
+            backgroundColor:"rgba(0,0,0,0.9)",justifyContent:"center",alignItems:"center",position:"absolute",borderRadius:6,
+            left:this.state.popup_left,bottom:this.state.subtitleFontSize*2,
+            zIndex:1000
+          }}>
+
+            {this.state.loadingMean == true?
+              <View style={{
+                width: meanWidth - 2,
+                flex: 5,
+                alignItems: "center",
+                justifyContent: "center"
+              }}>
+                <ActivityIndicator
+                  animating={true}
+                  style={{
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width:16,height:16,
+                  }}
+                  size="small"
+                />
+              </View>
+              :
+
+              <View style={{
+                width: meanWidth,
+                flex: 5,
+                left:0,
+                alignItems: "flex-start",
+                justifyContent: "flex-start"
+              }}>
+                { this.state.word_info && this.state.word_info.word?
+                  <View style={{flex:1}}>
+                    <View style={{height: 32,  margin:2, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+
+                      <Text style={{
+                        flex: 6,
+                        color: "white",
+                        fontSize: 18,
+                        marginLeft:8,
+                      }}>
+                        { this.state.word_info.word }
+                      </Text>
 
 
+                      <TouchableOpacity style={{flex:1,marginRight:2,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => {
 
-        <View style={{flex:2,width:meanWidth,minHeight:120,
-          backgroundColor:"rgba(0,0,0,0.8)",justifyContent:"center",alignItems:"center",position:"absolute",borderRadius:6,
-          left:this.state.popup_left,bottom:this.state.popup_top,
-          zIndex:1000
-        }}>
+                        if(this.state.word_info && this.state.word_info.logined != true)
+                        {
+                          alert("登录后才能搜藏喔~")
+                          return;
+                        }
 
-          {this.state.loadingMean == true?
-            <View style={{
-              width: meanWidth - 2,
-              flex: 5,
-              alignItems: "center",
-              justifyContent: "center"
-            }}>
-              <ActivityIndicator
-                animating={true}
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width:16,height:16,
-                }}
-                size="small"
-              />
-            </View>
-            :
+                        this.save_word(this.state.word_info.id,
+                          this.state.word_info.word,
+                          this.state.video_id,
+                          this.state.cur_subtitle_org,
+                        ) }}>
 
-            <View style={{
-              width: meanWidth,
-              flex: 5,
-              left:0,
-              alignItems: "flex-start",
-              justifyContent: "flex-start"
-            }}>
-              { this.state.word_info && this.state.word_info.word?
-                <View style={{flex:1}}>
-                <View style={{height: 32,  margin:2, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
+                        <Icon name={`${(this.state.word_info.saved == true && this.state.word_info.logined == true) ? 'star':'star-o'}`} size={18} color="white" />
+                      </TouchableOpacity>
 
-                  <Text style={{
-                    flex: 6,
-                    color: "white",
-                    fontSize: 20,
-                    marginLeft:8,
-                  }}>
-                    { this.state.word_info.word }
-                  </Text>
+                    </View>
 
+                    <View  style={{height: 32,   margin:2,flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
 
-                  <TouchableOpacity style={{flex:1,marginRight:2,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => {
+                      <Text style={{
+                        flex: 6,
+                        color: "white",
+                        fontSize: 14,
+                        marginRight: 10
+                      }}>  {this.state.word_info.accent} </Text>
 
-                    if(this.state.word_info && this.state.word_info.logined != true)
-                    {
-                       alert("登录后才能搜藏喔~")
-                       return;
-                    }
+                      <TouchableOpacity style={{flex:1,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.read_word(this.state.word_info.word)} }>
+                        <Icon name="volume-up" size={18} color="white" />
+                      </TouchableOpacity>
 
-                    this.save_word(this.state.word_info.id,
-                    this.state.word_info.word,
-                    this.state.video_id,
-                      this.state.cur_subtitle_org,
-                    ) }}>
+                    </View>
 
-                    <Icon name={`${(this.state.word_info.saved == true && this.state.word_info.logined == true) ? 'star':'star-o'}`} size={18} color="white" />
-                  </TouchableOpacity>
-
-                </View>
-
-                <View  style={{height: 32,   margin:2,flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
-
-                  <Text style={{
-                    flex: 6,
-                    color: "white",
-                    fontSize: 14,
-                    marginRight: 10
-                  }}>  {this.state.word_info.accent} </Text>
-
-                  <TouchableOpacity style={{flex:1,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.read_word(this.state.word_info.word)} }>
-                    <Icon name="volume-up" size={18} color="white" />
-                  </TouchableOpacity>
-
-                </View>
-
-                <ScrollView>
-                  <View style={{width: meanWidth - 3, marginLeft:8,flex: 1, flexDirection: "column"}}>
-                    {this.state.word_info['mean_cn_view'] }
+                    <ScrollView>
+                      <View style={{width: meanWidth - 3, marginLeft:8,flex: 1, flexDirection: "column"}}>
+                        {this.state.word_info['mean_cn_view'] }
+                      </View>
+                    </ScrollView>
                   </View>
-                </ScrollView>
-                </View>
-                :
-                <View style={{flex:1,width:meanWidth,justifyContent:"center",alignItems:"center"}}>
-                  <Text style={{fontSize:16,color:"white"}}>没有找到数据喃~</Text>
-                </View>
-              }
-            </View>
+                  :
+                  <View style={{flex:1,width:meanWidth,justifyContent:"center",alignItems:"center"}}>
+                    <Text style={{fontSize:16,color:"white"}}>没有找到数据喃~</Text>
+                  </View>
+                }
+              </View>
 
-          }
+            }
+
+
+          </View>
+
         </View>
 
+        <View style={{flex:1,marginTop:this.state.subtitleFontSize*6,borderTopWidth:1,borderColor:"#f2f2"}}>
+          <Text style={{textAlign:"center",padding:6,fontSize:16,paddingTop:16}}>视频中收藏的单词</Text>
+          <Wordbook  onSubtitlePress={this.onSubtitlePress} show_video_title={false} video_id={this.state.video_id}/>
+        </View>
       </View>
     )
   }
@@ -1172,6 +1230,7 @@ const inner_styles = {
     color:"white",
     margin:4
     }
+,
 
 };
 
@@ -1193,9 +1252,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    get_my_words:(page)=>{
-      dispatch(get_my_words({page:page}))
-    },
     watch_video:(video_id,package_id,call_back)=>{
       dispatch(watch_video({video_id:video_id,package_id:package_id},call_back))
     }

@@ -25,10 +25,11 @@ import VideoList from "../betterme/betterme/videoList"
 import Wordbook from "../betterme/betterme/wordbook"
 import Packages from "../betterme/betterme/packages"
 import Package_ from "../betterme/betterme/package"
-
+import Mine from "../betterme/betterme/mine"
+import MyPackages from "../betterme/betterme/my_packages"
 
 import Icon from 'react-native-vector-icons/FontAwesome';
-const initialRouteName = "Home"
+const initialRouteName = "VideoList"
 const RootStack =  StackNavigator(
   {
     LoginPassword:{screen:LoginPassword},
@@ -40,7 +41,9 @@ const RootStack =  StackNavigator(
     VideoList:{screen:VideoList},
     Wordbook:{screen:Wordbook},
     Packages:{screen:Packages},
-    Package_:{screen:Package_}
+    Package_:{screen:Package_},
+    Mine:{screen:Mine},
+    MyPackages:{screen:MyPackages}
   },
   {
     initialRouteName: initialRouteName,
