@@ -768,7 +768,14 @@ class Video_ extends Component
         {
           var word_info = _.clone(this.state.word_info);
           word_info.saved = true
-          this.setState({word_info});
+          var wordBookIndex = this.state.wordBookIndex;
+          if(!wordBookIndex )
+          {
+            wordBookIndex = 0;
+          }
+
+          wordBookIndex+=1;
+          this.setState({word_info,wordBookIndex});
         }
       }
     }).catch(e=>{
@@ -869,7 +876,7 @@ class Video_ extends Component
       style={{width:40,height:40,position:"absolute",top:10,left:10
         ,alignItems:"center",justifyContent:"center"
         ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
-        ,borderRadius:20
+        ,borderRadius:20,borderColor:"white",borderWidth:1
       }}
     onPress={()=>{this.props.navigation.goBack();}}
   >
@@ -883,7 +890,7 @@ class Video_ extends Component
       style={{width:40,height:40,position:"absolute",top:10,right:10,
         justifyContent:"center",padding:10,alignItems:"center"
         ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
-        ,borderRadius:20,
+        ,borderRadius:20,borderWidth:1,borderColor:"white"
       }}>
 
       { watched_loading == UPDATE_DATA_STATUS.LOADING ? <ActivityIndicator
@@ -1172,7 +1179,7 @@ class Video_ extends Component
 
         <View style={{flex:1,marginTop:this.state.subtitleFontSize*6,borderTopWidth:1,borderColor:"#f2f2"}}>
           <Text style={{textAlign:"center",padding:6,fontSize:16,paddingTop:16}}>视频中收藏的单词</Text>
-          <Wordbook  onSubtitlePress={this.onSubtitlePress} show_video_title={false} video_id={this.state.video_id}/>
+          <Wordbook key={this.state.wordBookIndex} onSubtitlePress={this.onSubtitlePress} show_video_title={false} video_id={this.state.video_id}/>
         </View>
       </View>
     )

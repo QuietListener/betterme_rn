@@ -204,43 +204,44 @@ class VideoList extends Component
 
       show_view = <View>
 
-        <View style={{flex:1,flexDirection:"row",padding:12,backgroundColor:"white"}}>
+        <View style={{flex:1,flexDirection:"row",padding:4,backgroundColor:"white"}}>
 
           <TouchableOpacity
             onPress={()=>this.props.navigation.navigate("Mine")}
             style={{flex:1,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}>
             <Icon name="id-badge" size={20} color="black" />
-            <Text style={{marginLeft:4,fontSize:18} }>{base.getUserName(user_info_data.name)}</Text>
+            <Text style={{marginLeft:4,fontSize:14} }>{base.getUserName(user_info_data.name)}</Text>
          </TouchableOpacity>
 
 
 
-          <View style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
-            <TouchableOpacity style={[{backgroundColor:"green"},inner_styles.touchItem]} onPress={()=>this.props.navigation.navigate("Packages")}>
-              <Text style={{fontSize:14,color:"white"}}>{' 选新专辑 '}</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={{flex:2,flexDirection:"row",padding:0,paddingTop:6,paddingBottom:6,backgroundColor:"white"}}>
 
-        </View>
-
-
-        <View style={{flex:1,flexDirection:"row",padding:12,backgroundColor:"white",borderTopWidth:1,borderColor:"#f2f2"}}>
-
-        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-          <TouchableOpacity style={inner_styles.touchItem} onPress={()=>this.props.navigation.navigate("Wordbook")}>
-            <Text style={{fontSize:12}}>{'收藏的单词'}</Text>
-          </TouchableOpacity>
-        </View>
+              <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                <TouchableOpacity style={inner_styles.touchItem} onPress={()=>this.props.navigation.navigate("Wordbook")}>
+                  <Text style={{fontSize:14}}>{'单词本'}</Text>
+                </TouchableOpacity>
+              </View>
 
 
-        <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+              <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
 
-          <TouchableOpacity style={inner_styles.touchItem}
-                            onPress={()=>{this.props.navigation.navigate("MyPackages")}}>
-            <Text style={{fontSize:11}}>    我的专辑    </Text>
-          </TouchableOpacity>
+                <TouchableOpacity style={inner_styles.touchItem}
+                                  onPress={()=>{this.props.navigation.navigate("MyPackages")}}>
+                  <Text style={{fontSize:14}}>我的专辑</Text>
+                </TouchableOpacity>
 
-        </View>
+              </View>
+
+
+              <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                <TouchableOpacity style={[inner_styles.touchItem,{backgroundColor:"green"}]} onPress={()=>this.props.navigation.navigate("Packages")}>
+                  <Text style={{fontSize:14,color:"white"}}>{' 选专辑 '}</Text>
+                </TouchableOpacity>
+              </View>
+
+            </View>
+
 
         </View>
 
@@ -260,12 +261,14 @@ class VideoList extends Component
                 <Text style={{fontSize: 16}}>{package_.title}</Text>
               </View>
 
+              <View style={{flexDirection:"row",justifyContent:"flex-start",alignItem:"center",borderTopWidth:1,borderColor:"#f2f2",paddingTop:8}}>
+
               {package1&&package1.finished == true?
-              <View style={{marginTop:6,flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120,padding:4,borderRadius:2,padding:6}}>
+              <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120},inner_styles.touchItem]}>
                 <Icon name="check" size={14} color="white" /> <Text style={{fontSize:14,color:"white"}}>专辑完成</Text>
               </View>
-
                 :null}
+              </View>
 
             </View>
 
@@ -330,7 +333,7 @@ const inner_styles = {
     color:"rgb(177,180,183)"
 
   },
-  touchItem:{borderWidth:1,padding:6,borderRadius:4,marginRight:10}
+  touchItem:{borderWidth:1,padding:4,borderRadius:4,borderColor:"#f2f2"}
 
 };
 

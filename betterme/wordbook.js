@@ -29,7 +29,7 @@ class Wordbook extends Component
 
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
-    return { title:"我收藏的单词"};
+    return { title:"单词本"};
   };
 
   constructor(props)
@@ -67,6 +67,17 @@ class Wordbook extends Component
   }
 
 
+  componentWillReceiveProps(props)
+  {
+    if(props)
+    {
+      if(this.state.key != props.key)
+      {
+        this.setState({key:props.key});
+        this.componentDidMount();
+      }
+    }
+  }
 
   componentWillUnmount()
   {
