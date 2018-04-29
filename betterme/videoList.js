@@ -64,6 +64,7 @@ class VideoList extends Component
       }
 
     this.load_package = this.load_package.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   load_package(data)
@@ -85,9 +86,10 @@ class VideoList extends Component
     return data;
   }
 
-  async componentDidMount()
+  componentDidMount()
   {
 
+    console.log("componentDidMount  VideoList")
     var video_list = [];
     video_list = [];
 
@@ -197,6 +199,7 @@ class VideoList extends Component
                            title={item.title}
                            finished={item.finished}
                            video_id={item.id}
+                           goBackCallBack={()=>{this.componentDidMount()}}
         />
       });
       }

@@ -53,6 +53,7 @@ class Video_ extends Component
     var otherSrtUrl = null;
     var video_id = null;
     var package_id = null;
+    var goBackCallBack = null;
 
     if(state && state.params)
     {
@@ -64,6 +65,7 @@ class Video_ extends Component
       otherSrtUrl = state.params.otherSrtUrl;
       otherSrtPath = state.params.otherSrtPath;
       package_id = state.params.package_id;
+      goBackCallBack = state.params.goBackCallBack
     }
 
     console.log({srtPath,otherSrtUrl,videoPath})
@@ -93,7 +95,8 @@ class Video_ extends Component
       rate:1.0,
       showSettingModal:false,
       startTime:new Moment(),
-      package_id:package_id
+      package_id:package_id,
+      goBackCallBack:goBackCallBack
     }
 
     console.log('video state:',this.state);
@@ -878,7 +881,13 @@ class Video_ extends Component
         ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
         ,borderRadius:20,borderColor:"white",borderWidth:1
       }}
-    onPress={()=>{this.props.navigation.goBack();}}
+    onPress={()=>{
+      this.props.navigation.goBack();
+      if(this.state.goBackCallBack)
+      {
+        this.state.goBackCallBack();
+      }
+    }}
   >
 
   <Icon name={'angle-left'} size={22} color="white" />
@@ -1248,7 +1257,7 @@ _.mixin(Video_.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {get_my_words,watch_video} from "./common/redux/actions/actions.js"
+import {get_my_words,watch_video,package_} from "./common/redux/actions/actions.js"
 
 
 const mapStateToProps = state => {

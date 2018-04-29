@@ -71,7 +71,7 @@ class Package extends Component
     this.add_package = this.add_package.bind(this);
   }
 
-  async componentDidMount()
+  componentDidMount()
   {
     this.props.package_(this.state.package_id,null);
   }
@@ -213,7 +213,7 @@ class Package extends Component
             otherSrtUrl:  item_.other_srt_url,
             id:item_.id,
             utype_id:item_.utype_id,
-            finished:vses.length > 0
+            finished:vses.length > 0,
           }
 
 
@@ -237,6 +237,7 @@ class Package extends Component
                                      title={item.title}
                                      finished={item.finished}
                                      video_id={item.id}
+                                      goBackCallBack={()=>{this.componentDidMount()}}
           />
         })
       }
