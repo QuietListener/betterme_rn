@@ -156,8 +156,12 @@ class VideoList extends Component
         var package1 = this.state.my_package.data;
         console.log("package1",package1)
         var videos_status = package1.videos_status
+        var videos = this.state.my_package.data.videos;
 
-        videos_views = this.state.my_package.data.videos.map((item_) => {
+        var finished_length = videos_status.filter(item1=>{return (item1[1] == 2)}).length//2是watched
+        var videos_length = videos.length;
+
+        videos_views = videos.map((item_) => {
           var vses = videos_status.filter(item1=>{return (item1[0]==item_.id && item1[1] == 2)}) //2是watched
           var item = { title:item_.title,
                    poster: item_.poster,
@@ -230,7 +234,7 @@ class VideoList extends Component
               <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
 
                 <TouchableOpacity style={inner_styles.touchItem}
-                                  onPress={()=>{this.props.navigation.navigate("MyPackages")}}>
+                                  onPress={()=>{this.props.navigation.navigate("MyPackages",{goBackCallBack:this.componentDidMount})}}>
                   <Text style={{fontSize:14}}>我的专辑</Text>
                 </TouchableOpacity>
 
@@ -270,7 +274,7 @@ class VideoList extends Component
               <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120},inner_styles.touchItem]}>
                 <Icon name="check" size={14} color="white" /> <Text style={{fontSize:14,color:"white"}}>专辑完成</Text>
               </View>
-                :null}
+                :<Text>{finished_length}/{videos_length}</Text>}
               </View>
 
             </View>

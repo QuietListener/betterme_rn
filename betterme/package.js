@@ -69,6 +69,7 @@ class Package extends Component
     this.star_callback = this.star_callback.bind(this);
     this.unstar_callback = this.unstar_callback.bind(this);
     this.add_package = this.add_package.bind(this);
+
   }
 
   componentDidMount()

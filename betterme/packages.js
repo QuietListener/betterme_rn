@@ -66,6 +66,8 @@ class Packages extends Component
     this.goTo = this.goTo.bind(this);
     //this.realm = new Realm({schema: [DownloadItem]});
 
+    this.componentDidMount = this.componentDidMount.bind(this);
+
   }
 
   async componentDidMount()
@@ -162,7 +164,12 @@ class Packages extends Component
 
           var finished = my_packages.filter(item1=>{return (item.id == item1.package_id && item1.ttype==0) }).length > 0
 
-          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={finished} width={width_} navigation={this.props.navigation}/>
+          return <CPackageItem poster={item.poster} package_id={item.id}
+                               title={item.title} title_cn={item.title_cn}
+                               finished={finished} width={width_}
+                               navigation={this.props.navigation}
+                               goBackCallBack={this.componentDidMount}
+          />
         })
       }
       console.log("data");

@@ -345,3 +345,8 @@ export function getUserName(userName)
   return null;
 
 }
+
+export const shadow = { shadowColor:'gray',
+  shadowOffset:{h:10,w:10},
+  shadowRadius:3,
+  shadowOpacity:0.8}
