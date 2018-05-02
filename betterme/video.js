@@ -355,6 +355,12 @@ class Video_ extends Component
 
   setTime(time)
   {
+    if(this.state.cur_time > this.state.duration)
+    {
+      this.pause();
+      return;
+    }
+
     var cur_time = time.currentTime*1000;
     console.log("progress",cur_time);
 
@@ -481,7 +487,6 @@ class Video_ extends Component
     }
 
     this.setState({cur_time:cur_time/1000});
-
 
     console.log("cur_time",this.state.cur_time,this.state.cur_subtitle_org,this.state.otherText,);
   }
@@ -1186,8 +1191,8 @@ class Video_ extends Component
 
         </View>
 
-        <View style={{flex:1,marginTop:this.state.subtitleFontSize*6,borderTopWidth:1,borderColor:"#f2f2"}}>
-          <Text style={{textAlign:"center",padding:6,fontSize:16,paddingTop:16}}>视频中收藏的单词</Text>
+        <View style={{flex:1,marginTop:this.state.subtitleFontSize*6,borderTopWidth:1,borderColor:"#f2f2",paddingTop:8}}>
+
           <Wordbook key={this.state.wordBookIndex} onSubtitlePress={this.onSubtitlePress} show_video_title={false} video_id={this.state.video_id}/>
         </View>
       </View>

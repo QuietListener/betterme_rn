@@ -134,7 +134,7 @@ class Mine extends Component
 
       var userInfoView = null;
 
-      if(user_info_data)
+      if(user_info_data && user_info_data.package)
       {
         userInfoView = <View style={{height:100,backgroundColor:"#f2f2f2",justifyContent:"center",alignItems:"center"}}>
         <View style={{height:40,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
@@ -142,7 +142,7 @@ class Mine extends Component
           <Text style={{marginLeft:4,fontSize:18} }>{base.getUserName(user_info_data.name)}</Text>
 
         </View>
-          <Text style={{marginLeft:4,fontSize:16} }>正在学习专辑:<Text style={{marginLeft:4,fontSize:26} }>{user_info_data.package.title}</Text></Text>
+          <Text style={{marginLeft:4,fontSize:12} }>正在学习: <Text style={{marginLeft:4,fontSize:14,color:"green"} }>{user_info_data.package.title}</Text></Text>
       </View>
       }
 
@@ -161,12 +161,12 @@ class Mine extends Component
            statistics_view = <View style={{backgroundColor:"white",borderTopWidth:1,borderColor:"#f2f2f2"}}>
              <View style={{flexDirection:"row",justifyContent:"space-around"}}>
                <View style={{flex:1,alignItems:"center",padding:20}}>
-                 <Text  style={{fontSize:30,fontWeight:"bold"}}>{statistics_data.finished_package_count}</Text>
+                 <Text  style={{fontSize:30,fontWeight:"bold",color:"green"}}>{statistics_data.finished_package_count}</Text>
                  <Text>完成专辑数</Text>
                </View>
 
                <View style={{flex:1,alignItems:"center",padding:20}}>
-                 <Text style={{fontSize:30,fontWeight:"bold"}}>{statistics_data.watched_video_count}</Text>
+                 <Text style={{fontSize:30,fontWeight:"bold",color:"green"}}>{statistics_data.watched_video_count}</Text>
                  <Text style={{}}>学习视频数</Text>
                </View>
              </View>

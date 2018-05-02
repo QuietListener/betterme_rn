@@ -232,14 +232,14 @@ class Wordbook extends Component
             </View>
 
           <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start"}} >
-            <Text style={inner_styles.tip}>词意</Text><Text style={{flex:1,fontWeight:"bold"}}>{this.mean_cn_view(learn_word.mean_cn)}</Text>
+            <Text style={inner_styles.tip}>词意</Text><Text style={{flex:1,fontWeight:"bold",fontSize:13}}>{this.mean_cn_view(learn_word.mean_cn)}</Text>
           </View>
 
           {subtitle_text?
           <TouchableOpacity
             onPress={()=>{this.subtitlePressed(subtitleObj)}}
             style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
-            <Text style={inner_styles.tip}>字幕</Text><Text style={{fontWeight:"bold",flex:1}}>{subtitle_text}</Text>
+            <Text style={inner_styles.tip}>字幕</Text><Text style={{fontWeight:"bold",flex:1,fontSize:13}}>{subtitle_text}</Text>
           </TouchableOpacity>:null}
 
           {this.props.show_video_title != false && video && video.title?
@@ -257,7 +257,14 @@ class Wordbook extends Component
 
     show_view =  <View style={{flex:1,justifyContent:"flex-start",alignItems:"center"}}>
               {words_view}
-              <CPagination page={this.state.page} total_page={this.state.total_page} goTo={this.goTo}></CPagination>
+      {
+        (this.state.total_page && this.state.total_page > 1) ?<CPagination page={this.state.page} total_page={this.state.total_page} goTo={this.goTo}></CPagination>:
+
+          <View style={{alignItems:"center",justifyContent:"flex-start"}}>
+            <Text style={{fontSize:16,color:"red"}}> 点击字幕上的单词可以查词喔~</Text>
+        </View>
+
+      }
          </View>
     }
 
@@ -303,12 +310,12 @@ const inner_styles = {
   },
 
   bold_text:{
-    fontSize:16,
+    fontSize:14,
     color:"rgb(0,0,0)",
   },
 
   normal_text:{
-    fontSize:14,
+    fontSize:12,
     color:"rgb(177,180,183)"
 
   },

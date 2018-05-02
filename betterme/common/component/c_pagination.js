@@ -52,7 +52,7 @@ export default class CPagination extends Component
 
 
     return   <View style={{padding:4,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
-      {views}
+      {total_page>1?views:null}
     </View>
   }
 }

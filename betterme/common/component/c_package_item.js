@@ -27,8 +27,8 @@ export default class CPackageItem extends Component
         , justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)"
       }}>
 
-        <Text style={{fontSize:16,color: "white",textAlign:"center"}}>{this.props.title_cn}</Text>
-        <Text style={{fontSize:16,color: "white",textAlign:"center"}}>{this.props.title}</Text>
+        <Text style={{fontSize:12,color: "white",textAlign:"center"}}>{this.props.title_cn}</Text>
+        <Text style={{fontSize:12,color: "white",textAlign:"center"}}>{this.props.title}</Text>
       </View>
 
       { this.props.finished == true?

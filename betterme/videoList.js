@@ -209,6 +209,23 @@ class VideoList extends Component
       }
 
 
+      var gotoPackages = null;
+      if(user_info_data && user_info_data.package_id == null)
+      {
+        gotoPackages = <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+          <View style={{flex:1,marginTop:base.ScreenWidth/3-50}}>
+            <Text style={{fontSize:17,justifyContent:"flex-end",textAlign:"center"}}>你还没有学习的视频专辑~</Text>
+            <Text style={{fontSize:17,justifyContent:"flex-end",textAlign:"center"}}>去选一个吧~</Text>
+          </View>
+
+          <TouchableOpacity
+            onPress={()=>this.props.navigation.navigate("Packages")}
+            style={[{width:base.ScreenWidth/2,height:base.ScreenWidth/2,borderRadius:base.ScreenWidth/4,backgroundColor:"red",marginTop:10,justifyContent:"center",alignItems:"center"},base.shadow]}>
+            <Text style={{color:"white",fontSize:18}}>选择视频专辑</Text>
+          </TouchableOpacity>
+        </View>
+      }
+
       show_view = <View>
 
         <View style={{flex:1,flexDirection:"row",padding:4,backgroundColor:"white"}}>
@@ -242,7 +259,8 @@ class VideoList extends Component
 
 
               <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                <TouchableOpacity style={[inner_styles.touchItem,{backgroundColor:"green"}]} onPress={()=>this.props.navigation.navigate("Packages")}>
+                <TouchableOpacity style={[inner_styles.touchItem,{backgroundColor:"green"}]}
+                                  onPress={()=>this.props.navigation.navigate("Packages")}>
                   <Text style={{fontSize:14,color:"white"}}>{' 选专辑 '}</Text>
                 </TouchableOpacity>
               </View>
@@ -253,8 +271,14 @@ class VideoList extends Component
         </View>
 
 
-        {package_ ?
-          <View style={{height: 100, flexDirection: "row", marginTop:4,paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
+        { package_ ?
+          <View style={{flex:1}}>
+
+            <View style={{flex:1,alignItems:"center",justifyContent:"flex-end",padding:8}}>
+              <Text style={{textAlign:"center"}}>正在学习的专辑</Text>
+            </View>
+
+            <View style={{height: 100, flexDirection: "row",paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
             <View style={{width:80,justifyContent:"center",alignItems:"center"}}>
               <Image style={{width: 75, height: 90,}} source={{uri: package_.poster}}/>
             </View>
@@ -271,9 +295,19 @@ class VideoList extends Component
               <View style={{flexDirection:"row",justifyContent:"flex-start",alignItem:"center",borderTopWidth:1,borderColor:"#f2f2",paddingTop:8}}>
 
               {package1&&package1.finished == true?
-              <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120},inner_styles.touchItem]}>
-                <Icon name="check" size={14} color="white" /> <Text style={{fontSize:14,color:"white"}}>专辑完成</Text>
-              </View>
+                <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center"}]}>
+
+                  <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120},inner_styles.touchItem]}>
+                    <Icon name="check" size={14} color="white" />
+                    <Text style={{fontSize:14,color:"white"}}>专辑完成</Text>
+                  </View>
+
+                    <TouchableOpacity style={[inner_styles.touchItem,{backgroundColor:"red",marginLeft:6},base.shadow]}
+                    onPress={()=>this.props.navigation.navigate("Packages")}>
+                    <Text style={{fontSize:13,color:"white"}}>{'选个新专辑吧~'}</Text>
+                    </TouchableOpacity>
+                </View>
+
                 :<Text>{finished_length}/{videos_length}</Text>}
               </View>
 
@@ -283,7 +317,10 @@ class VideoList extends Component
 
 
 
-          </View>:null
+          </View>
+          </View>
+          :gotoPackages
+          }
         }
 
 
@@ -291,6 +328,7 @@ class VideoList extends Component
           {videos_views}
         </View>
       </View>
+
     }
 
     return (
