@@ -158,7 +158,10 @@ class VideoList extends Component
         var videos_status = package1.videos_status
         var videos = this.state.my_package.data.videos;
 
-        var finished_length = videos_status.filter(item1=>{return (item1[1] == 2)}).length//2是watched
+        console.log("###videos_status")
+        console.log(videos_status);
+        var finished_length = videos_status.filter(item1=>{return (item1[1] == 2 && item1[0]==package1.id)}).length//2是watched
+
         var videos_length = videos.length;
 
         videos_views = videos.map((item_) => {
@@ -308,7 +311,7 @@ class VideoList extends Component
                     </TouchableOpacity>
                 </View>
 
-                :<Text>{finished_length}/{videos_length}</Text>}
+                :<Text>进度:  <Text style={{fontSize:20,color:"green",fontWeight:"bold"}}>{finished_length}</Text>   <Text style={{fontSize:18,color:"black",fontWeight:"bold"}}>/  {videos_length}</Text></Text>}
               </View>
 
             </View>

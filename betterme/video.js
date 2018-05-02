@@ -870,7 +870,7 @@ class Video_ extends Component
 
     var settingView =  this.state.showProgressBar ? <TouchableOpacity
       onPress={()=>{this.pause();this.setState({showSettingModal:true }) }}
-                          style={{width:40,height:40,position:"absolute",top:10,right:60 ,
+                          style={{width:40,height:40,position:"absolute",top:10,right:10 ,
                             justifyContent:"center",padding:10,alignItems:"center"
                             ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
                             ,borderRadius:20,
@@ -899,25 +899,34 @@ class Video_ extends Component
 
   </TouchableOpacity>
 
-    var finishedView =  <TouchableOpacity
-      onPress={()=>{this.state.video_finished == true ?null:this.finished_video()}}
-      style={{width:40,height:40,position:"absolute",top:10,right:10,
-        justifyContent:"center",padding:10,alignItems:"center"
-        ,backgroundColor:"rgba(0,0,0,0.3)",zIndex:102
-        ,borderRadius:20,borderWidth:1,borderColor:"white"
-      }}>
+    var finishedView = <View style={{flex:0.2,flexDirection:"row",backgroundColor:"#f2f2f2",width:base.ScreenWidth,justifyContent:"center",padding:2, alignItems:"center"}}>
 
-      { watched_loading == UPDATE_DATA_STATUS.LOADING ? <ActivityIndicator
+        <TouchableOpacity
+        onPress={()=>{this.state.video_finished == true ?null:this.finished_video()}}
+        style={[{padding:6,alignItems:"center",flexDirection:"row",justifyContent:"flex-end"
+          ,borderWidth:1,borderRadius:2,borderColor:"f2f2f2",backgroundColor:"#f2f2f2"
+        }]}>
+
+
+
+          { watched_loading == UPDATE_DATA_STATUS.LOADING ? <ActivityIndicator
             animating={true}
             style={{
               alignItems: 'center',
+              flex:1,
               justifyContent: 'center',
               width:20,height:20,
             }}
             size="small"
-          />:<Icon name={'check'} size={this.state.video_finished == true?20:10} color={this.state.video_finished == true?"yellow":"white"} />
-      }
+          />:<View style={{flexDirection:"row",justifyContent:"center"}}>
+            <Text style={{color:"black",fontSize:18,color:this.state.video_finished ? "green" : "black"}}>完成视频学习</Text>
+              {this.state.video_finished == true?
+            <Icon name={'check'} size={20} color={"green"} />:null}
+            </View>
+          }
     </TouchableOpacity>
+
+    </View>
 
     var touchView = <TouchableOpacity activeOpacity={0.8}
       style={[{position:"absolute",left:0,top:0,zIndex:101,
@@ -960,7 +969,7 @@ class Video_ extends Component
 
     var speedView =  [0.8,0.9,1.0,1.1,1.2].map((item)=>{
         var active = this.state.rate == item;
-        return <Text style={{borderWidth:1,borderRadius:6,padding:4,margin:4,color:active?"white":"black",borderColor:active?"white":"black",fontSize:14}} onPress={()=>this.setState({rate:item})}>
+        return <Text style={{borderWidth:1,borderRadius:6,padding:4,margin:4,color:active?"white":"black",borderColor:active?"white":"black",fontSize:12}} onPress={()=>this.setState({rate:item})}>
           {item==1.0?"常速":`${item}x`}
         </Text>
     });
@@ -974,7 +983,7 @@ class Video_ extends Component
       <TouchableOpacity onPress={()=>{this.setState({showSettingModal:false }) }}
         style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"rgba(0,0,0,0.4)"}}>
 
-        <TouchableOpacity activeOpacity={1} style={{marginTop:150,paddingTop:20,paddingBottom:20,borderRadius:4,width:base.ScreenWidth*2/3,height:base.ScreenHeight/2}}>
+        <TouchableOpacity activeOpacity={1} style={{marginTop:-20,paddingTop:20,paddingBottom:20,borderRadius:4,width:base.ScreenWidth*4/5,height:base.ScreenHeight/2}}>
           <View style={inner_styles.settingItem}>
             <Text style={inner_styles.tip}>显示英文字幕:</Text>
             <Switch value={this.state.show_subtitle_en}
@@ -1029,7 +1038,7 @@ class Video_ extends Component
 
 
         <View style={[{},this.state.backgroundVideo]}>
-          {finishedView}
+
           {settingView}
           {loadingView}
           {touchView}
@@ -1191,8 +1200,10 @@ class Video_ extends Component
 
         </View>
 
+
         <View style={{flex:1,marginTop:this.state.subtitleFontSize*6,borderTopWidth:1,borderColor:"#f2f2",paddingTop:8}}>
 
+          {finishedView}
           <Wordbook key={this.state.wordBookIndex} onSubtitlePress={this.onSubtitlePress} show_video_title={false} video_id={this.state.video_id}/>
         </View>
       </View>
