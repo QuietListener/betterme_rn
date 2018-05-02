@@ -752,6 +752,7 @@ class Video_ extends Component
 
   save_word(id,word,video_id,subtitle)
   {
+    this.setState({saving_word:true});
     //alert("srt not exist,url = ",srtUrl)
     var url = `${base.HOBBY_DOMAIN}/dict/save_word.json`;
 
@@ -768,7 +769,10 @@ class Video_ extends Component
       }
     }
 
+
     base.axios({method:"post" , url:url ,data:{id:id,word:word,video_id:video_id,subtitle:subtitle_str}}).then(res3=>{
+
+      this.setState({saving_word:false});
       if(res3 && res3.data && res3.data.status == 1)
       {
 
@@ -788,6 +792,7 @@ class Video_ extends Component
       }
     }).catch(e=>{
       alert("保存单词失败",e);
+      this.setState({saving_word:false});
     });
   }
 
@@ -1132,7 +1137,7 @@ class Video_ extends Component
                 alignItems: "flex-start",
                 justifyContent: "flex-start"
               }}>
-                { this.state.word_info && this.state.word_info.word?
+                { this.state.word_info && this.state.word_info.word && this.state.saving_word == false?
                   <View style={{flex:1}}>
                     <View style={{height: 32,  margin:2, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
 
@@ -1147,6 +1152,11 @@ class Video_ extends Component
 
 
                       <TouchableOpacity style={{flex:1,marginRight:2,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => {
+
+                        if(this.state.saving_word == true)
+                        {
+                          return;
+                        }
 
                         if(this.state.word_info && this.state.word_info.logined != true)
                         {
