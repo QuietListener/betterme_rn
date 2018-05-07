@@ -237,7 +237,7 @@ class VideoList extends Component
 
           <TouchableOpacity
             onPress={()=>this.props.navigation.navigate("Mine")}
-            style={{flex:1,flexDirection:"row",justifyContent:"flex-start",alignItems:"center"}}>
+            style={{flex:1,flexDirection:"row",justifyContent:"flex-start",alignItems:"center",}}>
             <Icon name="id-badge" size={20} color="black" />
             <Text style={{marginLeft:4,fontSize:14} }>{base.getUserName(user_info_data.name)}</Text>
          </TouchableOpacity>

@@ -16,6 +16,7 @@ const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = r
 //import fs from "fs"
 
 import Tts from 'react-native-tts';
+Tts.setDucking(true);
 Tts.addEventListener('tts-start', (event) => console.log("start", event));
 Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
 Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
@@ -91,6 +92,8 @@ class Wordbook extends Component
     {
       Tts.getInitStatus().then(() => {
         Tts.speak(word);
+      }).catch(e=>{
+        console.error(e);
       });
     }
   }
