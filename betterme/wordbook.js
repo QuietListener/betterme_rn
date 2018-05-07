@@ -258,7 +258,7 @@ class Wordbook extends Component
     show_view =  <View style={{flex:1,justifyContent:"flex-start",alignItems:"center"}}>
               {words_view}
       {
-        (this.state.total_page && this.state.total_page > 1) ?<CPagination page={this.state.page} total_page={this.state.total_page} goTo={this.goTo}></CPagination>:
+        (words && words.length > 0) ?<CPagination page={this.state.page} total_page={this.state.total_page} goTo={this.goTo}></CPagination>:
 
           <View style={{alignItems:"center",justifyContent:"flex-start"}}>
             <Text style={{fontSize:16,color:"red"}}> 点击字幕上的单词可以查词喔~</Text>

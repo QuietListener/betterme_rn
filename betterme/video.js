@@ -96,7 +96,8 @@ class Video_ extends Component
       showSettingModal:false,
       startTime:new Moment(),
       package_id:package_id,
-      goBackCallBack:goBackCallBack
+      goBackCallBack:goBackCallBack,
+      saving_word:false
     }
 
     console.log('video state:',this.state);
@@ -317,6 +318,7 @@ class Video_ extends Component
     if(word)
     {
       that.refs_store[word_index].measure(this.measure)
+
 
       this.get_word_info(word,(word,word_info)=>{
         try
@@ -790,6 +792,7 @@ class Video_ extends Component
           this.setState({word_info,wordBookIndex});
         }
       }
+
     }).catch(e=>{
       alert("保存单词失败",e);
       this.setState({saving_word:false});
@@ -909,7 +912,7 @@ class Video_ extends Component
         <TouchableOpacity
         onPress={()=>{this.state.video_finished == true ?null:this.finished_video()}}
         style={[{padding:6,alignItems:"center",flexDirection:"row",justifyContent:"flex-end"
-          ,borderWidth:1,borderRadius:2,borderColor:"f2f2f2",backgroundColor:"#f2f2f2"
+          ,borderWidth:1,borderRadius:2,borderColor:"#f2f2",backgroundColor:"#f2f2f2"
         }]}>
 
 
@@ -923,10 +926,14 @@ class Video_ extends Component
               width:20,height:20,
             }}
             size="small"
-          />:<View style={{flexDirection:"row",justifyContent:"center"}}>
-            <Text style={{color:"black",fontSize:18,color:this.state.video_finished ? "green" : "black"}}>完成视频学习</Text>
-              {this.state.video_finished == true?
-            <Icon name={'check'} size={20} color={"green"} />:null}
+          />:<View style={{flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
+
+            {this.state.video_finished == true? <Icon name={'check'} size={20} color={"green"} />:null}
+
+            <Text style={{color:"black",fontSize:20,padding:2,color:this.state.video_finished ? "green" : "black"}}>{this.state.video_finished == true ? "完成了视频学习 加油~":"点击完成视频学习"} </Text>
+
+
+
             </View>
           }
     </TouchableOpacity>
@@ -1137,7 +1144,7 @@ class Video_ extends Component
                 alignItems: "flex-start",
                 justifyContent: "flex-start"
               }}>
-                { this.state.word_info && this.state.word_info.word && this.state.saving_word == false?
+                { this.state.word_info && this.state.word_info.word?
                   <View style={{flex:1}}>
                     <View style={{height: 32,  margin:2, flexDirection: "row", alignItems: "center", justifyContent: "flex-start"}}>
 
