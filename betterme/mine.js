@@ -142,7 +142,7 @@ class Mine extends Component
           <Text style={{marginLeft:4,fontSize:18} }>{base.getUserName(user_info_data.name)}</Text>
 
         </View>
-          <Text style={{marginLeft:4,fontSize:12} }>正在学习: <Text style={{marginLeft:4,fontSize:14,color:"green"} }>{user_info_data.package.title}</Text></Text>
+          <Text style={{marginLeft:4,fontSize:12} }>正在学习: <Text style={{marginLeft:4,fontSize:14,color:"green"} }>{user_info_data.package.title_cn}</Text></Text>
       </View>
       }
 

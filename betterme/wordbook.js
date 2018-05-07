@@ -178,7 +178,7 @@ class Wordbook extends Component
     if(words.length > 0 )
     {
 
-      words_view = words.map(item=>{
+      words_view = words.map((item,index)=>{
 
         let learn_word = item.learn_word;
         if(!learn_word)
@@ -217,7 +217,7 @@ class Wordbook extends Component
         return <View style={{width:base.ScreenWidth-30,borderBottomWidth:1,borderTopWidth:1, padding:8,margin:6,borderRadius:6,borderColor:"#f2f2f2"}}>
             <View style={{flex:1,flexDirection:"row"}} >
               <View style={{flexDirection:"row",flex:6,justifyContent:"flex-start",alignItems:"center",marginBottom:4}}>
-                <Text style={{fontSize:20}}>{learn_word.word}</Text>
+                <Text style={{fontSize:20}}><Text style={{fontSize:11}}>#{index}</Text> {learn_word.word}</Text>
                 <Text style={{marginLeft:20}}>{learn_word.accent}</Text>
               </View>
 
