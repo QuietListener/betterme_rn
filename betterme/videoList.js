@@ -160,7 +160,7 @@ class VideoList extends Component
 
         console.log("###videos_status")
         console.log(videos_status);
-        var finished_length = videos_status.filter(item1=>{return (item1[1] == 2 && item1[0]==package1.id)}).length//2是watched
+        var finished_length = 0;
 
         var videos_length = videos.length;
 
@@ -180,6 +180,8 @@ class VideoList extends Component
                     finished:vses.length > 0
                  }
 
+          if(vses.length > 0)
+            finished_length+=1;
 
         console.log("video :",item);
 
@@ -288,11 +290,11 @@ class VideoList extends Component
 
             <View style={{flex: 2, marginLeft: 20, padding: 4}}>
               <View>
-                <Text style={{fontSize: 20,fontWeight:"bold"}}>{package_.title_cn}</Text>
+                <Text style={{fontSize: 16,fontWeight:"bold"}}>{package_.title_cn}</Text>
               </View>
 
               <View>
-                <Text style={{fontSize: 16}}>{package_.title}</Text>
+                <Text style={{fontSize: 14}}>{package_.title}</Text>
               </View>
 
               <View style={{flexDirection:"row",justifyContent:"flex-start",alignItem:"center",borderTopWidth:1,borderColor:"#f2f2",paddingTop:8}}>

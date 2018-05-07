@@ -524,7 +524,10 @@ class Video_ extends Component
   changeCurrentTime(currentTime)
   {
     if(this.player)
+    {
+      this.setState({cur_time:currentTime});
       this.player.seek(currentTime)
+    }
 
   }
 
