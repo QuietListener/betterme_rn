@@ -1023,7 +1023,7 @@ class Video_ extends Component
               style={{backgroundColor:"rgba(0,0,0,0.0)",flex:5.5}}
               value={this.state.subtitleFontSize}
               step = { 1 }
-              minimumValue = { 14 }
+              minimumValue = { 11 }
               maximumValue = { 20 }
               minimumTrackTintColor = "black"
               onValueChange={(ChangedValue) => this.setState({subtitleFontSize:ChangedValue})}

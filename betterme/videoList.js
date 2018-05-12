@@ -15,7 +15,7 @@ const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = r
 //import fs from "fs"
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Tts from 'react-native-tts';
-var SQLite = require('react-native-sqlite-storage')
+//var SQLite = require('react-native-sqlite-storage')
 var RNFS = require('react-native-fs');
 import CPagination from "../betterme/common/component/c_pagination"
 

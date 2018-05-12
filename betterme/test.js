@@ -16,7 +16,7 @@ const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = r
 //import fs from "fs"
 
 import Tts from 'react-native-tts';
-var SQLite = require('react-native-sqlite-storage')
+//var SQLite = require('react-native-sqlite-storage')
 var RNFS = require('react-native-fs');
 
 //const fromUrl = 'http://wvoice.spriteapp.cn/voice/2015/0818/55d2248309b09.mp3';
