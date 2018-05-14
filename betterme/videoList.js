@@ -276,7 +276,7 @@ class VideoList extends Component
               <View>
               <Text style={{fontSize: 14}}>{package_.title}</Text>
               </View>
-             
+
               <View style={{flexDirection:"row",justifyContent:"flex-start",alignItem:"center",borderTopWidth:1,borderColor:"#f2f2",paddingTop:8}}>
                 {package_status_view}
               </View>
