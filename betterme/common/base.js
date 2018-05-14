@@ -350,3 +350,6 @@ export const shadow = { shadowColor:'gray',
   shadowOffset:{h:10,w:10},
   shadowRadius:3,
   shadowOpacity:0.8}
+
+
+export var access_token = "";

@@ -110,7 +110,6 @@ class VideoList extends Component
 
   render()
   {
-
     if(!this.props.data[base.URLS.user_info.name]
       || !this.props.data[base.URLS.user_info.name].data
     )
@@ -231,6 +230,63 @@ class VideoList extends Component
         </View>
       }
 
+      var package_view = gotoPackages;
+
+      var package_status_view = null;
+      if(!!package1 && package1.finished == true)
+      {
+        package_status_view = <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center"}]}>
+
+          <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120},inner_styles.touchItem]}>
+            <Icon name="check" size={14} color="white" />
+            <Text style={{fontSize:14,color:"white"}}>专辑完成</Text>
+          </View>
+
+          <TouchableOpacity style={[inner_styles.touchItem,{backgroundColor:"red",marginLeft:6},base.shadow]}
+                            onPress={()=>this.props.navigation.navigate("Packages")}>
+            <Text style={{fontSize:13,color:"white"}}>{'选个新专辑吧~'}</Text>
+          </TouchableOpacity>
+        </View>
+      }
+      else
+      {
+          package_status_view =  <Text>进度:  <Text style={{fontSize:20,color:"green",fontWeight:"bold"}}>{finished_length}</Text>
+            <Text style={{fontSize:18,color:"black",fontWeight:"bold"}}>/  {videos_length}</Text></Text>
+      }
+
+
+      if(!!package_)
+      {
+        package_view = <View style={{flex:1}}>
+
+          <View style={{flex:1,alignItems:"center",justifyContent:"flex-end",padding:8}}>
+          <Text style={{textAlign:"center"}}>正在学习的专辑</Text>
+          </View>
+
+          <View style={{height: 100, flexDirection: "row",paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
+            <View style={{width:80,justifyContent:"center",alignItems:"center"}}>
+            <Image style={{width: 75, height: 90,}} source={{uri: package_.poster}}/>
+            </View>
+
+            <View style={{flex: 2, marginLeft: 20, padding: 4}}>
+              <View>
+              <Text style={{fontSize: 16,fontWeight:"bold"}}>{package_.title_cn}</Text>
+              </View>
+
+              <View>
+              <Text style={{fontSize: 14}}>{package_.title}</Text>
+              </View>
+             
+              <View style={{flexDirection:"row",justifyContent:"flex-start",alignItem:"center",borderTopWidth:1,borderColor:"#f2f2",paddingTop:8}}>
+                {package_status_view}
+              </View>
+
+            </View>
+
+          </View>
+        </View>
+      }
+
       show_view = <View>
 
         <View style={{flex:1,flexDirection:"row",padding:4,backgroundColor:"white"}}>
@@ -241,7 +297,6 @@ class VideoList extends Component
             <Icon name="id-badge" size={20} color="black" />
             <Text style={{marginLeft:4,fontSize:14} }>{base.getUserName(user_info_data.name)}</Text>
          </TouchableOpacity>
-
 
 
             <View style={{flex:2,flexDirection:"row",padding:0,paddingTop:6,paddingBottom:6,backgroundColor:"white"}}>
@@ -275,58 +330,7 @@ class VideoList extends Component
 
         </View>
 
-
-        { package_ ?
-          <View style={{flex:1}}>
-
-            <View style={{flex:1,alignItems:"center",justifyContent:"flex-end",padding:8}}>
-              <Text style={{textAlign:"center"}}>正在学习的专辑</Text>
-            </View>
-
-            <View style={{height: 100, flexDirection: "row",paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
-            <View style={{width:80,justifyContent:"center",alignItems:"center"}}>
-              <Image style={{width: 75, height: 90,}} source={{uri: package_.poster}}/>
-            </View>
-
-            <View style={{flex: 2, marginLeft: 20, padding: 4}}>
-              <View>
-                <Text style={{fontSize: 16,fontWeight:"bold"}}>{package_.title_cn}</Text>
-              </View>
-
-              <View>
-                <Text style={{fontSize: 14}}>{package_.title}</Text>
-              </View>
-
-              <View style={{flexDirection:"row",justifyContent:"flex-start",alignItem:"center",borderTopWidth:1,borderColor:"#f2f2",paddingTop:8}}>
-
-              {package1&&package1.finished == true?
-                <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center"}]}>
-
-                  <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120},inner_styles.touchItem]}>
-                    <Icon name="check" size={14} color="white" />
-                    <Text style={{fontSize:14,color:"white"}}>专辑完成</Text>
-                  </View>
-
-                    <TouchableOpacity style={[inner_styles.touchItem,{backgroundColor:"red",marginLeft:6},base.shadow]}
-                    onPress={()=>this.props.navigation.navigate("Packages")}>
-                    <Text style={{fontSize:13,color:"white"}}>{'选个新专辑吧~'}</Text>
-                    </TouchableOpacity>
-                </View>
-
-                :<Text>进度:  <Text style={{fontSize:20,color:"green",fontWeight:"bold"}}>{finished_length}</Text>   <Text style={{fontSize:18,color:"black",fontWeight:"bold"}}>/  {videos_length}</Text></Text>}
-              </View>
-
-            </View>
-
-
-
-
-
-          </View>
-          </View>
-          :gotoPackages
-          }
-        }
+        {package_view}
 
 
         <View  style={{flex: 4, marginTop:8,backgroundColor:"white",flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap"}}>

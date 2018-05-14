@@ -53,7 +53,9 @@ class Home extends Component {
       if(access_token)
       {
         console.log(" base.resetAndGoto");
+        base.access_token = access_token;
         base.set_cookie("access_token",access_token, 31536000, base.Domain)
+        base.axios.defaults.headers.common['access_token'] = access_token;
         base.resetAndGoto(this.props.navigation, "VideoList", { access_token: access_token });
       }
       else

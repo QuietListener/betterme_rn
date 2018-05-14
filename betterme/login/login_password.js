@@ -6,7 +6,7 @@
 
 import React, { Component} from 'react';
 import * as base from "../common/base.js"
-import {TouchableOpacity,Image,Button,TextInput,Alert,NativeModules,Modal} from "react-native"
+import {TouchableOpacity,AsyncStorage,Image,Button,TextInput,Alert,NativeModules,Modal} from "react-native"
 import * as BaseStyle from  "../styles/base_style.js"
 import {
   Platform,
@@ -19,7 +19,7 @@ import CHeadTip from "../common/component/c_header_tip"
 
 import { connect } from "react-redux";
 import {login,register,ensure_code,update_data_state,UPDATE_DATA_STATUS,UPDATE_DATA_STATE} from "../../betterme/common/redux/actions/actions.js"
-
+import CookieManager from 'react-native-cookies';
 
 const codeBtnText = "获取验证码"
 const codeBtnDisabled = "秒后重新发送"
@@ -48,6 +48,7 @@ class LoginPassword extends Component {
 
     this.countdown = this.countdown.bind(this);
     // AnotherToastAndroid.show('Another Toast', AnotherToastAndroid.LONG);
+    this.setCookieAndroid = this.setCookieAndroid.bind(this);
   }
 
   toggle()
@@ -55,11 +56,36 @@ class LoginPassword extends Component {
     this.setState({register:!this.state.register})
   }
 
+  setCookieAndroid()
+  {
+
+    // Get cookies as a request header string
+    CookieManager.get( base.URLS.user_info.url())
+      .then((res) => {
+        console.log('CookieManager.get =>', res); // => 'user_session=abcdefg; path=/;'
+      });
+
+    CookieManager.setFromResponse(
+      base.URLS.user_info.url(),"").then((res) => {
+        // `res` will be true or false depending on success.
+        console.log('CookieManager.setFromResponse =>', res);
+      })
+  }
+
   login()
   {
       var account = this.state.account;
       var password = this.state.password;
-      this.props.login({username:account,password:password},null);
+      this.props.login({username:account,password:password},(data)=>{
+        console.log("data11111",data);
+         if(data && data.data && data.data.access_token)
+         {
+           AsyncStorage.setItem("access_token", data.data.access_token);
+           base.access_token = data.data.access_token;
+         }
+
+         return data;
+      });
   }
 
   register()
@@ -284,7 +310,9 @@ class LoginPassword extends Component {
 
     var show_view_ = <View style={{flex:1}}>
       <View style={{flex:1,justifyContent:"center",paddingTop:20,alignItems:"center",backgroundColor:"white"}}>
-        <Image source={require("../resources/images/bee.png")} style={{marginBottom:20,width:40,height:40}}/>
+
+        {/*<Image source={require("../resources/images/bee.png")} style={{marginBottom:20,width:40,height:40}}/>*/}
+
         <Text style={{marginBottom:2,fontSize:16,textAlign:"left",fontWeight:"bold",fontFamily: 'System'}}>小蜜蜂播放器</Text>
         {/*<Text style={{fontSize:14,fontWeight:"bold",textAlign:"left",fontFamily: 'System'}}>为学习而生</Text>*/}
       </View>
