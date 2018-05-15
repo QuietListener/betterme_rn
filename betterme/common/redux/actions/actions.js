@@ -116,10 +116,11 @@ async function return_get_data_func(type,dispatch,getState,call_back,params={})
 
     params = params || {}
 
+    params["access_token"]=base.access_token;
 
     if(method == base.HttpType.GET)
     {
-      var params_str = "access_token="+base.access_token+"&";
+      var params_str = "";
       for (let name in params)
       {
         params_str += `${name}=${params[name]}&`;
