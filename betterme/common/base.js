@@ -21,7 +21,7 @@ export const axios = instance
 
 export const is_android = Platform.OS === "android";
 export const is_ios = Platform.OS === "ios";
-export const Domain =  "139.129.86.178";//"192.168.1.101"//"172.16.35.224"//"139.129.86.178";
+export const Domain =  "139.129.86.178";//"172.16.34.103";//"192.168.1.101"//"139.129.86.178";
 port = ""//":3000"
 
 export const HOBBY_DOMAIN = `http://${Domain}${port}`;
@@ -353,3 +353,7 @@ export const shadow = { shadowColor:'gray',
 
 
 export var access_token = "";
+export function access_token_param()
+{
+  return `access_token=${access_token}`;
+}

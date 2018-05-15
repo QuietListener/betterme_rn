@@ -222,7 +222,7 @@ class Video_ extends Component
     this.setState({loadingMean:true});
     try
     {
-      var url = `${base.HOBBY_DOMAIN}/api/search_word.json?word=${word}`;
+      var url = `${base.HOBBY_DOMAIN}/api/search_word.json?word=${word}&access_token=`+base.access_token;
 
       console.log(`HTTP: begin ${url}`);
       var res3 = await base.axios({method: "get", url: url});
@@ -759,8 +759,7 @@ class Video_ extends Component
   {
     this.setState({saving_word:true});
     //alert("srt not exist,url = ",srtUrl)
-    var url = `${base.HOBBY_DOMAIN}/dict/save_word.json`;
-
+    var url = `${base.HOBBY_DOMAIN}/dict/save_word.json?access_token=` + base.access_token;
     var subtitle_str = null;
     if(subtitle)
     {
