@@ -160,15 +160,26 @@ class Mine extends Component
 
            statistics_view = <View style={{backgroundColor:"white",borderTopWidth:1,borderColor:"#f2f2f2"}}>
              <View style={{flexDirection:"row",justifyContent:"space-around"}}>
-               <View style={{flex:1,alignItems:"center",padding:20}}>
-                 <Text  style={{fontSize:30,fontWeight:"bold",color:"green"}}>{statistics_data.finished_package_count}</Text>
+
+
+
+               <View style={{flex:1,alignItems:"center",padding:10}}>
+                 <Text  style={{fontSize:24,fontWeight:"bold",color:"green"}}>{statistics_data.listen_word_count}</Text>
+                 <Text>听过单词数</Text>
+               </View>
+               
+               <View style={{flex:1,alignItems:"center",padding:10}}>
+                 <Text style={{fontSize:24,fontWeight:"bold",color:"green"}}>{statistics_data.watched_video_count}</Text>
+                 <Text style={{}}>学习视频数</Text>
+               </View>
+
+               <View style={{flex:1,alignItems:"center",padding:10}}>
+                 <Text  style={{fontSize:24,fontWeight:"bold",color:"green"}}>{statistics_data.finished_package_count}</Text>
                  <Text>完成专辑数</Text>
                </View>
 
-               <View style={{flex:1,alignItems:"center",padding:20}}>
-                 <Text style={{fontSize:30,fontWeight:"bold",color:"green"}}>{statistics_data.watched_video_count}</Text>
-                 <Text style={{}}>学习视频数</Text>
-               </View>
+
+
              </View>
            </View>
 
