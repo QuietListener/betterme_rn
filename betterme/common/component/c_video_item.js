@@ -27,7 +27,8 @@ export default class CVideoItem extends Component
         otherSrtUrl:this.props.otherSrtUrl,
         otherSrtPath:this.props.other_srt_path,
         package_id: this.props.package_id,
-        goBackCallBack:this.props.goBackCallBack
+        goBackCallBack:this.props.goBackCallBack,
+        finished:this.props.finished
       })
     }}>
 

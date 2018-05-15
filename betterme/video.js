@@ -54,7 +54,7 @@ class Video_ extends Component
     var video_id = null;
     var package_id = null;
     var goBackCallBack = null;
-
+    var finished = false;
     if(state && state.params)
     {
       videoPath = state.params.videoPath;
@@ -66,6 +66,7 @@ class Video_ extends Component
       otherSrtPath = state.params.otherSrtPath;
       package_id = state.params.package_id;
       goBackCallBack = state.params.goBackCallBack
+      finished = state.params.finished
     }
 
     console.log({srtPath,otherSrtUrl,videoPath})
@@ -97,7 +98,8 @@ class Video_ extends Component
       startTime:new Moment(),
       package_id:package_id,
       goBackCallBack:goBackCallBack,
-      saving_word:false
+      saving_word:false,
+      video_finished:finished
     }
 
     console.log('video state:',this.state);
@@ -132,7 +134,6 @@ class Video_ extends Component
       this.load_file(filePath_,srtUrl_,index);
 
     });
-
    // Orientation.lockToLandscape();
 
   }
@@ -642,7 +643,7 @@ class Video_ extends Component
 
       var time_elapsed_percent = time_elapsed*1.0/this.state.duration;
 
-      if(time_elapsed_percent < 0.01)
+      if(time_elapsed_percent < 0.7)
       {
         Alert.alert("你是超人吗?","你看得太快了吧");
         return;
@@ -667,7 +668,10 @@ class Video_ extends Component
 
   onEnd()
   {
-
+    if(this.state.video_finished != true)
+    {
+      this.finished_video();
+    }
   }
 
   //
@@ -1030,10 +1034,9 @@ class Video_ extends Component
       touchView = <View
         {...this._panResponder.panHandlers}
         style={[{
-          position: "absolute", left: 0, top: 0, zIndex: 101,
-          flexDirection: "row", justifyContent: "center", alignItems: "flex-start"
-
-          , backgroundColor: "rgba(0,0,0,0.0)"
+          position: "absolute", left: 0, top: 0, zIndex: 91,
+          flexDirection: "row", justifyContent: "center",
+          alignItems: "flex-start", backgroundColor: "rgba(0,0,0,0.0)"
         }, this.state.backgroundVideo]}
       >
       </View>
