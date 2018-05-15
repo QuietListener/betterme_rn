@@ -210,6 +210,87 @@ class Video_ extends Component
   }
   componentWillMount(){
     //Orientation.lockToPortrait();
+
+    this._panResponder = PanResponder.create({
+      // 要求成为响应者：
+      onStartShouldSetPanResponder: (evt, gestureState) => false,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) =>{
+        if (gestureState.dx === 0 || gestureState.dy === 0) {
+          return false;
+        }
+        return true;
+      },
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
+
+      onPanResponderGrant: (evt, gestureState) => {
+        // 开始手势操作。给用户一些视觉反馈，让他们知道发生了什么事情！
+
+        // gestureState.{x,y} 现在会被设置为0
+        console.log("onPanResponderGrant");
+      },
+      onPanResponderMove: (evt, gestureState) => {
+        // 最近一次的移动距离为gestureState.move{X,Y}
+        // 从成为响应者开始时的累计手势移动距离为gestureState.d{x,y}
+        console.log("onPanResponderMove");
+      },
+      onPanResponderTerminationRequest: (evt, gestureState) => true,
+      onPanResponderRelease: (evt, gestureState) => {
+        // 用户放开了所有的触摸点，且此时视图已经成为了响应者。
+        // 一般来说这意味着一个手势操作已经成功完成。
+        console.log("onPanResponderRelease");
+        var x0 = gestureState.x0;
+        var moveX = gestureState.moveX;
+
+        var moveY = gestureState.moveY
+        var y0 = gestureState.y0;
+
+        var distanceX = moveX - x0;
+        var distanceY = moveY - y0;
+
+        if(Math.abs(distanceX) < 10 && Math.abs(distanceY) < 10)
+        {
+          this.showProgress();
+          this.troggle_video();
+          if (this.state.popup_left > 0)
+            this.hide_mean_box()
+
+          return;
+        }
+
+        console.log("onPanResponderRelease x0 moveX distanceX,marginLeft",x0,moveX,distanceX)
+        console.log("onPanResponderRelease",evt,gestureState)
+
+        if(Math.abs(distanceX) -  Math.abs(distanceY) < 0 )
+        {
+          return;
+        }
+
+        if(Math.abs(distanceX) > base.ScreenWidth / 10)
+        {
+          if(distanceX > 0)
+          {
+            this.goforward();
+          }
+          else
+          {
+            this.goback();
+          }
+        }
+
+
+
+      },
+      onPanResponderTerminate: (evt, gestureState) => {
+        // 另一个组件已经成为了新的响应者，所以当前手势将被取消。
+        return true;
+      },
+      onShouldBlockNativeResponder: (evt, gestureState) => {
+        // 返回一个布尔值，决定当前组件是否应该阻止原生组件成为JS响应者
+        // 默认返回true。目前暂时只支持android。
+        return true;
+      },
+    });
   }
 
 
@@ -364,7 +445,7 @@ class Video_ extends Component
     }
 
     var cur_time = time.currentTime*1000;
-    console.log("progress",cur_time);
+    //console.log("progress",cur_time);
 
     var cur_subtitle = null;
     var cur_subtitle_org = null;
@@ -432,8 +513,8 @@ class Video_ extends Component
                 }
               }
 
-              console.log("en text:", text);
-              console.log("other text:", otherText);
+              //console.log("en text:", text);
+              //console.log("other text:", otherText);
 
               var words = text.split(" ")
 
@@ -448,7 +529,7 @@ class Video_ extends Component
                   <Text style={{fontSize:this.state.subtitleFontSize,fontWeight:"bold"}}>{word}</Text>
                 </TouchableOpacity>});
 
-              console.log("cur_subtitle",cur_subtitle)
+              //console.log("cur_subtitle",cur_subtitle)
 
               show_srt_index = i;
             }
@@ -490,7 +571,7 @@ class Video_ extends Component
 
     this.setState({cur_time:cur_time/1000});
 
-    console.log("cur_time",this.state.cur_time,this.state.cur_subtitle_org,this.state.otherText,);
+   // console.log("cur_time",this.state.cur_time,this.state.cur_subtitle_org,this.state.otherText,);
   }
 
 
@@ -568,7 +649,7 @@ class Video_ extends Component
       }
 
       this.props.watch_video(this.state.video_id,this.state.package_id,(data)=>{
-        if(data.status == 1)
+        if(data && data.status == 1)
         {
           this.setState({video_finished:true});
           Alert.alert("","完成了这个视频,加油");
@@ -577,6 +658,7 @@ class Video_ extends Component
         {
           Alert.alert("opps!","网络错误,重试一下呢~");
         }
+        return data;
       });
     }
 
@@ -942,42 +1024,20 @@ class Video_ extends Component
 
     </View>
 
-    var touchView = <TouchableOpacity activeOpacity={0.8}
-      style={[{position:"absolute",left:0,top:0,zIndex:101,
-        flexDirection:"row",justifyContent:"center",alignItems:"flex-start"
+    var touchView = null;
+    if(this._panResponder)
+    {
+      touchView = <View
+        {...this._panResponder.panHandlers}
+        style={[{
+          position: "absolute", left: 0, top: 0, zIndex: 101,
+          flexDirection: "row", justifyContent: "center", alignItems: "flex-start"
 
-        ,backgroundColor:"rgba(0,0,0,0.0)"},this.state.backgroundVideo]}
-
-      onPress={()=>{this.showProgress();
-            this.troggle_video();
-            if(this.state.popup_left > 0)
-              this.hide_mean_box()
-      }}
-
-
-    >
-
-      {this.state.showProgressBar?
-       <TouchableOpacity onPress={()=>this.goback()}
-         style={{flex:1,marginTop:80,justifyContent:"center",padding:8,alignItems:"center",backgroundColor:"rgba(0,0,0,0.1)"}}>
-          <Icon name={'angle-left'} size={26} color="white" />
-       </TouchableOpacity>:null
-      }
-
-      <View style={{flex:10}}>
-
+          , backgroundColor: "rgba(0,0,0,0.0)"
+        }, this.state.backgroundVideo]}
+      >
       </View>
-
-      {this.state.showProgressBar?
-        <TouchableOpacity
-          onPress={()=>this.goforward()}
-          style={{marginTop:80,flex:1,justifyContent:"center",padding:8,alignItems:"center",backgroundColor:"rgba(0,0,0,0.1)"}}>
-          <Icon name={'angle-right'} size={26} color="white" />
-      </TouchableOpacity>:null
-      }
-
-    </TouchableOpacity>
-
+    }
 
 
 
