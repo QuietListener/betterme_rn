@@ -263,18 +263,18 @@ class VideoList extends Component
           <Text style={{textAlign:"center"}}>正在学习的专辑</Text>
           </View>
 
-          <View style={{height: 100, flexDirection: "row",paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
+          <View style={{height: 120, flexDirection: "row",paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
             <View style={{width:80,justifyContent:"center",alignItems:"center"}}>
             <Image style={{width: 75, height: 90,}} source={{uri: package_.poster}}/>
             </View>
 
             <View style={{flex: 2, marginLeft: 20, padding: 4}}>
               <View>
-              <Text style={{fontSize: 16,fontWeight:"bold"}}>{package_.title_cn}</Text>
+              <Text style={{fontSize: 14,fontWeight:"bold"}}>{package_.title_cn}</Text>
               </View>
 
               <View>
-              <Text style={{fontSize: 14}}>{package_.title}</Text>
+              <Text style={{fontSize: 12}}>{package_.title}</Text>
               </View>
 
               <View style={{flexDirection:"row",justifyContent:"flex-start",alignItem:"center",borderTopWidth:1,borderColor:"#f2f2",paddingTop:8}}>

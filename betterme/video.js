@@ -212,86 +212,7 @@ class Video_ extends Component
   componentWillMount(){
     //Orientation.lockToPortrait();
 
-    this._panResponder = PanResponder.create({
-      // 要求成为响应者：
-      onStartShouldSetPanResponder: (evt, gestureState) => false,
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
-      onMoveShouldSetPanResponder: (evt, gestureState) =>{
-        if (gestureState.dx === 0 || gestureState.dy === 0) {
-          return false;
-        }
-        return true;
-      },
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
 
-      onPanResponderGrant: (evt, gestureState) => {
-        // 开始手势操作。给用户一些视觉反馈，让他们知道发生了什么事情！
-
-        // gestureState.{x,y} 现在会被设置为0
-        console.log("onPanResponderGrant");
-      },
-      onPanResponderMove: (evt, gestureState) => {
-        // 最近一次的移动距离为gestureState.move{X,Y}
-        // 从成为响应者开始时的累计手势移动距离为gestureState.d{x,y}
-        console.log("onPanResponderMove");
-      },
-      onPanResponderTerminationRequest: (evt, gestureState) => true,
-      onPanResponderRelease: (evt, gestureState) => {
-        // 用户放开了所有的触摸点，且此时视图已经成为了响应者。
-        // 一般来说这意味着一个手势操作已经成功完成。
-        console.log("onPanResponderRelease");
-        var x0 = gestureState.x0;
-        var moveX = gestureState.moveX;
-
-        var moveY = gestureState.moveY
-        var y0 = gestureState.y0;
-
-        var distanceX = moveX - x0;
-        var distanceY = moveY - y0;
-
-        if(Math.abs(distanceX) < 10 && Math.abs(distanceY) < 10)
-        {
-          this.showProgress();
-          this.troggle_video();
-          if (this.state.popup_left > 0)
-            this.hide_mean_box()
-
-          return;
-        }
-
-        console.log("onPanResponderRelease x0 moveX distanceX,marginLeft",x0,moveX,distanceX)
-        console.log("onPanResponderRelease",evt,gestureState)
-
-        if(Math.abs(distanceX) -  Math.abs(distanceY) < 0 )
-        {
-          return;
-        }
-
-        if(Math.abs(distanceX) > base.ScreenWidth / 10)
-        {
-          if(distanceX > 0)
-          {
-            this.goforward();
-          }
-          else
-          {
-            this.goback();
-          }
-        }
-
-
-
-      },
-      onPanResponderTerminate: (evt, gestureState) => {
-        // 另一个组件已经成为了新的响应者，所以当前手势将被取消。
-        return true;
-      },
-      onShouldBlockNativeResponder: (evt, gestureState) => {
-        // 返回一个布尔值，决定当前组件是否应该阻止原生组件成为JS响应者
-        // 默认返回true。目前暂时只支持android。
-        return true;
-      },
-    });
   }
 
 
@@ -643,9 +564,12 @@ class Video_ extends Component
 
       var time_elapsed_percent = time_elapsed*1.0/this.state.duration;
 
-      if(time_elapsed_percent < 0.7)
+      var least_percent = 0.7;
+      var least_time = this.state.duration*least_percent/60;
+
+      if(time_elapsed_percent < least_percent)
       {
-        Alert.alert("你是超人吗?","你看得太快了吧");
+        Alert.alert("你看得太快了吧",`至少看 ${least_time} 分钟吧`);
         return;
       }
 
@@ -930,13 +854,13 @@ class Video_ extends Component
     var btn = null;
     if(this.state.paused == false)
     {
-      btn = <TouchableOpacity style={{flex:1,justifyContent:"center", padding:6,alignItems:"center"}} onPress={() => { this.troggle_video()}} >
+      btn = <TouchableOpacity style={{width:40,justifyContent:"center", padding:6,alignItems:"center"}} onPress={() => { this.troggle_video()}} >
         <Icon name="pause" size={16} color="black" />
       </TouchableOpacity>;
     }
     else
     {
-      btn = <TouchableOpacity style={{flex:1,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.troggle_video()}}>
+      btn = <TouchableOpacity style={{width:40,justifyContent:"center",padding:6, alignItems:"center"}} onPress={() => { this.troggle_video()}}>
         <Icon name="play" size={16} color="black" />
       </TouchableOpacity>;
     }
@@ -949,7 +873,7 @@ class Video_ extends Component
 
         <Slider
           //thumbImage={require('../resources/images/circle2.png')}
-          style={{backgroundColor:"rgba(0,0,0,0.0)",flex:5.5}}
+          style={{backgroundColor:"rgba(0,0,0,0.0)",flex:4.6}}
           value={this.state.cur_time}
           step = { 1 }
           minimumValue = { 0 }
@@ -961,6 +885,23 @@ class Video_ extends Component
         <Text style={{width:50,alignSelf:"center",fontSize:15,color:"black"}} > {this.formatedCurrentTime(this.state.duration||0)} </Text>
 
         {btn}
+
+      <View style={{marginRight:4,flex:2,flexDirection:"row"}}>
+
+        <TouchableOpacity
+          onPress={()=>{this.goback()}}
+          style={{padding:4,margin:2,paddingRight:11,paddingLeft:11,backgroundColor:"black",borderWidth:1,borderRadius:2}}>
+          <Icon name={'angle-left'} size={16} color="white" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={()=>{this.goforward()}}
+          style={{padding:4,paddingRight:11,paddingLeft:11,margin:2,marginLeft:4,backgroundColor:"black",borderWidth:1,borderRadius:2}}>
+          <Icon name={'angle-right'} size={16} color="white" />
+        </TouchableOpacity>
+
+      </View>
+
       </View>
 
 
@@ -999,11 +940,9 @@ class Video_ extends Component
 
         <TouchableOpacity
         onPress={()=>{this.state.video_finished == true ?null:this.finished_video()}}
-        style={[{padding:6,alignItems:"center",flexDirection:"row",justifyContent:"flex-end"
+        style={[{flex:2,padding:6,margin:4,alignItems:"center",flexDirection:"row",justifyContent:"center"
           ,borderWidth:1,borderRadius:2,borderColor:"#f2f2",backgroundColor:"#f2f2f2"
         }]}>
-
-
 
           { watched_loading == UPDATE_DATA_STATUS.LOADING ? <ActivityIndicator
             animating={true}
@@ -1016,31 +955,33 @@ class Video_ extends Component
             size="small"
           />:<View style={{flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
 
-            {this.state.video_finished == true? <Icon name={'check'} size={20} color={"green"} />:null}
+            {this.state.video_finished == true? <Icon name={'check'} size={16} color={"green"} />:null}
 
-            <Text style={{color:"black",fontSize:20,padding:2,color:this.state.video_finished ? "green" : "black"}}>{this.state.video_finished == true ? "完成了视频学习 加油~":"点击完成视频学习"} </Text>
-
-
+            <Text style={{color:"black",fontSize:16,padding:2,color:this.state.video_finished ? "green" : "black"}}>{this.state.video_finished == true ? "已完成":"点击完成视频学习"} </Text>
 
             </View>
           }
+
+
     </TouchableOpacity>
+
 
     </View>
 
-    var touchView = null;
-    if(this._panResponder)
-    {
-      touchView = <View
-        {...this._panResponder.panHandlers}
+    var touchView = <TouchableOpacity
+        onPress={()=>{
+          this.troggle_video();
+          this.hide_mean_box();
+          this.showProgress();
+        }}
         style={[{
           position: "absolute", left: 0, top: 0, zIndex: 91,
           flexDirection: "row", justifyContent: "center",
           alignItems: "flex-start", backgroundColor: "rgba(0,0,0,0.0)"
         }, this.state.backgroundVideo]}
       >
-      </View>
-    }
+      </TouchableOpacity>
+
 
 
 

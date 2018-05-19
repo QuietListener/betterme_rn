@@ -327,6 +327,7 @@ const inner_styles = {
     marginRight:8,
     fontSize:12,
     borderWidth:1
+    padding:2,
   }
 
 };
