@@ -569,7 +569,7 @@ class Video_ extends Component
 
       if(time_elapsed_percent < least_percent)
       {
-        Alert.alert("你看得太快了吧",`至少看 ${least_time} 分钟吧`);
+        Alert.alert("你看得太快了吧?",`完成至少需要看 ${Math.round(least_time)} 分钟喔~`);
         return;
       }
 
@@ -936,12 +936,12 @@ class Video_ extends Component
 
   </TouchableOpacity>
 
-    var finishedView = <View style={{flex:0.2,flexDirection:"row",backgroundColor:"#f2f2f2",width:base.ScreenWidth,justifyContent:"center",padding:2, alignItems:"center"}}>
+    var finishedView = <View style={{flex:0.2,flexDirection:"row",backgroundColor:"white",width:base.ScreenWidth,justifyContent:"center",padding:2, alignItems:"center"}}>
 
         <TouchableOpacity
         onPress={()=>{this.state.video_finished == true ?null:this.finished_video()}}
         style={[{flex:2,padding:6,margin:4,alignItems:"center",flexDirection:"row",justifyContent:"center"
-          ,borderWidth:1,borderRadius:2,borderColor:"#f2f2",backgroundColor:"#f2f2f2"
+          ,borderWidth:1,borderRadius:2,borderColor:"#f2f2",backgroundColor:this.state.video_finished ? "green" : "#999"
         }]}>
 
           { watched_loading == UPDATE_DATA_STATUS.LOADING ? <ActivityIndicator
@@ -955,9 +955,9 @@ class Video_ extends Component
             size="small"
           />:<View style={{flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
 
-            {this.state.video_finished == true? <Icon name={'check'} size={16} color={"green"} />:null}
+            {this.state.video_finished == true? <Icon name={'check'} size={16} color={"white"} />:null}
 
-            <Text style={{color:"black",fontSize:16,padding:2,color:this.state.video_finished ? "green" : "black"}}>{this.state.video_finished == true ? "已完成":"点击完成视频学习"} </Text>
+            <Text style={{fontSize:16,padding:2,color:"white"}}>{this.state.video_finished == true ? "已完成":"点击完成视频学习"} </Text>
 
             </View>
           }

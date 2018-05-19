@@ -16,7 +16,7 @@ export default class CVideoItem extends Component
   {
 
     return    <TouchableOpacity
-    style={[{height: this.props.height, width: this.props.width, flexDirection: "row", margin: 10, backgroundColor: "white",borderRadius:4},base.shadow]}
+    style={[{height: this.props.height+2, width: this.props.width, flexDirection: "row", margin: 10, backgroundColor:  "white",borderRadius:4,borderWidth:1,borderColor:this.props.finished == true?"green":"white"},base.shadow]}
     onPress={() => {
       this.props.navigation.navigate("Video", {
         videoUrl: this.props.videoUrl,
@@ -32,13 +32,13 @@ export default class CVideoItem extends Component
       })
     }}>
 
-    <Image style={{borderRadius:4,width:this.props.width,height:this.props.height,}} source={{uri:this.props.poster}} />
+    <Image style={{borderRadius:2,width:this.props.width-2,height:this.props.height,}} source={{uri:this.props.poster}} />
 
     <View style={[{borderRadius:4,
-      position: "absolute", bottom: 0, width: this.props.width,padding:4
+      position: "absolute", bottom: 0, width: this.props.width-2,padding:4
       , justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)"
     },base.shadow]}>
-      <Text style={{fontSize:12,color: "white",textAlign:"center"}}>{this.props.title}</Text>
+      <Text style={{fontSize:12,color: "white",textAlign:"center"}}>{this.props.title_cn||this.props.title}</Text>
     </View>
 
     { this.props.finished == true?

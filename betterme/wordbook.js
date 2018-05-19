@@ -220,15 +220,15 @@ class Wordbook extends Component
         return <View style={{width:base.ScreenWidth-30,borderBottomWidth:1,borderTopWidth:1, padding:8,margin:6,borderRadius:6,borderColor:"#f2f2f2"}}>
             <View style={{flex:1,flexDirection:"row"}} >
               <View style={{flexDirection:"row",flex:6,justifyContent:"flex-start",alignItems:"center",marginBottom:4}}>
-                <Text style={{fontSize:20}}><Text style={{fontSize:11}}>#{index}</Text> {learn_word.word}</Text>
-                <Text style={{marginLeft:20}}>{learn_word.accent}</Text>
+                <Text style={{fontSize:20,color:"green"}}><Text style={{fontSize:11,color:"green"}}>{index}</Text> {learn_word.word}</Text>
+                <Text style={{marginLeft:20,color:"#999"}}>{learn_word.accent}</Text>
               </View>
 
               <View  style={{flex:1,justifyContent:"center",alignItems:"flex-end"}}>
 
-              <TouchableOpacity style={{justifyContent:"center",alignItems:"flex-end",padding:8,paddingBottom:4}}
+              <TouchableOpacity style={{justifyContent:"center",alignItems:"flex-end",padding:8,paddingBottom:2,paddingRight:12,paddingLeft:18}}
                                 onPress={() => { this.read_word(learn_word.word)} }>
-                <Icon name="volume-up" size={18} color="black" />
+                <Icon name="volume-up" size={18} color="#999" />
               </TouchableOpacity>
             </View>
 
@@ -246,12 +246,12 @@ class Wordbook extends Component
           </TouchableOpacity>:null}
 
           {this.props.show_video_title != false && video && video.title?
-            <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
+            <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start",justifyContent:"center",marginTop:4}} >
               <Text style={inner_styles.tip}>视频</Text><Text style={{flex:1,fontSize:12}}>{video.title}</Text>
             </View>:null}
 
           <View style={{flex:1,flexDirection:"row",justifyContent:'flex-end',flexWrap:"wrap",alignItems:"flex-start",marginTop:4}} >
-            <Text style={[inner_styles.tip,{borderWidth:0}]}>{date}</Text>
+            <Text style={[inner_styles.tip,{borderWidth:0,color:"#999"}]}>{date}</Text>
           </View>
 
         </View>
@@ -326,8 +326,8 @@ const inner_styles = {
   tip:{
     marginRight:8,
     fontSize:12,
-    borderWidth:1
-    padding:2,
+    borderWidth:1,
+    padding:1,
   }
 
 };

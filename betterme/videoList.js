@@ -251,7 +251,7 @@ class VideoList extends Component
       else
       {
           package_status_view =  <Text>进度:  <Text style={{fontSize:20,color:"green",fontWeight:"bold"}}>{finished_length}</Text>
-            <Text style={{fontSize:18,color:"black",fontWeight:"bold"}}>/  {videos_length}</Text></Text>
+            <Text style={{fontSize:18,color:"black",fontWeight:"bold"}}>  /  {videos_length}</Text></Text>
       }
 
 
@@ -260,19 +260,18 @@ class VideoList extends Component
         package_view = <View style={{flex:1}}>
 
           <View style={{flex:1,alignItems:"center",justifyContent:"flex-end",padding:8}}>
-          <Text style={{textAlign:"center"}}>正在学习的专辑</Text>
+          {/*<Text style={{textAlign:"center"}}>--- 正在学习的专辑 ---</Text>*/}
           </View>
 
           <View style={{height: 120, flexDirection: "row",paddingLeft: 10, paddingTop: 4, backgroundColor: "white"}}>
             <View style={{width:80,justifyContent:"center",alignItems:"center"}}>
-            <Image style={{width: 75, height: 90,}} source={{uri: package_.poster}}/>
+            <Image style={{width: 82.5, height: 110,}} source={{uri: package_.poster}}/>
             </View>
 
             <View style={{flex: 2, marginLeft: 20, padding: 4}}>
               <View>
               <Text style={{fontSize: 14,fontWeight:"bold"}}>{package_.title_cn}</Text>
               </View>
-
               <View>
               <Text style={{fontSize: 12}}>{package_.title}</Text>
               </View>
@@ -291,19 +290,19 @@ class VideoList extends Component
 
         <View style={{flex:1,flexDirection:"row",padding:4,backgroundColor:"white"}}>
 
-          <TouchableOpacity
-            onPress={()=>this.props.navigation.navigate("Mine")}
-            style={{flex:1,flexDirection:"row",justifyContent:"flex-start",alignItems:"center",}}>
-            <Icon name="id-badge" size={20} color="black" />
-            <Text style={{marginLeft:4,fontSize:14} }>{base.getUserName(user_info_data.name)}</Text>
-         </TouchableOpacity>
-
-
             <View style={{flex:2,flexDirection:"row",padding:0,paddingTop:6,paddingBottom:6,backgroundColor:"white"}}>
 
               <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
+                <TouchableOpacity style={inner_styles.touchItem}
+                                  onPress={()=>this.props.navigation.navigate("Mine")}
+                >
+                  <Text style={{fontSize:16,color:"white"}}>{'   我的   '}</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
                 <TouchableOpacity style={inner_styles.touchItem} onPress={()=>this.props.navigation.navigate("Wordbook")}>
-                  <Text style={{fontSize:14}}>{'单词本'}</Text>
+                  <Text style={{fontSize:16,color:"white"}}>{'单词本'}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -312,7 +311,7 @@ class VideoList extends Component
 
                 <TouchableOpacity style={inner_styles.touchItem}
                                   onPress={()=>{this.props.navigation.navigate("MyPackages",{goBackCallBack:this.componentDidMount})}}>
-                  <Text style={{fontSize:14}}>我的专辑</Text>
+                  <Text style={{fontSize:16,color:"white"}}>我的专辑</Text>
                 </TouchableOpacity>
 
               </View>
@@ -387,7 +386,7 @@ const inner_styles = {
     color:"rgb(177,180,183)"
 
   },
-  touchItem:{borderWidth:1,padding:4,borderRadius:4,borderColor:"#f2f2"}
+  touchItem:{borderWidth:1,padding:4,borderRadius:4,borderColor:"#f2f2",backgroundColor:"#999"}
 
 };
 

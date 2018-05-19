@@ -15,20 +15,20 @@ export default class CPackageItem extends Component
   {
 
     return <TouchableOpacity
-      style={[{height: this.props.height || 200, width: this.props.width, flexDirection: "row", margin: 10, backgroundColor: "white",borderRadius:4},base.shadow]}
+      style={[{height: this.props.height || 200, width: this.props.width, flexDirection: "row", margin: 10, backgroundColor: "white",borderRadius:4,borderWidth:1,borderColor:this.props.finished == true?"green":"white"},base.shadow]}
       onPress={() => {
         this.props.navigation.navigate("Package_",{package_id:this.props.package_id,goBackCallBack:this.props.goBackCallBack})
       }}>
 
-      <Image style={{borderRadius:4,width:this.props.width,height:200,}} source={{uri:this.props.poster}} />
+      <Image style={{borderRadius:2,width:this.props.width-2,height:200,}} source={{uri:this.props.poster}} />
 
       <View style={{borderRadius:4,
-        position: "absolute", bottom: 0, width: this.props.width,padding:4
+        position: "absolute", bottom: 0, width: this.props.width-2,padding:4
         , justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)"
       }}>
 
-        <Text style={{fontSize:12,color: "white",textAlign:"center"}}>{this.props.title_cn}</Text>
-        <Text style={{fontSize:12,color: "white",textAlign:"center"}}>{this.props.title}</Text>
+        <Text style={{fontSize:12,color: "white",textAlign:"center"}}>{this.props.title_cn||this.props.title}</Text>
+
       </View>
 
       { this.props.finished == true?
