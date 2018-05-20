@@ -158,13 +158,13 @@ class Wordbook extends Component
     }
     else if(status == UPDATE_DATA_STATUS.LOADING)
     {
-      show_view=<View style={{flex:1,paddingTop:30,justifyContent:"center",alignItems:"center"}}>
+      show_view=<View style={{flex:2,paddingTop:30,justifyContent:"center",alignItems:"center"}}>
         <ActivityIndicator
         animating={true}
         style={{
           alignItems: 'center',
           justifyContent: 'center',
-          width:16,height:16,
+          width:12,height:12,
         }}
         size="large"
       />
@@ -326,8 +326,13 @@ const inner_styles = {
   tip:{
     marginRight:8,
     fontSize:12,
-    borderWidth:1,
+
     padding:1,
+    textAlign:"center",
+    borderRadius:4,
+    borderColor:"#999",
+    color:"#999"
+
   }
 
 };

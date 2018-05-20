@@ -42,7 +42,7 @@ class MyPackages extends Component
 {
 
   static navigationOptions = ({ navigation }) => {
-    return {title:"收藏的专辑"};
+    return {title:"我的专辑"};
   };
 
 
@@ -136,7 +136,8 @@ class MyPackages extends Component
       var packages = my_package_data.data;
 
       console.log("packages +++",packages);
-      let width_ = base.ScreenWidth / 2 - 20
+      let width_ = base.ScreenWidth / 3 - 20
+      let height_ = width_*4/3;
 
       var my_packages = my_package_data.data;
       console.log("my_packages",my_packages);
@@ -147,7 +148,7 @@ class MyPackages extends Component
           var item =item12.package;
           if(!item)  return null
 
-          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={false} width={width_} navigation={this.props.navigation}/>
+          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={false} height={height_} width={width_} navigation={this.props.navigation}/>
         })
 
 
@@ -155,14 +156,14 @@ class MyPackages extends Component
           var item =item12.package;
           if(!item)  return null
 
-          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={false} width={width_} navigation={this.props.navigation}/>
+          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={false} height={height_} width={width_} navigation={this.props.navigation}/>
         })
 
         played_package_views = packages.filter(item1=>{return item1.ttype==2}).map(item12=>{
           var item =item12.package;
           if(!item)  return null
 
-          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={false} width={width_} navigation={this.props.navigation}/>
+          return <CPackageItem poster={item.poster} package_id={item.id} title={item.title} title_cn={item.title_cn} finished={false} height={height_} width={width_} navigation={this.props.navigation}/>
         })
 
       }
@@ -176,15 +177,15 @@ class MyPackages extends Component
         <View style={{flex:1}}>
           {show_view}
 
-          <View style={inner_styles.packageBox}>
-            <View style={inner_styles.tiphead}><Text style={{fontSize:16,color:"white"}}>我收藏的专辑</Text></View>
+          <View style={[inner_styles.packageBox]}>
+            <View style={[inner_styles.tiphead,{marginTop:0}]}><Text style={inner_styles.title}>我收藏的专辑</Text></View>
             <View style={{flex:1,flexWrap:"wrap",flexDirection:"row",marginTop:6}}>
             {liked_package_views}
             </View>
           </View>
 
           <View style={inner_styles.packageBox}>
-            <View style={inner_styles.tiphead}><Text style={{fontSize:16,color:"white"}}>我完成的专辑</Text></View>
+            <View style={inner_styles.tiphead}><Text style={inner_styles.title}>我完成的专辑</Text></View>
             <View style={{flex:1,flexWrap:"wrap",flexDirection:"row",marginTop:6}}>
               {finished_package_views}
             </View>
@@ -193,7 +194,7 @@ class MyPackages extends Component
 
 
           <View style={inner_styles.packageBox}>
-            <View style={inner_styles.tiphead}><Text style={{fontSize:16,color:"white"}}>我播放过的专辑</Text></View>
+            <View style={inner_styles.tiphead}><Text style={inner_styles.title}>我播放过的专辑</Text></View>
             <View style={{flex:1,flexWrap:"wrap",flexDirection:"row",marginTop:6}}>
               {played_package_views}
             </View>
@@ -253,8 +254,11 @@ const inner_styles = {
   },
   packageBox:{
     flex:1,
-    marginBottom:10
-  }
+    marginBottom:4,
+    marginTop:20
+  },
+  title:{fontSize:16,color:"white",fontWeight:"bold"}
+
 
 };
 
