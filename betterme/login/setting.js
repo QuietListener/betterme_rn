@@ -73,10 +73,21 @@ class Setting extends Component
           </TouchableOpacity>
 
           <TouchableOpacity style={inner_styles.subitem2} onPress={()=>this.logout()}>
-            <Text style={inner_styles.normal_text}>></Text>
+            <Text style={inner_styles.normal_text}></Text>
           </TouchableOpacity>
         </View>
 
+        <View style={inner_styles.item}>
+
+          <TouchableOpacity style={inner_styles.subitem1} >
+            <Text style={inner_styles.bold_text}>联系我: <Text style={{marginLeft:30}}>   fowardgogogo@gmail.com</Text></Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={inner_styles.subitem2} >
+            <Text style={inner_styles.normal_text}></Text>
+          </TouchableOpacity>
+
+        </View>
 
         <View style={inner_styles.item}>
 
@@ -85,9 +96,8 @@ class Setting extends Component
           </TouchableOpacity>
 
           <TouchableOpacity style={inner_styles.subitem2} >
-            <Text style={inner_styles.normal_text}>></Text>
+            <Text style={inner_styles.normal_text}></Text>
           </TouchableOpacity>
-
 
         </View>
 
@@ -99,11 +109,14 @@ class Setting extends Component
           </TouchableOpacity>
 
           <TouchableOpacity style={inner_styles.subitem2}>
-            <Text style={inner_styles.normal_text}>></Text>
+            <Text style={inner_styles.normal_text}></Text>
           </TouchableOpacity>
 
 
         </View>
+
+
+
 
       </View>
     )
