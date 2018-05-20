@@ -26,7 +26,7 @@ Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
 Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
 
 const meanWidth = base.ScreenWidth*2/3;
-const ProgressShowTime = 10000
+const ProgressShowTime = 5000
 
 var chineseReg = /[\u4e00-\u9fa5]/g
 
@@ -936,6 +936,23 @@ class Video_ extends Component
 
   </TouchableOpacity>
 
+
+    var subtitleView=  this.state.showProgressBar ? <View  style={{width:100,height:100,position:"absolute",top:40,right:5
+      ,alignItems:"center",justifyContent:"center",zIndex:109
+    }}>
+          <View style={[inner_styles.settingItem,{height:30,backgroundColor:"rgba(0,0,0,0.5)"}]}>
+        <Text style={[inner_styles.tip,{margin:1}]}>英</Text>
+          <Switch value={this.state.show_subtitle_en}
+                  onValueChange={(val)=>{this.setState({show_subtitle_en:!this.state.show_subtitle_en})}}></Switch>
+        </View>
+      <View style={[inner_styles.settingItem,{height:30,backgroundColor:"rgba(0,0,0,0.5)"}]}>
+            <Text style={[inner_styles.tip,{margin:1}]}>中</Text>
+
+            <Switch value={this.state.show_subtitle_other}
+                    onValueChange={(val)=>{this.setState({show_subtitle_other:!this.state.show_subtitle_other})}}></Switch>
+          </View>
+    </View>:null;
+
     var finishedView = <View style={{flex:0.2,flexDirection:"row",backgroundColor:"white",width:base.ScreenWidth,justifyContent:"center",padding:2, alignItems:"center"}}>
 
         <TouchableOpacity
@@ -985,12 +1002,13 @@ class Video_ extends Component
 
 
 
-    var speedView =  [0.8,0.9,1.0,1.1,1.2].map((item)=>{
-        var active = this.state.rate == item;
-        return <Text style={{borderWidth:1,borderRadius:6,padding:4,margin:4,color:active?"white":"black",borderColor:active?"white":"black",fontSize:12}} onPress={()=>this.setState({rate:item})}>
-          {item==1.0?"常速":`${item}x`}
-        </Text>
-    });
+    var speedView = null;
+    // var speedView =  [0.8,0.9,1.0,1.1,1.2].map((item)=>{
+    //     var active = this.state.rate == item;
+    //     return <Text style={{borderWidth:1,borderRadius:6,padding:4,margin:4,color:active?"white":"black",borderColor:active?"white":"black",fontSize:12}} onPress={()=>this.setState({rate:item})}>
+    //       {item==1.0?"常速":`${item}x`}
+    //     </Text>
+    // });
 
     var settingModal = <Modal
       animationType={"slide"}
@@ -1002,19 +1020,6 @@ class Video_ extends Component
         style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"rgba(0,0,0,0.4)"}}>
 
         <TouchableOpacity activeOpacity={1} style={{marginTop:-20,paddingTop:20,paddingBottom:20,borderRadius:4,width:base.ScreenWidth*4/5,height:base.ScreenHeight/2}}>
-          <View style={inner_styles.settingItem}>
-            <Text style={inner_styles.tip}>显示英文字幕:</Text>
-            <Switch value={this.state.show_subtitle_en}
-                    onValueChange={(val)=>{this.setState({show_subtitle_en:!this.state.show_subtitle_en})}}></Switch>
-          </View>
-
-          <View style={inner_styles.settingItem}>
-
-            <Text style={inner_styles.tip}>显示中文字幕:</Text>
-
-            <Switch value={this.state.show_subtitle_other}
-                    onValueChange={(val)=>{this.setState({show_subtitle_other:!this.state.show_subtitle_other})}}></Switch>
-          </View>
 
           <View style={{height:90,justifyContent:"flex-start",alignItems:"center",backgroundColor:"gray"}}>
           <View style={inner_styles.settingItem}>
@@ -1035,11 +1040,11 @@ class Video_ extends Component
            <Text style={{fontSize:this.state.subtitleFontSize,color:"yellow"}}>字幕:here we go!</Text>
           </View>
 
-          <View style={[inner_styles.settingItem,{height:60+20,paddingBottom:20}]}>
+          {/*<View style={[inner_styles.settingItem,{height:60+20,paddingBottom:20}]}>*/}
 
-            <Text style={inner_styles.tip}>速度:</Text>
-            <View style={{flexWrap:"wrap",flexDirection:"row"}}>{speedView}</View>
-          </View>
+            {/*<Text style={inner_styles.tip}>速度:</Text>*/}
+            {/*<View style={{flexWrap:"wrap",flexDirection:"row"}}>{speedView}</View>*/}
+          {/*</View>*/}
 
         </TouchableOpacity>
 
@@ -1062,6 +1067,7 @@ class Video_ extends Component
           {touchView}
           {settingModal}
           {gobackView}
+          {subtitleView}
 
         <Video key={121321}
           source={{uri:this.state.videoFileExist == true? this.state.videoPath:this.state.videoUrl}}   // Can be a URL or a local file.
@@ -1096,15 +1102,7 @@ class Video_ extends Component
           <View style={{flex:2,minHeight:this.state.subtitleFontSize*3,position:"absolute",bottom:-this.state.subtitleFontSize,width:base.ScreenWidth ,zIndex:1000, justifyContent:"center", backgroundColor: "rgba(255,255,255,0.95)",}}>
 
 
-            {(this.state.otherText && _.trim(this.state.otherText) != "" && this.state.show_subtitle_other)?
-              <View style={{
-                paddingBottom: 1,
-                justifyContent: "center",
-                alignItems: "center"
-              }}>
-                <Text style={{fontSize:this.state.subtitleFontSize,fontWeight:"bold",textAlign:"center"}}>{this.state.otherText}</Text>
-              </View>:null
-            }
+
 
             {this.state.cur_subtitle && (this.state.show_subtitle_en)?
               <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",flexWrap:"wrap",paddingBottom:1,paddingTop:1}} ref={(ref) => {
@@ -1114,6 +1112,15 @@ class Video_ extends Component
               </View>
               :null}
 
+            {(this.state.otherText && _.trim(this.state.otherText) != "" && this.state.show_subtitle_other)?
+              <View style={{
+                paddingBottom: 1,
+                justifyContent: "center",
+                alignItems: "center"
+              }}>
+                <Text style={{fontSize:this.state.subtitleFontSize,fontWeight:"bold",textAlign:"center"}}>{this.state.otherText}</Text>
+              </View>:null
+            }
 
           </View>
 
@@ -1276,7 +1283,7 @@ const inner_styles = {
     flexDirection:"row",
     justifyContent:"flex-start",
     alignItems:"center",
-    backgroundColor:"gray",
+    backgroundColor:"#999",
     padding:4
   },
 
