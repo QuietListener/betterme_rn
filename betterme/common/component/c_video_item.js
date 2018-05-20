@@ -38,7 +38,7 @@ export default class CVideoItem extends Component
       position: "absolute", bottom: 0, width: this.props.width-2,padding:4
       , justifyContent: "center", alignItems: "center", backgroundColor: "rgba(0,0,0,0.6)"
     },base.shadow]}>
-      <Text style={{fontSize:12,color: "white",textAlign:"center"}}>{this.props.title_cn||this.props.title}</Text>
+      <Text style={{fontSize:10,color: "white",textAlign:"center"}}>{this.props.title_cn||this.props.title}</Text>
     </View>
 
     { this.props.finished == true?

@@ -192,10 +192,10 @@ class VideoList extends Component
         var other_srt_path = `${downloadDir}/${item.otherSrtFileName}`;
 
 
-        let width_ = base.ScreenWidth / 2 - 20
-
+        let width_ = base.ScreenWidth / 3 - 20
+        let height_ = width_*4/3
         return <CVideoItem navigation={this.props.navigation}
-          width={width_} height={150}
+          width={width_} height={height_}
                            videoUrl={item.videoUrl}
                            srtUrl={item.srtUrl}
                            otherSrtUrl={item.otherSrtUrl}
@@ -237,14 +237,14 @@ class VideoList extends Component
       {
         package_status_view = <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center"}]}>
 
-          <View style={[{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120},inner_styles.touchItem]}>
+          <View style={[inner_styles.touchItem,{flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:"green",width:120}]}>
             <Icon name="check" size={14} color="white" />
             <Text style={{fontSize:14,color:"white"}}>专辑完成</Text>
           </View>
 
           <TouchableOpacity style={[inner_styles.touchItem,{backgroundColor:"red",marginLeft:6},base.shadow]}
                             onPress={()=>this.props.navigation.navigate("Packages")}>
-            <Text style={{fontSize:13,color:"white"}}>{'选个新专辑吧~'}</Text>
+            <Text style={{fontSize:13,color:"white"}}>{'再选个新专辑吧~'}</Text>
           </TouchableOpacity>
         </View>
       }
@@ -286,7 +286,7 @@ class VideoList extends Component
         </View>
       }
 
-      show_view = <View>
+      show_view = <View style={{minHeight:base.ScreenHeight-60}}>
 
         <View style={{flex:1,flexDirection:"row",padding:4,backgroundColor:"white"}}>
 
