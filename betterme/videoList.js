@@ -216,16 +216,16 @@ class VideoList extends Component
       var gotoPackages = null;
       if(user_info_data && user_info_data.package_id == null)
       {
-        gotoPackages = <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-          <View style={{flex:1,marginTop:base.ScreenWidth/3-50}}>
-            <Text style={{fontSize:17,justifyContent:"flex-end",textAlign:"center"}}>你还没有学习的视频专辑~</Text>
+        gotoPackages = <View style={[{flex:1,justifyContent:"center",alignItems:"center"},]}>
+          <View style={{flex:1,marginTop:base.ScreenWidth/3-100}}>
+            <Text style={{fontSize:17,justifyContent:"flex-end",textAlign:"center"}}>你还没有学习的视频~</Text>
             <Text style={{fontSize:17,justifyContent:"flex-end",textAlign:"center"}}>去选一个吧~</Text>
           </View>
 
           <TouchableOpacity
             onPress={()=>this.props.navigation.navigate("Packages")}
-            style={[{width:base.ScreenWidth/2,height:base.ScreenWidth/2,borderRadius:base.ScreenWidth/4,backgroundColor:"red",marginTop:10,justifyContent:"center",alignItems:"center"},base.shadow]}>
-            <Text style={{color:"white",fontSize:18}}>选择视频专辑</Text>
+            style={[{width:base.ScreenWidth/2,height:base.ScreenWidth/2,borderRadius:base.ScreenWidth/4,backgroundColor:"#ff0066",marginTop:5,justifyContent:"center",alignItems:"center"},base.shadow]}>
+            <Text style={{color:"white",fontSize:22}}>去选视频</Text>
           </TouchableOpacity>
         </View>
       }
@@ -286,7 +286,7 @@ class VideoList extends Component
         </View>
       }
 
-      show_view = <View style={{minHeight:base.ScreenHeight-60}}>
+      show_view = <View style={{minHeight:base.ScreenHeight-60,backgroundColor:"white"}}>
 
         <View style={{flex:1,flexDirection:"row",padding:4,backgroundColor:"white"}}>
 
@@ -398,6 +398,7 @@ _.mixin(VideoList.prototype,base.base_component);
 
 import { connect } from "react-redux";
 import {videos,user_info,utypes,package_} from "./common/redux/actions/actions.js"
+import {base_styles} from "./styles/base_style";
 
 
 const mapStateToProps = state => {
