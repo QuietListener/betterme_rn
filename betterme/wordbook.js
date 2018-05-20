@@ -40,6 +40,8 @@ class Wordbook extends Component
       show_mean:true,
       page:1,
       total_page:1,
+      show_mean_cn:false,
+      mean_cn_index_show:new Array(400).fill(false),
     }
 
     this.read_word = this.read_word.bind(this);
@@ -180,7 +182,6 @@ class Wordbook extends Component
     var words = words_data.words;
     if(words.length > 0 )
     {
-
       words_view = words.map((item,index)=>{
 
         let learn_word = item.learn_word;
@@ -216,6 +217,24 @@ class Wordbook extends Component
         console.log(item);
         var video = item.video;
 
+        var mean_cn_view_ = <TouchableOpacity
+          onPress={()=>
+          {
+            var mean_cn_index_show = this.state.mean_cn_index_show;
+            mean_cn_index_show[index] = true;
+            this.setState({mean_cn_index_show: _.clone(mean_cn_index_show)});
+          }
+          }
+
+          style={{backgroundColor:"#999",width:base.ScreenWidth/1.5,height:20}}></TouchableOpacity>
+
+        if(this.state.show_mean_cn == true || this.state.mean_cn_index_show[index] == true)
+        {
+          mean_cn_view_ =  <Text style={{flex: 1, fontWeight: "bold", fontSize: 13}}>{this.mean_cn_view(learn_word.mean_cn)}</Text>;
+        }
+
+
+
 
         return <View style={{width:base.ScreenWidth-30,borderBottomWidth:1,borderTopWidth:1, padding:8,margin:6,borderRadius:6,borderColor:"#f2f2f2"}}>
             <View style={{flex:1,flexDirection:"row"}} >
@@ -235,7 +254,8 @@ class Wordbook extends Component
             </View>
 
           <View style={{flex:1,flexDirection:"row",flexWrap:"wrap",alignItems:"flex-start"}} >
-            <Text style={inner_styles.tip}>词意</Text><Text style={{flex:1,fontWeight:"bold",fontSize:13}}>{this.mean_cn_view(learn_word.mean_cn)}</Text>
+            <Text style={inner_styles.tip}>词意</Text>
+            {mean_cn_view_}
           </View>
 
           {subtitle_text?
@@ -256,6 +276,7 @@ class Wordbook extends Component
 
         </View>
       })
+
     }
 
     show_view =  <View style={{flex:1,justifyContent:"flex-start",alignItems:"center"}}>
@@ -275,11 +296,17 @@ class Wordbook extends Component
 
 
     return (
-        <ScrollView style={[{flex:1,backgroundColor:"white",width:base.ScreenWidth}]}>
-          {show_view}
-          
+      <View style={{flex:1,backgroundColor:"white"}}>
 
+        <View style={{flexDirection:"row",height:40,borderBottomWidth:1,borderColor:"#f2f2f2",justifyContent:"flex-end",alignItems:"center",padding:6,marginRight:10}}>
+          <Text style={{}}>显示词意</Text>
+          <Switch value={this.state.show_mean_cn}
+                  onValueChange={(val)=>{this.setState({show_mean_cn:!this.state.show_mean_cn})}}></Switch>
+        </View>
+        <ScrollView style={[{flex:30,backgroundColor:"white",width:base.ScreenWidth}]}>
+          {show_view}
         </ScrollView>
+      </View>
 
     )
   }

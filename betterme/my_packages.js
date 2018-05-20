@@ -177,7 +177,7 @@ class MyPackages extends Component
         <View style={{flex:1}}>
           {show_view}
 
-          <View style={[inner_styles.packageBox]}>
+          <View style={[inner_styles.packageBox,{marginTop:0}]}>
             <View style={[inner_styles.tiphead,{marginTop:0}]}><Text style={inner_styles.title}>我收藏的专辑</Text></View>
             <View style={{flex:1,flexWrap:"wrap",flexDirection:"row",marginTop:6}}>
             {liked_package_views}
@@ -247,7 +247,7 @@ const inner_styles = {
 
   },
   tiphead:{
-    backgroundColor:"green",
+    backgroundColor:"#999",
     padding:6,
     fontWeight:"bold",
     alignItems:"flex-start"

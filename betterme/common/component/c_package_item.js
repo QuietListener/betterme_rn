@@ -20,7 +20,7 @@ export default class CPackageItem extends Component
         this.props.navigation.navigate("Package_",{package_id:this.props.package_id,goBackCallBack:this.props.goBackCallBack})
       }}>
 
-      <Image style={{borderRadius:2,width:this.props.width-2,height:200,}} source={{uri:this.props.poster}} />
+      <Image style={{borderRadius:4,width:this.props.width-2,height:this.props.height-2 || 200-2,}} source={{uri:this.props.poster}} />
 
       <View style={{borderRadius:4,
         position: "absolute", bottom: 0, width: this.props.width-2,padding:4
