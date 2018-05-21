@@ -46,10 +46,14 @@ class Home extends Component {
     this.check_login_state = this.check_login_state.bind(this);
   }
 
-  check_login_state()
+  async check_login_state()
   {
-    AsyncStorage.getItem("access_token").then(access_token=>{
+    try
+    {
+      var access_token = await AsyncStorage.getItem("access_token");
       this.props.navigation.setParams({headerStyle:{height:0,borderWidth:0}});
+      console.log("check_login_state access_token",access_token);
+
       if(access_token)
       {
         console.log(" base.resetAndGoto");
@@ -63,9 +67,11 @@ class Home extends Component {
         console.log("access_token is null")
       }
 
-    }).catch(e=>{
+    }
+    catch(e)
+    {
       console.error(e);
-    })
+    }
   }
 
   componentWillReceiveProps(props)

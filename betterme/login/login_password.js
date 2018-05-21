@@ -75,7 +75,7 @@ class LoginPassword extends Component {
       })
   }
 
-  login()
+  async login()
   {
       var account = this.state.account;
       var password = this.state.password;
@@ -83,7 +83,14 @@ class LoginPassword extends Component {
         console.log("data11111",data);
          if(data && data.data && data.data.access_token)
          {
-           AsyncStorage.setItem("access_token", data.data.access_token);
+           console.log("access_token----",data.data.access_token);
+           AsyncStorage.setItem("access_token", data.data.access_token)
+             .then((item)=>{
+             console.log("AsyncStorage save access_token",item);
+             AsyncStorage.getItem('access_token').then(item=>console.log("AsyncStorage save access_token 1",item)); // I like to save it.
+           })
+             .catch(e=>console.error(e));
+
            base.access_token = data.data.access_token;
          }
 

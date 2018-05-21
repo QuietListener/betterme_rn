@@ -189,7 +189,7 @@ class Package extends Component
         }}
         style={{flex: 1, justifyContent: "center", alignItems: "center", flexDirection: "row"}}>
         {
-          started_?<Icon name="heart" size={26} color="red"/>:<Icon name="heart" size={26} color="black"/>
+          started_?<Icon name="heart" size={26} color="#ff0066"/>:<Icon name="heart" size={26} color="#f2f2f2"/>
         }
         <Text style={{fontSize: 20, marginLeft: 4}}>{star_count}</Text>
       </TouchableOpacity>

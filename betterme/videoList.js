@@ -288,7 +288,7 @@ class VideoList extends Component
 
       show_view = <View style={{minHeight:base.ScreenHeight-60,backgroundColor:"white"}}>
 
-        <View style={{flex:1,flexDirection:"row",padding:4,backgroundColor:"white"}}>
+        <View style={{flex:1,flexDirection:"row",padding:4,backgroundColor:"white",borderBottomWidth:1,borderColor:"#f2f2f2"}}>
 
             <View style={{flex:2,flexDirection:"row",padding:0,paddingTop:6,paddingBottom:6,backgroundColor:"white"}}>
 
