@@ -93,11 +93,11 @@ class LoginPassword extends Component {
 
   register()
   {
-      var account = this.state.account;
-      var password = this.state.password;
-      var code = this.state.code;
-      var params = {username: account, password: password, code: code};
-      this.props.register(params);
+    var account = this.state.account;
+    var password = this.state.password;
+    var code = this.state.code;
+    var params = {username: account, password: password, code: code};
+    this.props.register(params, () => this.login());
   }
 
   async countdown()
@@ -163,7 +163,6 @@ class LoginPassword extends Component {
     }
   }
 
-
   goto_home()
   {
     //this.props.navigation.navigate("CWebViewMall",{url:`${base.HOBBY_DOMAIN}/home#/`});
@@ -184,11 +183,8 @@ class LoginPassword extends Component {
 
   loading()
   {
-    if(!this.props.data
-      || !this.props.data[base.URLS.login.name]
-      || !this.props.data[base.URLS.login.name].data
+    if(!this.props.data[base.URLS.login.name]
       || !this.props.data[base.URLS.register.name]
-      || !this.props.data[base.URLS.register.name].data
     )
       return null;
 
@@ -391,7 +387,7 @@ const styles = StyleSheet.create(
 
 const mapStateToProps = state => {
   return {
-    user_info: state.update_state.login,
+    data: state.update_state,
     nav:state.nav,
   }
 }
