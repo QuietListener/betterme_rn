@@ -58,6 +58,14 @@ class Home extends Component {
       {
         console.log(" base.resetAndGoto");
         base.access_token = access_token;
+        AsyncStorage.setItem("access_token", access_token)
+          .then((item)=>{
+            console.log("AsyncStorage save access_token",item);
+            AsyncStorage.getItem('access_token').then(item=>console.log("AsyncStorage save access_token 1",item)); // I like to save it.
+          })
+          .catch(e=>console.error(e));
+
+
         base.set_cookie("access_token",access_token, 31536000, base.Domain)
         base.axios.defaults.headers.common['access_token'] = access_token;
         base.resetAndGoto(this.props.navigation, "VideoList", { access_token: access_token });
