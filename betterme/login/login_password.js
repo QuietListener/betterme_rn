@@ -53,6 +53,9 @@ class LoginPassword extends Component {
 
   toggle()
   {
+    if(this.interval)
+      clearInterval(this.interval);
+
     this.setState({register:!this.state.register})
   }
 
@@ -108,23 +111,37 @@ class LoginPassword extends Component {
       var url = base.URLS.ensure_code.url();
       var method = base.HttpType.POST;
 
+      this.setState({ensure_code_loading:true});
       var res3 = await base.axios({method: method, url:url , data: params});
-
+      this.setState({ensure_code_loading:false});
       console.log(`HTTP: ${method} : ${JSON.stringify(params)} : ${url} : res=${JSON.stringify(res3)}`);
 
       if (!!res3 && !!res3.data && res3.data.status == 1)
       {
-
-        if (this.interval != null)
+        if(this.interval != null)
         {
-          this.interval = clearInterval(this.interval);
+          clearInterval(this.interval);
         }
 
         this.setState({count: 60});
         this.interval = setInterval(() => {
-          var precount = this.state.count || 60;
+          var precount = this.state.count||60;
           var count = precount - 1;
-          this.setState({count: count, codeBtnText: `${count}${codeBtnDisabled}`});
+
+          if(count <= 0 )
+          {
+            if(this.interval)
+            {
+              clearInterval(this.interval);
+            }
+
+            this.setState({count: count, codeBtnText:codeBtnText});
+          }
+          else
+          {
+            this.setState({count: count, codeBtnText: `${count}${codeBtnDisabled}`});
+          }
+
         }, 1000);
       }
       else
@@ -142,6 +159,7 @@ class LoginPassword extends Component {
     catch(e)
     {
       console.error(e);
+      this.setState({ensure_code_loading:false});
     }
   }
 
@@ -269,9 +287,9 @@ class LoginPassword extends Component {
                      onChangeText={txt => this.setState({account: txt})}/>
 
           <TouchableOpacity style={{position:"absolute",right:18}}
-                            disabled={this.state.count > 0}
+                            disabled={this.state.count > 0 && this.state.ensure_code_loading == false}
                             onPress={this.countdown}>
-                    <Text style={{fontSize:12,color:"red"}}>{this.state.codeBtnText}</Text>
+                    <Text style={{fontSize:12,color:this.state.count > 0?"#999":"red"}}>{this.state.codeBtnText}</Text>
           </TouchableOpacity>
 
           </View>
