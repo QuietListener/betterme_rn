@@ -940,15 +940,19 @@ class Video_ extends Component
     var subtitleView=  this.state.showProgressBar ? <View  style={{width:100,height:100,position:"absolute",top:40,right:5
       ,alignItems:"center",justifyContent:"center",zIndex:109
     }}>
-          <View style={[inner_styles.settingItem,{height:30,backgroundColor:"rgba(0,0,0,0.5)"}]}>
+          <View style={[inner_styles.settingItem,{height:34,backgroundColor:"rgba(0,0,0,0.5)"}]}>
         <Text style={[inner_styles.tip,{margin:1}]}>英</Text>
-          <Switch value={this.state.show_subtitle_en}
+          <Switch
+            style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
+            value={this.state.show_subtitle_en}
                   onValueChange={(val)=>{this.setState({show_subtitle_en:!this.state.show_subtitle_en})}}></Switch>
         </View>
-      <View style={[inner_styles.settingItem,{height:30,backgroundColor:"rgba(0,0,0,0.5)"}]}>
+
+      <View style={[inner_styles.settingItem,{height:34,backgroundColor:"rgba(0,0,0,0.5)"}]}>
             <Text style={[inner_styles.tip,{margin:1}]}>中</Text>
 
-            <Switch value={this.state.show_subtitle_other}
+            <Switch style={{ transform: [{ scaleX: .8 }, { scaleY: .8 }] }}
+                    value={this.state.show_subtitle_other}
                     onValueChange={(val)=>{this.setState({show_subtitle_other:!this.state.show_subtitle_other})}}></Switch>
           </View>
     </View>:null;

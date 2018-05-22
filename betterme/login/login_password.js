@@ -330,8 +330,8 @@ class LoginPassword extends Component {
     }
 
     var show_view_ = <View style={{flex:1}}>
-      <View style={{flex:1,justifyContent:"center",paddingTop:20,alignItems:"center",backgroundColor:"white"}}>
-        <Image source={require("../resources/images/bee.jpg")} style={{marginBottom:20,width:50,height:56}}/>
+      <View style={{flex:2,justifyContent:"center",paddingTop:8,alignItems:"center",backgroundColor:"white"}}>
+        <Image source={require("../resources/images/bee.jpg")} style={{marginBottom:20,width:40,height:52}}/>
         <Text style={{marginBottom:2,fontSize:16,textAlign:"left",fontWeight:"bold",fontFamily: 'System'}}>小蜜蜂播放器</Text>
         {/*<Text style={{fontSize:14,fontWeight:"bold",textAlign:"left",fontFamily: 'System'}}>为学习而生</Text>*/}
       </View>

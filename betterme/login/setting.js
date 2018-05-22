@@ -69,7 +69,7 @@ class Setting extends Component
         <View style={inner_styles.item}>
 
           <TouchableOpacity style={inner_styles.subitem1} onPress={()=>this.logout()}>
-            <Text style={inner_styles.bold_text}>退出</Text>
+            <Text style={inner_styles.bold_text}>退出账号</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={inner_styles.subitem2} onPress={()=>this.logout()}>
@@ -80,7 +80,18 @@ class Setting extends Component
         <View style={inner_styles.item}>
 
           <TouchableOpacity style={inner_styles.subitem1} >
-            <Text style={inner_styles.bold_text}>联系我: <Text style={{marginLeft:30}}>   fowardgogogo@gmail.com</Text></Text>
+            <Text style={inner_styles.bold_text}>email:fowardgogogo@gmail.com</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={inner_styles.subitem2} >
+            <Text style={inner_styles.normal_text}></Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={inner_styles.item}>
+          <TouchableOpacity style={inner_styles.subitem1} >
+              <Text style={inner_styles.bold_text}>qq 群:
+              661359464  入群暗号:小蜜蜂</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={inner_styles.subitem2} >
@@ -89,35 +100,17 @@ class Setting extends Component
 
         </View>
 
-        <View style={inner_styles.item}>
-
-          <TouchableOpacity style={inner_styles.subitem1} >
-            <Text style={inner_styles.bold_text}>qq群:</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={inner_styles.subitem2} >
-            <Text style={inner_styles.normal_text}></Text>
-          </TouchableOpacity>
-
-        </View>
-
 
         <View style={inner_styles.item}>
 
           <TouchableOpacity style={inner_styles.subitem1} >
-            <Text style={inner_styles.bold_text}>版本(0.1.0)</Text>
+            <Text style={inner_styles.bold_text}>版 本:0.1.0</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={inner_styles.subitem2}>
             <Text style={inner_styles.normal_text}></Text>
           </TouchableOpacity>
-
-
         </View>
-
-
-
-
       </View>
     )
   }
@@ -137,7 +130,7 @@ const inner_styles = {
   },
 
   subitem1:{
-    flex:3,
+    flex:5,
     alignItems:"flex-start",
     justifyContent:"center"
 
