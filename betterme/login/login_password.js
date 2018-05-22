@@ -6,7 +6,7 @@
 
 import React, { Component} from 'react';
 import * as base from "../common/base.js"
-import {TouchableOpacity,AsyncStorage,Image,Button,TextInput,Alert,NativeModules,Modal} from "react-native"
+import {TouchableOpacity,AsyncStorage,ActivityIndicator,Image,Button,TextInput,Alert,NativeModules,Modal} from "react-native"
 import * as BaseStyle from  "../styles/base_style.js"
 import {
   Platform,
@@ -49,6 +49,7 @@ class LoginPassword extends Component {
     this.countdown = this.countdown.bind(this);
     // AnotherToastAndroid.show('Another Toast', AnotherToastAndroid.LONG);
     this.setCookieAndroid = this.setCookieAndroid.bind(this);
+    this.loading = this.loading.bind(this);
   }
 
   toggle()
@@ -190,37 +191,52 @@ class LoginPassword extends Component {
 
   loading()
   {
-    if(!this.props.data[base.URLS.login.name]
-      || !this.props.data[base.URLS.register.name]
-    )
-      return null;
-
-    var login_data = this.props.data[base.URLS.login.name].data;
-    var login_status = this.props.data[base.URLS.login.name].status;
-
-    var register_data = this.props.data[base.URLS.register.name].data;
-    var register_status = this.props.data[base.URLS.register.name].status;
-
-    if(login_status == UPDATE_DATA_STATUS.LOADING || register_status == UPDATE_DATA_STATUS.LOADING)
+    if(this.props.data && (this.props.data[base.URLS.login.name]|| this.props.data[base.URLS.register.name]))
     {
-      return <Modal>
-        <View>
-          <Text>loading</Text>
+      var login_status = null;
+      if(this.props.data[base.URLS.login.name])
+       login_status = this.props.data[base.URLS.login.name].status;
+
+      var register_status = null;
+      if(this.props.data[base.URLS.register.name])
+       register_status = this.props.data[base.URLS.register.name].status;
+
+      if(login_status == UPDATE_DATA_STATUS.LOADING || register_status == UPDATE_DATA_STATUS.LOADING)
+      {
+      return <Modal
+        transparent={true}
+        visible={true}
+      >
+        <View style={{flex:1,justifyContent:"center",alignItems:"center",backgroundColor:"rgba(0,0,0,0.4)"}}>
+          <ActivityIndicator
+            animating={true}
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              width:50,height:50,
+            }}
+            size="large"
+          />
+
         </View>
       </Modal>
     }
+  }
+  return null;
 
   }
   render() {
 
 
-    console.log("user_info",this.props.user_info);
+    console.log("user_info---",this.props.user_info);
 
     var tip = null;
-    if(this.props.user_info && this.props.user_info.data && this.props.user_info.data.status != 1)
+    var login_data = this.props.data[base.URLS.login.name]
+    if(login_data && login_data.data && login_data.data.status != 1)
     {
-        var tipTxt = this.props.user_info.data.msg || this.props.user_info.data.smsg;
+        var tipTxt = login_data.data.msg || login_data.data.smsg;
         tip = <CHeadTip  style={{width:base.ScreenWidth}} tip={tipTxt}/>
+      console.log("tip:",tipTxt);
     }
 
     var show_view = null;
@@ -338,9 +354,12 @@ class LoginPassword extends Component {
       <View style={{flex:5,paddingTop:0}}>{show_view}</View>
     </View>
 
+
+    var loading_view= this.loading()
     return (
       <View style={BaseStyle.base_styles.base_view_style}>
-        {this.loading()}
+
+        {loading_view}
         {tip}
         {show_view_}
       </View>
