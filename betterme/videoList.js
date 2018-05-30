@@ -119,7 +119,6 @@ class VideoList extends Component
     var user_info = this.props.data[base.URLS.user_info.name].data;
     var user_info_status = this.props.data[base.URLS.user_info.name].status;
 
-
     var show_view = null;
     if(user_info_status == UPDATE_DATA_STATUS.FAILED ||  (user_info && user_info.status !=1))
     {

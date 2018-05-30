@@ -13,10 +13,10 @@ export default class CNetworkErrorTip extends Component
 
   render()
   {
-    return <TouchableOpacity onPress={this.props.refresh ? this.props.refresh() : ()=>null}
-                 style={{backgroundColor:"rgb(254,223,224)",height:30,justifyContent:"center",
+    return <TouchableOpacity onPress={this.props.refresh ? this.props.refresh : ()=>null}
+                 style={{backgroundColor:"red",padding:6,justifyContent:"center",
                         alignItems:"center",...this.props.style}}>
-      <Text style={{ color:"rgb(129,104,105)" }}>网络异常 请在稳定的网络环境下重试</Text>
+      <Text style={{ color:"white" }}>{this.props.text||`网络异常 点我重试一下呢~`}</Text>
 
     </TouchableOpacity>
   }

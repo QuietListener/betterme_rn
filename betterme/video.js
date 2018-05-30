@@ -21,6 +21,7 @@ const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = r
 
 var RNFS = require('react-native-fs');
 import Tts from 'react-native-tts';
+import CNetworkErrorTip from "./common/component/c_network_error_tip"
 Tts.addEventListener('tts-start', (event) => console.log("start", event));
 Tts.addEventListener('tts-finish', (event) => console.log("finish", event));
 Tts.addEventListener('tts-cancel', (event) => console.log("cancel", event));
@@ -119,72 +120,94 @@ class Video_ extends Component
     this.onEnd = this.onEnd.bind(this);
     this.finished_video = this.finished_video.bind(this);
     this.onSubtitlePress = this.onSubtitlePress.bind(this);
+    this.load_subtitles = this.load_subtitles.bind(this);
 
     if(videoPath)
     {
       RNFS.exists(videoPath).then(videoFileExist=>this.setState({videoFileExist:videoFileExist}));
     }
 
-    this.load_file = this.load_file
-    var that = this;
-    [{path:srtPath,url:srtUrl},{path:otherSrtPath,url:otherSrtUrl}].forEach((item_,index)=>{
 
-      var filePath_ = item_.path;
-      var srtUrl_ = item_.url;
-      this.load_file(filePath_,srtUrl_,index);
-
-    });
    // Orientation.lockToLandscape();
 
+  }
+
+
+  load_subtitles()
+  {
+
+    var that = this;
+    [{path:this.state.srtPath,url:this.state.srtUrl},{path:this.state.otherSrtPath,url:this.state.otherSrtUrl}].forEach((item_,index)=> {
+      var filePath_ = item_.path;
+      var srtUrl_ = item_.url;
+      if(srtUrl_)
+      {
+        srtUrl_ += `?timestamp=${new Date().getTime()}`;
+      }
+
+      that.load_file(filePath_,srtUrl_,index);
+    });
   }
 
 
   load_file(filePath_,srtUrl_,index)
   {
     var that = this;
-    RNFS.exists(filePath_).then((srtFileExist)=>{
-    console.log("##>>",index);
+    if(!filePath_)
+      filePath_ = "asdfjasasdfasdfasdfafafafaa";
 
-    if(srtFileExist == true)
-    {
-      //alert("srt exist")
-      RNFS.readFile(filePath_).then(data=>{
-        //console.log("srt",data);
-        var srt_data = parse(data);
-        if(index == 0)
+      RNFS.exists(filePath_).then((srtFileExist) => {
+        console.log("##>>", index);
+
+        if (srtFileExist == true)
         {
-          that.setState({srt_data});
+          //alert("srt exist")
+          RNFS.readFile(filePath_).then(data => {
+            //console.log("srt",data);
+            var srt_data = parse(data);
+            if (index == 0)
+            {
+              that.setState({srt_data});
+            }
+            else
+            {
+              that.setState({srt_data1: srt_data});
+            }
+            console.log(srt_data[1])
+          })
         }
-        else
+        else if (srtUrl_)
         {
-          that.setState({srt_data1:srt_data});
+          //alert("srt not exist,url = ",srtUrl_)
+          base.axios({method: "get", url: srtUrl_}).then(res3 => {
+            console.log("subtitle", res3.data);
+            var srt_data = parse(res3.data);
+            if (index == 0)
+            {
+              that.setState({srt_data,srt_data_error:false});
+            }
+            else
+            {
+              that.setState({srt_data1: srt_data,srt_data1_error:false});
+            }
+            console.log(srt_data[1])
+            console.log(`load  subtitle : ${srtUrl_} 成功`);
+          }).catch(e => {
+            console.error(e);
+            //Alert.alert("","字幕加载失败,重新进入视频试试呢?")
+            if (index == 0)
+            {
+              that.setState({srt_data_error:true});
+            }
+            else
+            {
+              that.setState({srt_data1_error:true});
+            }
+          });
+
         }
-        console.log(srt_data[1])
-      })
-    }
-    else if(srtUrl_)
-    {
-      //alert("srt not exist,url = ",srtUrl_)
-      base.axios({method:"get" , url:srtUrl_ }).then(res3=>{
-        console.log("subtitle",res3.data);
-        var srt_data = parse(res3.data);
-        if(index == 0)
-        {
-          that.setState({srt_data});
-        }
-        else
-        {
-          that.setState({srt_data1:srt_data});
-        }
-        console.log(srt_data[1])
-        console.log(`load  subtitle : ${srtUrl_} 成功`);
-      }).catch(e=>{
-        console.error(e);
-        Alert.alert("","字幕加载失败,重新进入视频试试呢?")
       });
 
-    }
-    });
   }
 
   componentWillUnmount()
@@ -197,7 +220,7 @@ class Video_ extends Component
   {
 
     var that = this;
-
+    this.load_subtitles();
     //base.set_cookie("access_token","7110eda4d09e062aa5e4a390b0a572ac0d2c0220596",  31536000,   "172.16.35.224")
 
    // Orientation.addOrientationListener(this._orientationLisener);
@@ -1060,10 +1083,21 @@ class Video_ extends Component
 
     </Modal>
 
+    var srt_error = null;
+    if(this.state.srt_data_error == true || this.state.srt_data1_error == true)
+    {
+      srt_error = <CNetworkErrorTip style={{width:base.ScreenWidth}} refresh={()=>{
+        this.setState({srt_data_error:false,srt_data1_error:false});
+        this.load_subtitles()
+      }
+      } text={'加载字幕失败，点我重试~'}/>
+    }
+
+
+
     return (
       <View style={{flex:1,justifyContent:"flex-start",alignItems:"center",backgroundColor:"white"}}>
-
-
+        {srt_error}
         <View style={[{},this.state.backgroundVideo]}>
 
           {settingView}
