@@ -37,6 +37,7 @@ const DownloadError = -100;
 //
 // import Realm from "realm"
 import {DownloadItem} from "./db/models"
+import CNetworkErrorTip from "./common/component/c_network_error_tip"
 
 class Package extends Component
 {
@@ -69,6 +70,7 @@ class Package extends Component
     this.star_callback = this.star_callback.bind(this);
     this.unstar_callback = this.unstar_callback.bind(this);
     this.add_package = this.add_package.bind(this);
+    this.componentDidMount = this.componentDidMount.bind(this);
 
   }
 
@@ -128,7 +130,7 @@ class Package extends Component
     var show_view = null;
     if(status == UPDATE_DATA_STATUS.FAILED ||  (data && data.status !=1))
     {
-      show_view=<Text>加载失败</Text>
+      show_view=<CNetworkErrorTip refresh={()=>this.componentDidMount()}></CNetworkErrorTip>;
     }
     else if (status == UPDATE_DATA_STATUS.LOADING)
     {
@@ -287,6 +289,11 @@ class Package extends Component
             :null
           }
 
+          <TouchableOpacity
+            onPress={this.add_package}
+            style={{borderRadius:4,margin:4,padding:8,backgroundColor:"black",borderColor:"white",borderWidth:1,justifyContent:"center",alignItems:"center"}}>
+            <Text style={{color:"white",fontSize:24,fontWeight:"bold"}}>选中这个专辑</Text>
+          </TouchableOpacity>
 
           <View style={{marginTop:4,backgroundColor:"white",flexDirection:"row",flexWrap: "wrap"}}>
             {videos_view}
@@ -295,11 +302,6 @@ class Package extends Component
 
         </ScrollView>
 
-        <TouchableOpacity
-          onPress={this.add_package}
-          style={{position:"absolute",width:80,height:80,borderRadius:40,bottom:20,right:20,backgroundColor:"rgba(0,0,0,0.7)",borderColor:"white",borderWidth:1,justifyContent:"center",alignItems:"center"}}>
-          <Text style={{color:"white",fontSize:50,marginTop:-10}}>+</Text>
-        </TouchableOpacity>
       </View>
 
     )

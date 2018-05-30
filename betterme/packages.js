@@ -37,6 +37,7 @@ const DownloadError = -100;
 //
 // import Realm from "realm"
 import {DownloadItem} from "./db/models"
+import CNetworkErrorTip from "./common/component/c_network_error_tip"
 
 class Packages extends Component
 {
@@ -126,7 +127,7 @@ class Packages extends Component
     var show_view = null;
     if(my_package_status == UPDATE_DATA_STATUS.FAILED || status == UPDATE_DATA_STATUS.FAILED ||  (data && data.status !=1)||(my_package_data&&my_package_data.status !=1))
     {
-      show_view=<Text>加载失败</Text>
+      show_view=show_view= <CNetworkErrorTip refresh={()=>this.componentDidMount()}></CNetworkErrorTip>
     }
     else if (status == UPDATE_DATA_STATUS.LOADING || my_package_status == UPDATE_DATA_STATUS.LOADING)
     {
