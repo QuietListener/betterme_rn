@@ -38,6 +38,7 @@ const DownloadError = -100;
 import {DownloadItem} from "./db/models"
 import CVideoItem from "./common/component/c_video_item"
 import CNetworkErrorTip from "./common/component/c_network_error_tip"
+import CRedPoint from "./common/component/c_red_point"
 
 class VideoList extends Component
 {
@@ -47,7 +48,10 @@ class VideoList extends Component
 
     var headerRight =   <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center",paddingRight:8,paddingLeft:8}}  activeOpacity={0.9}
                                           onPress={()=>navigation.navigate("Setting")}>
+
+      <CRedPoint name={base.RP_NEW_VERSION} style={{position:"absolute",left:0,top:10}}/>
       <Icon name="cog" size={26} color="black" />
+
     </TouchableOpacity>
 
 
@@ -64,8 +68,11 @@ class VideoList extends Component
         total_page:1
       }
 
+
     this.load_package = this.load_package.bind(this);
     this.componentDidMount = this.componentDidMount.bind(this);
+
+
   }
 
   load_package(data)
@@ -99,6 +106,44 @@ class VideoList extends Component
     var video_key_list = video_list.map((item)=>{});
     var orgin_download_state = {};
     this.setState({video_list, orgin_download_state});
+
+
+    //新版本小红点;
+    var params = {client_type:base.is_ios?1:3}
+    var that = this;
+    this.props.latest_version(params,(data)=> {
+      try
+      {
+        //alert(JSON.stringify(data));
+        if (data && data.data && data.data.version)
+        {
+          if (data.data.version > base.buildNumber)
+          {
+            base.setRedPoint(base.RP_NEW_VERSION);
+            that.props.update_red_point();
+          }
+          else
+          {
+            base.clearRedPoint(new Array(base.RP_NEW_VERSION));
+          }
+        }
+
+        setTimeout(()=>{
+
+            if( this.props.navigation &&  this.props.navigation.setParams)
+            {
+              this.props.navigation.setParams({ fresh: `1` });
+            }
+
+          },500);
+      }
+      catch(e)
+      {
+        console.error(e);
+      }
+
+      return data;
+    });
   }
 
 
@@ -397,7 +442,7 @@ _.mixin(VideoList.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {videos,user_info,utypes,package_} from "./common/redux/actions/actions.js"
+import {videos,user_info,utypes,package_,latest_version,update_red_point} from "./common/redux/actions/actions.js"
 import {base_styles} from "./styles/base_style";
 
 
@@ -423,6 +468,13 @@ const mapDispatchToProps = dispatch => {
       dispatch(package_({id:id},callback))
     },
 
+    latest_version:(params,call_back)=>{
+      dispatch(latest_version(params,call_back));
+    },
+
+    update_red_point:()=>{
+      dispatch(update_red_point())
+    }
   }
 }
 

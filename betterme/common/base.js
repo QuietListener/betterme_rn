@@ -1,7 +1,8 @@
 import CookieManager from 'react-native-cookies';
 import Moment from "moment"
 import React, {Component} from 'React'
-import {NativeModules,Platform,TouchableOpacity,View, ScrollView, Image, Text, Button, StyleSheet, ProgressViewIOS} from 'react-native'
+import {NativeModules,Platform,TouchableOpacity,View, ScrollView, Image, Text, Button, StyleSheet, ProgressViewIOS,AsyncStorage} from 'react-native'
+const DeviceInfo = require('react-native-device-info');
 
 //---网络库---
 const HttpTimeout = 10000//毫秒
@@ -300,8 +301,13 @@ export const URLS = {
     method:HttpType.GET,
     url:()=>`${HOBBY_DOMAIN}/api/statistics.json`,
     name:'statistics',
-  }
+  },
 
+  latest_version: {
+    method:HttpType.GET,
+    url:()=>`${HOBBY_DOMAIN}/api/latest_version.json`,
+    name:'latest_version',
+  }
 
 }
 
@@ -356,4 +362,28 @@ export var access_token = "";
 export function access_token_param()
 {
   return `access_token=${access_token}`;
+}
+
+
+export const RP_NEW_VERSION = "RP_NEW_VERSION";
+
+
+export const buildNumber = DeviceInfo.getBuildNumber();
+
+export function setRedPoint(name)
+{
+  AsyncStorage.setItem(name,"1")
+    .then((item)=>{})
+    .catch(e=>{
+      console.error(e);
+  });
+}
+
+export function clearRedPoint(names)
+{
+  AsyncStorage.multiRemove(names)
+    .then((itme)=>{})
+    .catch(e=>{
+        console.error(e);
+    })
 }

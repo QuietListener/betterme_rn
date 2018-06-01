@@ -15,6 +15,7 @@ export const UPDATE_DATA_STATUS = {
 }
 export const CLEAR_ALL_DATA = "CLEAR_ALL_DATA";
 export const LEFT_BAR_STATUS = "LEFT_BAR_STATUS";
+export const RED_POINT_CHANGE = "RED_POINT_CHANGE";
 
 import * as base from "../../base.js"
 
@@ -384,3 +385,19 @@ export function statistics(call_back)
 }
 
 
+export function update_red_point()
+{
+  console.log("update_red_point")
+  return { type: RED_POINT_CHANGE, text:null }
+}
+
+
+
+
+export function latest_version(params,call_back)
+{
+  console.log("latest_version");
+  return function(dispatch,getState) {
+    return_get_data_func(base.URLS.latest_version,dispatch,getState,call_back,params);
+  }
+}

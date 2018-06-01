@@ -1,4 +1,4 @@
-import { ADD_TODO,GET_WECHAT_INSTALLED_STATUS,NAV_STATUS,UPDATE_DATA_STATUS,UPDATE_DATA_STATE, CLEAR_ALL_DATA ,LEFT_BAR_STATUS} from '../actions/actions'
+import { ADD_TODO,GET_WECHAT_INSTALLED_STATUS,NAV_STATUS,UPDATE_DATA_STATUS,UPDATE_DATA_STATE, CLEAR_ALL_DATA ,LEFT_BAR_STATUS,RED_POINT_CHANGE} from '../actions/actions'
 
 
 function todos(state = [], action) {
@@ -91,12 +91,26 @@ function left_bar_status(state=false,action)
   return state;
 }
 
+function red_point(state,action)
+{
+  if(action.type == RED_POINT_CHANGE)
+  {
+    if(state == null)
+      state = 0;
+
+    return state+1;
+  }
+
+  return 0;
+}
+
  var reducers ={
-  nav_status,
-  todos,
-  wechat_installed_status,
-  update_state,
+   nav_status,
+   todos,
+   wechat_installed_status,
+   update_state,
    left_bar_status,
+   red_point
  }
 
 export default reducers;

@@ -283,6 +283,14 @@ class Package extends Component
               <Text style={{fontSize:20,marginLeft:4}}>{package_.play_count}</Text>
 
             </TouchableOpacity>
+            <TouchableOpacity
+
+              style={{flex:1,justifyContent:"center",alignItems:"center",flexDirection:"row"}}>
+
+              <Icon name="eye" size={26} color="black" />
+              <Text style={{fontSize:20,marginLeft:4}}>{package_.play_count}</Text>
+
+            </TouchableOpacity>
 
             {like_btn}
           </View>
@@ -291,8 +299,8 @@ class Package extends Component
 
           <TouchableOpacity
             onPress={this.add_package}
-            style={{borderRadius:4,margin:4,padding:8,backgroundColor:"black",borderColor:"white",borderWidth:1,justifyContent:"center",alignItems:"center"}}>
-            <Text style={{color:"white",fontSize:24,fontWeight:"bold"}}>选中这个专辑</Text>
+            style={[{borderRadius:20,margin:4,padding:8,backgroundColor:"black",borderColor:"white",borderWidth:1,justifyContent:"center",alignItems:"center"}]}>
+            <Text style={{color:"yellow",fontSize:24,fontWeight:"bold"}}>选为当前专辑</Text>
           </TouchableOpacity>
 
           <View style={{marginTop:4,backgroundColor:"white",flexDirection:"row",flexWrap: "wrap"}}>

@@ -2,12 +2,12 @@
  * Created by junjun on 17/11/8.
  */
 import React, {Component} from 'React'
-import {View, Image, Text, Button, StyleSheet,TouchableOpacity, ScrollView,Alert,Switch, AsyncStorage} from 'react-native'
+import {View, Image, Text, Button, StyleSheet,TouchableOpacity, ScrollView,Alert,Linking,Switch, AsyncStorage} from 'react-native'
 import {StackNavigator, StackRouter,NavigationActions} from 'react-navigation';
 
 import Moment from "moment"
 import * as base from "../common/base"
-const DeviceInfo = require('react-native-device-info');
+import CRedPoint from "../common/component/c_red_point.js"
 
 class Setting extends Component
 {
@@ -23,11 +23,45 @@ class Setting extends Component
 
     this.state = {switchValue:true}
     this.rating_on_appstore = this.rating_on_appstore.bind(this);
-  }
 
+    AsyncStorage.getItem(base.RP_NEW_VERSION).then(val=>{
+
+      //alert(val);
+      if(val != null && val != undefined && (val == 1 || val == "1"))
+      {
+        this.setState({ has_new_version:true})
+      }
+      else
+      {
+        this.setState({ has_new_version:false})
+      }
+    })
+
+  }
   componentDidMount()
   {
+    var params = {client_type:base.is_ios?1:3}
+    this.props.latest_version(params);
+  }
 
+
+
+  download_new_version(url)
+  {
+
+    if(base.is_android)
+    {
+      console.log("download new apk")
+      if(url != null)
+        Linking.openURL(url);
+    }
+    else if(base.is_ios)
+    {
+      console.log("go to appstore")
+    }
+
+    base.clearRedPoint(new Array(base.RP_NEW_VERSION));
+    this.props.update_red_point();
   }
 
   logout()
@@ -57,12 +91,25 @@ class Setting extends Component
     }
   }
 
-
-
   render()
   {
-    //alert(`switchValue ${this.state.switchValue}`);
 
+    var new_version_view = <TouchableOpacity  style={[inner_styles.subitem2,{flex:3}]}>
+      <Text style={inner_styles.normal_text}>{`已经是最新版了`}</Text>
+    </TouchableOpacity>
+
+    if(this.state.has_new_version && this.state.has_new_version == true)
+    {
+      var lv = this.props.data[base.URLS.latest_version.name].data
+      console.log("latest version",lv);
+
+      if(lv && lv.data && lv.data.version && lv.data.version > base.buildNumber )
+      {
+        new_version_view = <TouchableOpacity onPress={()=>{this.download_new_version(lv.data.download_url)}} style={[inner_styles.subitem2,{flex:3}]}>
+          <Text style={[inner_styles.normal_text,{color:"red",borderWidth:1,borderRadius:4,padding:2,borderColor:"red",paddingRight:8,paddingLeft:8,fontWeight:"bold"}]}>下载新版本</Text>
+        </TouchableOpacity>
+      }
+    }
 
     return (
       <View style={{flex:1,justifyContent:"flex-start",alignItems:"center"}}>
@@ -102,14 +149,12 @@ class Setting extends Component
 
 
         <View style={inner_styles.item}>
-
+          <CRedPoint name={base.RP_NEW_VERSION}  style={{position:"absolute",left:10,top:10}}/>
           <TouchableOpacity style={inner_styles.subitem1} >
-            <Text style={inner_styles.bold_text}>版 本:0.1.0</Text>
+            <Text style={inner_styles.bold_text}>{`版 本:${base.buildNumber}`}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={inner_styles.subitem2}>
-            <Text style={inner_styles.normal_text}></Text>
-          </TouchableOpacity>
+          {new_version_view}
         </View>
       </View>
     )
@@ -164,6 +209,7 @@ _.mixin(Setting.prototype,base.base_component);
 
 import { connect } from "react-redux";
 import {clear_all_data} from "../common/redux/actions/actions.js"
+import {latest_version,update_red_point} from "../common/redux/actions/actions";
 
 
 const mapStateToProps = state => {
@@ -175,8 +221,14 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
 
+    latest_version:(params)=>{
+      dispatch(latest_version(params,null))
+    },
     clear_all_data:()=>{
       dispatch(clear_all_data())
+    },
+    update_red_point:()=>{
+      dispatch(update_red_point());
     }
   }
 }

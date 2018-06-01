@@ -747,7 +747,7 @@ class Video_ extends Component
     console.log("onSubtitlePress",subtitleObj);
     if(subtitleObj && subtitleObj.start && subtitleObj.start > 0)
     {
-      let start = subtitleObj.start/1000-1;
+      let start = subtitleObj.start/1000.0;
       start = start < 0 ? start = 0: start;
 
       if(this.state.duration > 0  && start < this.state.duration)

@@ -37,6 +37,7 @@ const DownloadError = -100;
 //
 // import Realm from "realm"
 import {DownloadItem} from "./db/models"
+import CNetworkErrorTip from "./common/component/c_network_error_tip"
 
 class Mine extends Component
 {
@@ -61,6 +62,7 @@ class Mine extends Component
         total_page:1
       }
 
+    this.componentDidMount = this.componentDidMount.bind(this);
   }
 
   async componentDidMount()
@@ -103,7 +105,7 @@ class Mine extends Component
     var show_view = null;
     if(statistics_status ==  UPDATE_DATA_STATUS.FAILED|| user_info_status == UPDATE_DATA_STATUS.FAILED ||  (user_info && user_info.status !=1) || (statistics && statistics.status !=1))
     {
-      show_view=<Text>加载失败</Text>
+      show_view= <CNetworkErrorTip refresh={()=>this.componentDidMount()}></CNetworkErrorTip>
     }
     else if( user_info_status == UPDATE_DATA_STATUS.LOADING || statistics_status == UPDATE_DATA_STATUS.LOADING)
     {
