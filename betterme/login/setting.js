@@ -66,20 +66,22 @@ class Setting extends Component
 
   logout()
   {
-     base.clear_cookie("access_token");
-     base.clearDBItems(new Array(base.ACCESS_TOKEN));
-     this.props.clear_all_data();
 
-    //重置 route
-     var resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [
-        NavigationActions.navigate({ routeName: 'Home' })
-      ]
-    });
+   AsyncStorage.removeItem(base.ACCESS_TOKEN).then((item)=>{});
 
-     setTimeout(()=>{ this.props.navigation.dispatch(resetAction);},100);
-    //重置 route
+   base.clear_cookie("access_token");
+   this.props.clear_all_data();
+
+   //重置 route
+   var resetAction = NavigationActions.reset({
+     index: 0,
+     actions: [
+       NavigationActions.navigate({ routeName: 'Home' })
+     ]
+   });
+
+   this.props.navigation.dispatch(resetAction);
+   //重置 route
   }
 
   rating_on_appstore()
@@ -99,15 +101,29 @@ class Setting extends Component
 
     if(this.state.has_new_version && this.state.has_new_version == true)
     {
-      var lv = this.props.data[base.URLS.latest_version.name].data
-      console.log("latest version",lv);
-
-      if(lv && lv.data && lv.data.version && lv.data.version > base.buildNumber )
+      if (this.props.data && this.props.data[base.URLS.latest_version.name])
       {
-        new_version_view = <TouchableOpacity onPress={()=>{this.download_new_version(lv.data.download_url)}} style={[inner_styles.subitem2,{flex:3}]}>
-          <Text style={[inner_styles.normal_text,{color:"red",borderWidth:1,borderRadius:4,padding:2,borderColor:"red",paddingRight:8,paddingLeft:8,fontWeight:"bold"}]}>下载新版本</Text>
-        </TouchableOpacity>
-      }
+        var lv = this.props.data[base.URLS.latest_version.name].data
+        console.log("latest version", lv);
+
+        if (lv && lv.data && lv.data.version && lv.data.version > base.buildNumber)
+        {
+          new_version_view = <TouchableOpacity onPress={() => {
+            this.download_new_version(lv.data.download_url)
+          }} style={[inner_styles.subitem2, {flex: 3}]}>
+            <Text style={[inner_styles.normal_text, {
+              color: "red",
+              borderWidth: 1,
+              borderRadius: 4,
+              padding: 2,
+              borderColor: "red",
+              paddingRight: 8,
+              paddingLeft: 8,
+              fontWeight: "bold"
+            }]}>下载新版本</Text>
+          </TouchableOpacity>
+       }
+     }
     }
 
     return (
