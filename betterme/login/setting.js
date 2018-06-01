@@ -67,9 +67,8 @@ class Setting extends Component
   logout()
   {
      base.clear_cookie("access_token");
-
+     base.clearDBItems(new Array(base.ACCESS_TOKEN));
      this.props.clear_all_data();
-
 
     //重置 route
      var resetAction = NavigationActions.reset({
@@ -79,7 +78,7 @@ class Setting extends Component
       ]
     });
 
-    this.props.navigation.dispatch(resetAction);
+     setTimeout(()=>{ this.props.navigation.dispatch(resetAction);},100);
     //重置 route
   }
 

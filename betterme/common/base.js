@@ -387,3 +387,8 @@ export function clearRedPoint(names)
         console.error(e);
     })
 }
+
+
+export function clearDBItems(names) {
+  return clearRedPoint(names);
+}
