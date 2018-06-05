@@ -110,7 +110,7 @@ class Package extends Component
 
   add_package()
   {
-    this.props.add_my_package(this.state.package_id,()=>{this.props.navigation.navigate("VideoList")});
+    this.props.add_my_package(this.state.package_id,()=>{base.resetAndGoto(this.props.navigation,"HomeNav",{})});
   }
 
   render()

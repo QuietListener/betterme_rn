@@ -104,17 +104,15 @@ const RootStack =  StackNavigator(
     navigationOptions: ({navigation}) => {
 
       const { params } = navigation.state;
-      var left = <TouchableOpacity style={{flex:1,flexDirection:"row",paddingLeft:10,paddingRight:10,alignItems:"center"}} onPress={
+      var left = <TouchableOpacity style={{flex:1,flexDirection:"row",paddingLeft:10,paddingRight:40,alignItems:"center"}} onPress={
         ()=>{
-
-          navigation.goBack();
-          const { state, setParams } = navigation;
-          if(state &&  state.params && state.params.goBackCallBack)
-          {
-            state.params.goBackCallBack();
-          }
-
-        } }>
+            navigation.goBack();
+            const { state, setParams } = navigation;
+            if(state &&  state.params && state.params.goBackCallBack)
+            {
+              state.params.goBackCallBack();
+            }
+          }}>
         <Icon name={'angle-left'} size={30} color="black" />
       </TouchableOpacity>;
         return {headerLeft:left}

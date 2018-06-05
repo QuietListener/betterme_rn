@@ -356,7 +356,15 @@ class VideoList extends Component
         {package_view}
 
 
-        <View  style={{flex: 4, marginTop:8,backgroundColor:"white",flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap"}}>
+        <View style={{height:1,flex:1,borderWidth:1,borderColor:"#f2f2f2",margin:4}}></View>
+
+          <TouchableOpacity style={[{flex:1,maxHeight:40,justifyContent:"center",alignItems:"center",margin:10,padding:8,borderRadius:2,backgroundColor:"green"}]}
+                            onPress={()=>this.props.navigation.navigate("Packages")}>
+            <Text style={{fontSize:18,color:"white"}}>{' 选专辑 '}</Text>
+          </TouchableOpacity>
+
+
+        <View  style={{flex: 4, minHeight:base.ScreenHeight/2,marginTop:8,backgroundColor:"white",flexDirection: "row", justifyContent: "flex-start", alignItems: "center", flexWrap: "wrap"}}>
           {videos_views}
         </View>
       </View>
