@@ -392,3 +392,8 @@ export function clearRedPoint(names)
 export function clearDBItems(names) {
   return clearRedPoint(names);
 }
+
+
+
+export const focusColor = "green";
+export const normalColor = "gray";

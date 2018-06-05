@@ -56,8 +56,13 @@ class VideoList extends Component
 
 
     var headerStyle = params.headerStyle;
-    return {headerStyle, headerLeft:null, headerRight,title:"主页"};
+    var tabBarIcon = ({ focused, tintColor }) =>  (<View style={{marginTop:40,justifyContent:"center",alignItems:"center",height:40,width:40}}><Icon name="home" size={36} color={focused?base.focusColor:base.normalColor} />  /></View>);
+
+    return {headerStyle,headerLeft:<Text></Text>, headerRight,title:"主页","tabBarIcon":tabBarIcon};
+
+
   };
+
 
 
   constructor(props)
@@ -165,13 +170,16 @@ class VideoList extends Component
     var user_info_status = this.props.data[base.URLS.user_info.name].status;
 
     var show_view = null;
+    var tip = null;
+    var loading = null;
     if(user_info_status == UPDATE_DATA_STATUS.FAILED ||  (user_info && user_info.status !=1))
     {
-      show_view= <CNetworkErrorTip refresh={()=>this.componentDidMount()}></CNetworkErrorTip>
+      tip= <CNetworkErrorTip refresh={()=>this.componentDidMount()}></CNetworkErrorTip>
     }
-    else if( user_info_status == UPDATE_DATA_STATUS.LOADING)
+
+    if( user_info_status == UPDATE_DATA_STATUS.LOADING)
     {
-      show_view=<View style={{
+      loading=<View style={{
         flex: 1,
         alignItems: "center",
         justifyContent: "center"
@@ -187,8 +195,8 @@ class VideoList extends Component
         />
       </View>
     }
-    else if(user_info_status == UPDATE_DATA_STATUS.SUCCEED)
-    {
+
+
       var user_info_data = {};
       user_info_data = user_info.data;
       var package_ = user_info_data.package
@@ -333,47 +341,6 @@ class VideoList extends Component
 
       show_view = <View style={{minHeight:base.ScreenHeight-60,backgroundColor:"white"}}>
 
-        <View style={{flex:1,flexDirection:"row",padding:4,backgroundColor:"white",borderBottomWidth:1,borderColor:"#f2f2f2"}}>
-
-            <View style={{flex:2,flexDirection:"row",padding:0,paddingTop:6,paddingBottom:6,backgroundColor:"white"}}>
-
-              <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                <TouchableOpacity style={inner_styles.touchItem}
-                                  onPress={()=>this.props.navigation.navigate("Mine")}
-                >
-                  <Text style={{fontSize:16,color:"white"}}>{'   我的   '}</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                <TouchableOpacity style={inner_styles.touchItem} onPress={()=>this.props.navigation.navigate("Wordbook")}>
-                  <Text style={{fontSize:16,color:"white"}}>{'单词本'}</Text>
-                </TouchableOpacity>
-              </View>
-
-
-              <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-
-                <TouchableOpacity style={inner_styles.touchItem}
-                                  onPress={()=>{this.props.navigation.navigate("MyPackages",{goBackCallBack:this.componentDidMount})}}>
-                  <Text style={{fontSize:16,color:"white"}}>我的专辑</Text>
-                </TouchableOpacity>
-
-              </View>
-
-
-              <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-                <TouchableOpacity style={[inner_styles.touchItem,{backgroundColor:"green"}]}
-                                  onPress={()=>this.props.navigation.navigate("Packages")}>
-                  <Text style={{fontSize:14,color:"white"}}>{' 选专辑 '}</Text>
-                </TouchableOpacity>
-              </View>
-
-            </View>
-
-
-        </View>
-
         {package_view}
 
 
@@ -382,11 +349,14 @@ class VideoList extends Component
         </View>
       </View>
 
-    }
+    
 
     return (
 
         <ScrollView style={{flex:1,width:base.ScreenWidth}}>
+          {tip}
+          {loading}
+
           {show_view}
         </ScrollView>
 

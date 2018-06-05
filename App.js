@@ -5,7 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import { StackNavigator } from 'react-navigation';
+import { StackNavigator, TabNavigator} from 'react-navigation';
 
 import {
   Platform,
@@ -30,11 +30,65 @@ import MyPackages from "../betterme/betterme/my_packages"
 
 import Icon from 'react-native-vector-icons/FontAwesome';
 const initialRouteName = "Home"
+
+
+const HomeNav = TabNavigator({
+    VideoList: {screen: VideoList, navigationOptions: { title: '主页', headerLeft:<Text></Text>}},
+    Wordbook: {screen: Wordbook,navigationOptions: { title: '单词本', headerLef:<Text></Text>}},
+    MyPackages: {screen: MyPackages,navigationOptions: { title: '我的专辑', headerLeft:<Text></Text>}},
+    Mine: {screen: Mine,navigationOptions: { title: '我的', headerLeft:<Text></Text>}},
+  },
+
+  {
+    //animationEnabled: true,
+    lazy: false,
+    tabBarOptions:{
+
+      style: {
+        height:54,
+        backgroundColor:"white",
+        padding:0,
+        borderTopWidth:1,
+        borderTopColor:"rgba(203 ,205 ,207,0.5)",
+      },
+
+      tabStyle: {
+        backgroundColor:"white",
+        padding:0,
+        paddingBottom:20,
+        paddingTop:6
+      },
+
+      labelStyle:{zIndex:-100,color:"white"}
+    },
+    navigationOptions: ({navigation}) => {
+
+      const { params } = navigation.state;
+      var goback_refresh =  null;
+      if(params)
+        goback_refresh = params.goback_refresh;
+
+      return  {
+        headerStyle:{
+          backgroundColor:"white",
+        } ,
+        // headerTitleStyle:{
+        //   color:"white"
+        // },
+        // headerTintColor: 'white',
+        headerLeft:<Text></Text>
+      }
+    }
+
+  });
+
+
 const RootStack =  StackNavigator(
   {
     LoginPassword:{screen:LoginPassword},
     CWebViewMall:{screen:CWebViewMall},
     Home:{screen:Home},
+    HomeNav:{screen:HomeNav},
     Video:{screen:Video},
     Setting:{screen:Setting},
     Test :{screen:Test},

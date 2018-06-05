@@ -68,7 +68,7 @@ class Home extends Component {
 
         base.set_cookie("access_token",access_token, 31536000, base.Domain)
         base.axios.defaults.headers.common['access_token'] = access_token;
-        base.resetAndGoto(this.props.navigation, "VideoList", { access_token: access_token });
+        base.resetAndGoto(this.props.navigation, "HomeNav", { access_token: access_token });
       }
       else
       {
@@ -103,7 +103,7 @@ class Home extends Component {
         setTimeout(() => {
           this.props.navigation.setParams({headerStyle:{height:0,borderWidth:0}});
           console.log(" base.resetAndGoto");
-          base.resetAndGoto(this.props.navigation,"VideoList",{url:"http://www.coderlong.com/home#/",access_token:access_token});
+          base.resetAndGoto(this.props.navigation,"HomeNav",{url:"http://www.coderlong.com/home#/",access_token:access_token});
         }, 200);
       }
     }

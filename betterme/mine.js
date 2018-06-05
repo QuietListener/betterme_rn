@@ -45,12 +45,9 @@ class Mine extends Component
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
 
-    var headerRight =   <TouchableOpacity style={{flex:1,flexDirection:"row",alignItems:"center",paddingRight:8,paddingLeft:8}}  activeOpacity={0.9}
-                                          onPress={()=>navigation.navigate("Setting")}>
-      <Icon name="cog" size={26} color="black" />
-    </TouchableOpacity>
+    var tabBarIcon = ({ focused, tintColor }) =>  (<View style={{marginTop:40,justifyContent:"center",alignItems:"center",height:40,width:40}}><Icon name="user" size={36} color={focused?base.focusColor:base.normalColor} />  /></View>);
 
-    return {headerRight,title:"我的"};
+    return {headerRight:null,headerLeft:<Text></Text>,title:"我的","tabBarIcon":tabBarIcon};
   };
 
 

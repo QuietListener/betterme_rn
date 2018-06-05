@@ -37,12 +37,17 @@ const DownloadError = -100;
 //
 // import Realm from "realm"
 import {DownloadItem} from "./db/models"
+import FIcon from 'react-native-vector-icons/MaterialIcons';
 
 class MyPackages extends Component
 {
 
   static navigationOptions = ({ navigation }) => {
-    return {title:"我的专辑"};
+
+    var tabBarIcon = ({ focused, tintColor }) =>  (<View style={{marginTop:40,justifyContent:"center",alignItems:"center",height:40,width:40}}><FIcon name="collections-bookmark" size={36} color={focused?base.focusColor:base.normalColor} />  /></View>);
+
+    return {title:"我的专辑",headerLeft:<Text></Text>,"tabBarIcon":tabBarIcon};
+
   };
 
 

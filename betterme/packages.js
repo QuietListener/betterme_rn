@@ -13,7 +13,6 @@ import Orientation from 'react-native-orientation';
 const Subtitle = require('subtitle')
 const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = require('subtitle')
 //import fs from "fs"
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Tts from 'react-native-tts';
 
 var RNFS = require('react-native-fs');
@@ -125,11 +124,15 @@ class Packages extends Component
 
     var words_data = data.data;
     var show_view = null;
+    var net_work_tip = null;
+    var loadingw_view = null;
+
     if(my_package_status == UPDATE_DATA_STATUS.FAILED || status == UPDATE_DATA_STATUS.FAILED ||  (data && data.status !=1)||(my_package_data&&my_package_data.status !=1))
     {
-      show_view=show_view= <CNetworkErrorTip refresh={()=>this.componentDidMount()}></CNetworkErrorTip>
+      net_work_tip = <CNetworkErrorTip refresh={()=>this.componentDidMount()}></CNetworkErrorTip>
     }
-    else if (status == UPDATE_DATA_STATUS.LOADING || my_package_status == UPDATE_DATA_STATUS.LOADING)
+
+    if (status == UPDATE_DATA_STATUS.LOADING || my_package_status == UPDATE_DATA_STATUS.LOADING)
     {
       show_view=<View style={{
         flex: 1,
@@ -147,7 +150,8 @@ class Packages extends Component
         />
       </View>
     }
-    else if(status == UPDATE_DATA_STATUS.SUCCEED || my_package_status == UPDATE_DATA_STATUS.LOADING)
+
+    if(status == UPDATE_DATA_STATUS.SUCCEED || my_package_status == UPDATE_DATA_STATUS.SUCCEED)
     {
       var package_views = [];
       var packages = data.data.packages;

@@ -10,6 +10,8 @@ import * as base from "./common/base"
 const DeviceInfo = require('react-native-device-info');
 import Orientation from 'react-native-orientation';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import MIcon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import CPagination from "../betterme/common/component/c_pagination"
 
 const { parse, stringify, stringifyVtt, resync, toMS, toSrtTime, toVttTime } = require('subtitle')
@@ -30,7 +32,10 @@ class Wordbook extends Component
 
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
-    return { title:"单词本"};
+
+    var tabBarIcon = ({ focused, tintColor }) =>  (<View style={{marginTop:40,justifyContent:"center",alignItems:"center",height:40,width:40}}><MIcon name="file-word-box" size={36} color={focused?base.focusColor:base.normalColor} />  /></View>);
+
+    return { headerLeft:<Text></Text>,title:"单词本","tabBarIcon":tabBarIcon};
   };
 
   constructor(props)
