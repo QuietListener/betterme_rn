@@ -587,7 +587,7 @@ class Video_ extends Component
 
       var time_elapsed_percent = time_elapsed*1.0/this.state.duration;
 
-      var least_percent = 0.7;
+      var least_percent = 0.5;
       var least_time = this.state.duration*least_percent/60;
 
       if(time_elapsed_percent < least_percent)

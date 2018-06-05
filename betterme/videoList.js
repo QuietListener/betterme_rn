@@ -112,7 +112,7 @@ class VideoList extends Component
     var orgin_download_state = {};
     this.setState({video_list, orgin_download_state});
 
-
+    this.props.get_my_words();
     //新版本小红点;
     var params = {client_type:base.is_ios?1:3}
     var that = this;
@@ -149,6 +149,18 @@ class VideoList extends Component
 
       return data;
     });
+
+    setTimeout(()=>{
+        this.props.get_my_words();
+    },200);
+
+    setTimeout(()=>{
+      this.props.my_packages(1,null);
+    },300);
+
+    setTimeout(()=>{
+      this.props.statistics();
+    },600);
   }
 
 
@@ -349,7 +361,7 @@ class VideoList extends Component
         </View>
       </View>
 
-    
+
 
     return (
 
@@ -412,7 +424,7 @@ _.mixin(VideoList.prototype,base.base_component);
 
 
 import { connect } from "react-redux";
-import {videos,user_info,utypes,package_,latest_version,update_red_point} from "./common/redux/actions/actions.js"
+import {videos,user_info,utypes,package_,my_packages,latest_version,update_red_point,get_my_words,statistics} from "./common/redux/actions/actions.js"
 import {base_styles} from "./styles/base_style";
 
 
@@ -442,8 +454,18 @@ const mapDispatchToProps = dispatch => {
       dispatch(latest_version(params,call_back));
     },
 
+    get_my_words:()=>{
+      dispatch(get_my_words());
+    },
     update_red_point:()=>{
       dispatch(update_red_point())
+    },
+    statistics:()=>{
+      dispatch(statistics(null))
+    },
+
+    my_packages:(page,callback)=>{
+      dispatch(my_packages({page:page},callback))
     }
   }
 }
